@@ -8,7 +8,14 @@ I'm not the author of the app : praise **robyf** for his excellent work.
 
 I'm barely maintaining it for my own use now that he left off.
 
-## make it work locally
+## build and run
+
+``sh
+npm install
+./google-chat-linux.sh
+```
+
+## make it work manually
 
 electron 5 beta is required
 
@@ -43,7 +50,7 @@ Installation of the .deb file is untested... please provided feedback if you use
 
 NOTE : You'll probably have to :
 
-- either `sudo chown root:root /opt/google-chat-linux/chrome-sandbox && sudo chown 4755 /opt/google-chat-linux/` after the .Deb is installed
+- either `sudo chown root:root /opt/google-chat-linux/chrome-sandbox && sudo chown 4755 /opt/google-chat-linux/chrome-sandbox` after the .deb is installed
 - or run `export ELECTRON_DISABLE_SANDBOX=true` before the launch of `/opt/google-chat-linux/google-chat-linux`
 
 The provided .desktop file takes care of it. (at least it should)
