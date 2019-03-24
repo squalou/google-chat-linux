@@ -3,7 +3,7 @@ Terminal=false
 Type=Application
 Name=Google Chat Linux
 Comment=Desktop client for Google Chat
-Exec=/usr/bin/google-chat-linux.sh
+Exec=env ELECTRON_DISABLE_SANDBOX=true /opt/google-chat-linux/google-chat-linux
 Icon=google-chat-linux.png
 StartupWMClass=google-chat-linux
 Categories=Network;InstantMessaging;

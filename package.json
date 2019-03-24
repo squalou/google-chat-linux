@@ -4,13 +4,32 @@
   "description": "Google Hangouts Chat unofficial linux app",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "postinstall": "electron-builder install-app-deps",
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
-  "repository": "TODO",
+  "repository": "github.com:squalou/google-chat-linux.git",
+  "homepage": "github.com:squalou/google-chat-linux.git",
   "author": "Roberto Fasciolo <rob@robyf.net> (https://www.robyf.net/)",
   "license": "WTFPL",
+  "build": {
+    "appId": "google-chat-linux",
+    "icon": "./assets/icon/icon.png",
+    "linux": {
+      "category": "Networki;InstantMessaging",
+      "desktop": "./google-chat-linux.desktop",
+      "target": [
+        "deb"
+      ]
+    }
+  },
   "dependencies": {
     "electron-context-menu": "^0.9.1",
     "electron-localshortcut": "^3.1.0"
+  },
+  "devDependencies": {
+    "electron": "5.0.0-beta.6",
+    "electron-builder": "^20.39.0"
   }
 }
