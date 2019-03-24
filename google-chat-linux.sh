@@ -1,7 +1,7 @@
 #!/bin/sh
-export PATH=/usr/share/google-chat-linux/node_modules/.bin/:$PATH
+export NODE_PATH="$HOME/node_modules/.bin"
+export PATH=$NODE_PATH:$PATH
 export ELECTRON_DISABLE_SANDBOX=true
 
-cd /usr/share/google-chat-linux \
-  && electron .
+${NODE_PATH}/electron .
 
