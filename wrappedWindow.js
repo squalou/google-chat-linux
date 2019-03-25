@@ -95,17 +95,6 @@ module.exports = function createWrappedWindow(opts) {
     if (!opts.openLocally && extractDomain(url) !== extractDomain(window.webContents.getURL()) && extractDomain(url) !== "accounts.google.com" && extractDomain(url) !== "accounts.youtube.com" && extractDomain(url) !== "support.google.com" && extractDomain(url) !== "chat.google.com") {
       require('electron').shell.openExternal(url);
       e.preventDefault();
-/*
-    } else {
-      var nested = createWrappedWindow({
-        name: opts.name,
-        url: url,
-        openLocally: opts.openLocally
-      });
-      nested.on('closed', function() {
-        nested = null;
-      });
-*/
     }
   };
 
@@ -125,10 +114,8 @@ module.exports = function createWrappedWindow(opts) {
   });
 
   window.webContents.on('dom-ready', () => {
-    const scriptPath = path.join('file://', __dirname, 'node_modules/jquery/dist/jquery.min.js');
     window.webContents.executeJavaScript('var ipc = require(\'electron\').ipcRenderer; document.addEventListener("click", (evt) => { if (evt.target && evt.target.localName == "a" && evt.target.target == "_blank" && evt.target.href.startsWith("http")) { ipc.send("open-link", evt.target.href); evt.preventDefault(); } }, true);', true);
-
-   window.webContents.executeJavaScript('var ipc = require(\'electron\').ipcRenderer; console.log("gogogog"); var fi = document.querySelector("link#favicon256"); console.log(fi); ipc.send("favicon-changed", fi.href); var callback = function(mutationList) { ipc.send("favicon-changed", fi.href); }; var observer = new MutationObserver(callback); observer.observe(fi, { attributes: true });');
+    window.webContents.executeJavaScript('var ipc = require(\'electron\').ipcRenderer; console.log("gogogog"); var fi = document.querySelector("link#favicon256"); console.log(fi); ipc.send("favicon-changed", fi.href); var callback = function(mutationList) { ipc.send("favicon-changed", fi.href); }; var observer = new MutationObserver(callback); observer.observe(fi, { attributes: true });');
   });
 
   appIcon = new Tray(ICON_OFFLINE_MSG);
