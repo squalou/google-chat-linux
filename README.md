@@ -32,11 +32,11 @@ export ELECTRON_DISABLE_SANDBOX=true; electron .
 
 ## Linux packages
 
-## Arch
+## Arch (Manjaro, Antergos)
 
 a package 'google-chat-linux-git' is availabe on AUR for Arch Linux and derivatives.
 
-## Debian based
+## Debian based (Ubuntu, Mint ...)
 
 Run :
 
@@ -44,13 +44,13 @@ Run :
 npm run dist
 ```
 
-will build a .deb file in `dist/`.
+will build a .deb file in `dist/`. Run for instance `sudo dkpg -i dist/google-chat-linux*.deb`.
 
-Installation of the .deb file is untested... please provided feedback if you use it !
+Installation of the .deb file is tested under Linux Mint, and works fine.
 
-NOTE : You'll probably have to :
+NOTE : to run from a terminal you'll have to :
 
 - either `sudo chown root:root /opt/google-chat-linux/chrome-sandbox && sudo chown 4755 /opt/google-chat-linux/chrome-sandbox` after the .deb is installed
 - or run `export ELECTRON_DISABLE_SANDBOX=true` before the launch of `/opt/google-chat-linux/google-chat-linux`
 
-The provided .desktop file takes care of it. (at least it should)
+The provided .desktop file takes care of it, so running from your desktop launcher will work.
