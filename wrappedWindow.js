@@ -54,7 +54,6 @@ module.exports = function createWrappedWindow(opts) {
 	}
 	if (typeof data[hash].showInTaskbar !== 'undefined') {
 	    window.showInTaskbar = data[hash].showInTaskbar;
-		console.log("aacacacacac..."+window.showInTaskbar)
 	}
   }
 
