@@ -1,6 +1,6 @@
 {
   "name": "google-chat-linux",
-  "version": "0.1.0-1",
+  "version": "0.1.1-1",
   "description": "Google Hangouts Chat unofficial linux app",
   "main": "main.js",
   "scripts": {
@@ -14,7 +14,6 @@
   "license": "WTFPL",
   "build": {
     "appId": "google-chat-linux",
-    "icon": "./assets/icon/icon.png",
     "linux": {
       "category": "Networki;InstantMessaging",
       "desktop": "./google-chat-linux.desktop",
