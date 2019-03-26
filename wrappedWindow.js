@@ -106,6 +106,7 @@ module.exports = function createWrappedWindow(opts) {
 
   window.webContents.on('will-navigate', handleRedirect);
   window.webContents.on('new-window', handleRedirect);
+  window.webContents.on('new-redirect', handleRedirect);
 
 
   // Save the window bounds on close
@@ -121,7 +122,7 @@ module.exports = function createWrappedWindow(opts) {
   });
 
   window.webContents.on('dom-ready', () => {
-    window.webContents.executeJavaScript('var ipc = require(\'electron\').ipcRenderer; document.addEventListener("click", (evt) => { if (evt.target && evt.target.localName == "a" && evt.target.target == "_blank" && evt.target.href.startsWith("http")) { ipc.send("open-link", evt.target.href); evt.preventDefault(); } }, true);', true);
+    window.webContents.executeJavaScript('var ipc = require(\'electron\').ipcRenderer; document.addEventListener("click", (evt) => { if (evt.target && evt.target.localName != "a"){evt.preventDefault();} else if (evt.target && evt.target.target == "_blank" && evt.target.href.startsWith("http")) { ipc.send("open-link", evt.target.href); evt.preventDefault(); } }, true);', true);
     window.webContents.executeJavaScript('var ipc = require(\'electron\').ipcRenderer; var fi = document.querySelector("link#favicon256"); ipc.send("favicon-changed", fi.href); var callback = function(mutationList) { ipc.send("favicon-changed", fi.href); }; var observer = new MutationObserver(callback); observer.observe(fi, { attributes: true });');
   });
 
