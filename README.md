@@ -21,18 +21,19 @@ electron 5 beta is required
 
 ```sh
 npm install electron@beta
+export PATH=$HOME/node_modules/.bin:$PATH
 ```
 
 fix the rights on sandbox executable as the error message will suggest:
 
 ```sh
 sudo chown root:root $HOME/node_modules/electron/dist/chrome-sandbox && sudo chown 4755 $HOME/node_modules/electron/dist/chrome-sandbox
+electron .
 ```
     
 OR if you're in a hurry :
 
 ```sh
-export PATH=$HOME/node_modules/.bin:$PATH
 export ELECTRON_DISABLE_SANDBOX=true; electron .
 ```
 
