@@ -10,7 +10,7 @@ I'm barely maintaining it for my own use now that he left off.
 
 ## build and run
 
-``sh
+```sh
 npm install
 ./google-chat-linux.sh
 ```
@@ -23,10 +23,16 @@ electron 5 beta is required
 npm install electron@beta
 ```
 
-fix the rights on sandbox executable as the error message will suggest, OR if you're in a hurry :
+fix the rights on sandbox executable as the error message will suggest:
 
 ```sh
-export PATH=/path/to/node_modules/.bin:$PATH
+sudo chown root:root $HOME/node_modules/electron/dist/chrome-sandbox && sudo chown 4755 $HOME/node_modules/electron/dist/chrome-sandbox
+```
+    
+OR if you're in a hurry :
+
+```sh
+export PATH=$HOME/node_modules/.bin:$PATH
 export ELECTRON_DISABLE_SANDBOX=true; electron .
 ```
 
@@ -46,11 +52,11 @@ npm run dist
 
 will build a .deb file in `dist/`. Run for instance `sudo dkpg -i dist/google-chat-linux*.deb`.
 
-Installation of the .deb file is tested under Linux Mint, and works fine.
+Installation of the .deb file is tested under Ubuntu, and works fine. Under Mint it installs well but react with emotes crashes the app. Go wonder.
 
 NOTE : to run from a terminal you'll have to :
 
-- either `sudo chown root:root /opt/google-chat-linux/chrome-sandbox && sudo chown 4755 /opt/google-chat-linux/chrome-sandbox` after the .deb is installed
+- either `sudo chown root:root /opt/google-chat-linux/chrome-sandbox && sudo chown 4755 /opt/google-chat-linux/chrome-sandbox` after the .deb is inYYstalled
 - or run `export ELECTRON_DISABLE_SANDBOX=true` before the launch of `/opt/google-chat-linux/google-chat-linux`
 
 The provided .desktop file takes care of it, so running from your desktop launcher will work.
