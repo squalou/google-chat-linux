@@ -120,9 +120,8 @@ module.exports = function createWrappedWindow(opts) {
     newData[hash].showInTaskbar = window.showInTaskbar;
     fs.writeFileSync(initPath, JSON.stringify(newData));
   });
-
   window.webContents.on('dom-ready', () => {
-    window.webContents.executeJavaScript('var ipc = require(\'electron\').ipcRenderer; document.addEventListener("click", (evt) => { if (evt.target && evt.target.parentNode && evt.target.parentNode.href ){console.log("trouloulou"); ipc.send("open-link", evt.target.parentNode.href); evt.preventDefault(); }else if (evt.target && evt.target.localName != "a" && evt.target.localName != "input"){evt.preventDefault();} else if (evt.target && evt.target.target == "_blank" && evt.target.href.startsWith("http")) { ipc.send("open-link", evt.target.href); evt.preventDefault();}}, true);', true);
+    window.webContents.executeJavaScript('var ipc = require(\'electron\').ipcRenderer; document.addEventListener("click", (evt) => {var butt=false;if(evt.path){butt=(evt.path.some(function(d){return(d instanceof HTMLButtonElement)}))};if(!butt){if(evt.target && evt.target.parentNode && evt.target.parentNode.href){ipc.send("open-link", evt.target.parentNode.href); evt.preventDefault(); }else if (evt.target && evt.target.localName != "a" && evt.target.localName != "input"){evt.preventDefault();} else if (evt.target && evt.target.target == "_blank" && evt.target.href.startsWith("http")){ ipc.send("open-link", evt.target.href); evt.preventDefault();}}}, true);', true);
     window.webContents.executeJavaScript('var ipc = require(\'electron\').ipcRenderer; var fi = document.querySelector("link#favicon256"); ipc.send("favicon-changed", fi.href); var callback = function(mutationList) { ipc.send("favicon-changed", fi.href); }; var observer = new MutationObserver(callback); observer.observe(fi, { attributes: true });');
   });
 
