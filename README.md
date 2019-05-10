@@ -17,7 +17,8 @@ npm install
 
 ## make it work manually
 
-electron 5 beta is required
+electron 6 beta is required
+(works with 5.0.1 and up, with some minor annoyances)
 
 ```sh
 npm install electron@beta

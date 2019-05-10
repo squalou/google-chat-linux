@@ -42,10 +42,10 @@ module.exports = function createWrappedWindow(opts) {
   // Create the browser window.
   var windowOpts = (data && data[hash] && data[hash].bounds) ? data[hash].bounds : { width: 800, height: 600 };
   windowOpts['autoHideMenuBar'] = true;
-  windowOpts['webPreferences'] = { 'nodeIntegration': true , 'sandbox': true };
+  windowOpts['webPreferences'] = { 'nodeIntegration': true , 'sandbox': false };
   windowOpts['icon'] = iconPath;
   var window = new BrowserWindow(windowOpts);
-  window.setMenu(null);
+  window.removeMenu();
   window.showInTaskbar = true;
   // window.webContents.openDevTools();
   if (data && data[hash]){
@@ -181,8 +181,6 @@ function iconForType(itype) {
 }
 
 ipc.on('favicon-changed', (evt, href) => {
-  /* console.log("Favicon changed: ", href); */
-
   var itype = "";
   if (href.match(/chat-favicon-no-new/)) {
     itype = "NORMAL";
