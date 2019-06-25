@@ -131,18 +131,17 @@ module.exports = function createWrappedWindow(opts) {
   appIcon = new Tray(ICON_OFFLINE_MSG);
 
   function makeContextMenu() {
-    let showHideLabel = !windowShown ? 'Show window' : 'Hide window';
+    let showHideLabel = windowShown ? 'Hide window':'Show window';
 
     const contextMenu = Menu.buildFromTemplate([
       {
         label: showHideLabel, click: function () {
           if (!windowShown) {
             window.show();
-            windowShown = true;
           } else {
-            windowShown = false;
             window.hide();
           }
+	  windowShown = ! windowShown;
 
           makeContextMenu();
         }
@@ -161,11 +160,12 @@ module.exports = function createWrappedWindow(opts) {
 
   appIcon.on('click', function(e){
     if (!windowShown ||  window.isMinimized()){
-      windowShown = true;
       window.show();
     }else{
       window.focus();
     }
+    windowShown = true;
+    makeContextMenu();
   });
 
   return window;
