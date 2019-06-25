@@ -108,10 +108,16 @@ module.exports = function createWrappedWindow(opts) {
   window.webContents.on('new-window', handleRedirect);
   window.webContents.on('new-redirect', handleRedirect);
 
+  let windowShown = true;
+  let isQuiting = false;
 
   // Save the window bounds on close
-  window.on('close', function() {
-    var maximized = window.isMaximized();
+  window.on('close', function(e) {
+    if (!isQuiting) {
+    // Don't close the window, we'll just hide it.
+      e.preventDefault();
+    }
+
     var newData = data || {};
     newData[hash] = { bounds: window.getBounds() };
     if (window.isMaximized()) {
@@ -119,6 +125,10 @@ module.exports = function createWrappedWindow(opts) {
     }
     newData[hash].showInTaskbar = window.showInTaskbar;
     fs.writeFileSync(initPath, JSON.stringify(newData));
+
+    window.hide();
+    windowShown = false;
+    makeContextMenu();
   });
   window.webContents.on('dom-ready', () => {
     window.webContents.executeJavaScript('var ipc = require(\'electron\').ipcRenderer; document.addEventListener("click", (evt) => {var butt=false;if(evt.path){butt=(evt.path.some(function(d){return(d instanceof HTMLButtonElement)}))};if(!butt){if(evt.target && evt.target.parentNode && evt.target.parentNode.href){ipc.send("open-link", evt.target.parentNode.href); evt.preventDefault(); }else if (evt.target && evt.target.localName != "a" && evt.target.localName != "input"){evt.preventDefault();} else if (evt.target && evt.target.target == "_blank" && evt.target.href.startsWith("http")){ ipc.send("open-link", evt.target.href); evt.preventDefault();}}}, true);', true);
@@ -127,29 +137,36 @@ module.exports = function createWrappedWindow(opts) {
   });
 
   appIcon = new Tray(ICON_OFFLINE_MSG);
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: 'Toggle taskbar visibility', click: function(){
-        window.showInTaskbar = ! window.showInTaskbar
-        window.setSkipTaskbar(!window.showInTaskbar)
-      }
-    },{
-      label: 'Show', click: function () {
-        window.show()
-      }
-    },{
-      label: 'Hide', click: function () {
-        window.minimize()
-      }
-    },{
-      label: 'Quit', click: function () {
-        app.isQuiting = true
-        app.quit()
-      }
-    }
-  ]);
 
-  appIcon.setContextMenu(contextMenu);
+  function makeContextMenu() {
+    let showHideLabel = !windowShown ? 'Show window' : 'Hide window';
+
+    const contextMenu = Menu.buildFromTemplate([
+      {
+        label: showHideLabel, click: function () {
+          if (!windowShown) {
+            window.show();
+            windowShown = true;
+          } else {
+            windowShown = false;
+            window.hide();
+          }
+
+          makeContextMenu();
+        }
+      }, {
+        label: 'Quit', click: function () {
+          isQuiting = true;
+          app.quit()
+        }
+      }
+    ]);
+
+    appIcon.setContextMenu(contextMenu);
+  }
+
+  makeContextMenu();
+
   window.setSkipTaskbar(!window.showInTaskbar);
 
   appIcon.on('click', function(e){
