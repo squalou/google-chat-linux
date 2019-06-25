@@ -46,14 +46,9 @@ module.exports = function createWrappedWindow(opts) {
   windowOpts['icon'] = iconPath;
   var window = new BrowserWindow(windowOpts);
   window.removeMenu();
-  window.showInTaskbar = true;
-  // window.webContents.openDevTools();
   if (data && data[hash]){
 	if (data[hash].shouldBeMaximized) {
 	    window.maximize();
-	}
-	if (typeof data[hash].showInTaskbar !== 'undefined') {
-	    window.showInTaskbar = data[hash].showInTaskbar;
 	}
   }
 
@@ -123,9 +118,6 @@ module.exports = function createWrappedWindow(opts) {
     if (window.isMaximized()) {
       newData[hash].shouldBeMaximized = true;
     }
-    newData[hash].showInTaskbar = window.showInTaskbar;
-    fs.writeFileSync(initPath, JSON.stringify(newData));
-
     window.hide();
     windowShown = false;
     makeContextMenu();
@@ -167,10 +159,9 @@ module.exports = function createWrappedWindow(opts) {
 
   makeContextMenu();
 
-  window.setSkipTaskbar(!window.showInTaskbar);
-
   appIcon.on('click', function(e){
-    if (window.isMinimized()){
+    if (!windowShown ||  window.isMinimized()){
+      windowShown = true;
       window.show();
     }else{
       window.focus();
