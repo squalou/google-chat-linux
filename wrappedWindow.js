@@ -141,9 +141,13 @@ module.exports = function createWrappedWindow(opts) {
           } else {
             window.hide();
           }
-	  windowShown = ! windowShown;
+          windowShown = ! windowShown;
 
           makeContextMenu();
+        }
+      }, {
+        label: 'Force reload', click: function () {
+          window.webContents.reload();
         }
       }, {
         label: 'Quit', click: function () {
