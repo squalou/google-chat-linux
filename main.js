@@ -17,6 +17,6 @@ app.on('ready', function() {
   mainWindow = WrappedWindow({
     name: 'Google Hangouts Chat',
     url: 'https://chat.google.com/',
-    openLocally: false
+    openLocally: true
   });
 });
