@@ -8,6 +8,12 @@ I'm not the author of the app : praise **robyf** for his excellent work.
 
 I'm barely maintaining it for my own use now that he left off.
 
+## IMPORTANT NEWS
+
+from 0.3.* version : **systray icon color change does not work anymore**, I volontarily removed it. Why ? It requires "nodeIntegration: true" in electron, which in turn breaks the "Search" for people (Ctrl K), which is much, much more useful than the icon color change.
+
+As a compensation, there is a custom theme ... :)
+
 ## build and run
 
 ```sh
