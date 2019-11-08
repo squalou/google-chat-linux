@@ -253,8 +253,11 @@ img {
 .U26fgb.c7fp5b.FS4hgd.RASpke {
     background: white;
 }
-.IL9EXe .PL5Wwe .dHI9xe .qs41qe {
-    color: navy!important;
+.dHI9xe.qs41qe {
+    background-color: #6f87bd!important;
+}
+.dHI9xe.qs41qe .ojqkvd{
+    color: #0d2d56!important;
 }
 /* fond zone saisie */
 .whsOnd.zHQkBf {
