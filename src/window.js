@@ -4,13 +4,19 @@ const ConfigManager = require('./configs');
 const fs = require('fs');
 let mainWindow;
 let isQuitting= false;
-
+let isThemed=false;
 ipcMain.on('open-link', (evt, href) => {
 	shell.openExternal(href);
 });
 
 const setIsQuitting = (b) => {
 	isQuitting = b;
+};
+const getIsThemed = () => {
+	return isThemed
+};
+const setIsThemed = (b) => {
+	isThemed = b;
 };
 
 const getBrowserWindowOptions = () => {
@@ -36,10 +42,12 @@ const getExtraOptions = () => {
 	};
 }
 
-const handleTheme = (windowObj) => {
-	const theme = fs.readFileSync(pathsManifest.theme, 'utf8');
-	windowObj.webContents.executeJavaScript(theme);
-	windowObj.show();
+const handleTheme = (mainWindow) => {
+	if (isThemed){
+		const theme = fs.readFileSync(pathsManifest.theme, 'utf8');
+		mainWindow.webContents.executeJavaScript(theme)
+	}
+	mainWindow.show();
 }
 
 const handleRedirect = (e, url) => {
@@ -55,6 +63,7 @@ const handleRedirect = (e, url) => {
 const initializeWindow = (config) => {
 	const bwOptions = (config && config.bounds) ? Object.assign(getBrowserWindowOptions(), config.bounds) : getBrowserWindowOptions()
 	const extraOptions = getExtraOptions();
+	isThemed = (config && config.isThemed);
 
 	mainWindow = new BrowserWindow(bwOptions);
 	mainWindow.loadURL(extraOptions.url);
@@ -69,6 +78,7 @@ const initializeWindow = (config) => {
 			configsData = {};
 			configsData.bounds = mainWindow.getBounds();
 			configsData.wasMaximized = isMaximized;
+			configsData.isThemed = isThemed;
 			ConfigManager.updateConfigs(configsData);
 		}else{
 			e.preventDefault();
@@ -84,5 +94,7 @@ const initializeWindow = (config) => {
 
 module.exports = {
 	initializeWindow: initializeWindow,
-	setIsQuitting: setIsQuitting
+	setIsQuitting: setIsQuitting,
+	getIsThemed: getIsThemed,
+	setIsThemed: setIsThemed
 }

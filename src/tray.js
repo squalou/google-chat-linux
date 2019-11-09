@@ -1,6 +1,5 @@
 const {app, Tray, Menu, ipcMain} = require("electron");
 const pathsManifest = require("./paths");
-const ConfigManager = require('./configs');
 const WindowManager = require('./window');
 const fs = require('fs');
 let mainWindow;
@@ -15,29 +14,30 @@ const onQuitEntryClicked = () => {
 	app.quit();
 }
 
-const onInvertEntryClicked = (mainWindow) => {
+const onToggleThemeClicked = (mainWindow) => {
+	WindowManager.setIsThemed(!WindowManager.getIsThemed());
 	const theme = fs.readFileSync(pathsManifest.theme, 'utf8');
-	const configs = ConfigManager.loadConfigs();
-	
-	mainWindow.webContents.executeJavaScript(theme);	
-	configs.darkMode = (configs.darkMode) ? false : true;
-	ConfigManager.updateConfigs(configs);
+	if (WindowManager.getIsThemed() ){
+		mainWindow.webContents.executeJavaScript(theme);
+	}
+	if (!WindowManager.getIsThemed() ){
+		onQuitEntryClicked();
+	}
+	buildContextMenu();
 }
 
 const onSystemTrayIconClicked = () => {
 	(! mainWindow.isVisible() || mainWindow.isMinimized()) ? mainWindow.show() : mainWindow.focus();
 }
 
-const initializeTray = (windowObj) => {
-	systemTrayIcon = new Tray(pathsManifest.ICON_NO_NEW_MSG);
-	mainWindow = windowObj;
-	// this requires nodeIntegration: true but breaks Ctrl K
-	mainWindow.webContents.on('dom-ready', () => {
-	    mainWindow.webContents.executeJavaScript('var ipc; try{var ipc = require(\'electron\').ipcRenderer; var fi = document.querySelector("link#favicon256"); console.log(fi); ipc.send("favicon-changed", fi.href); var callback = function(mutationList) { ipc.send("favicon-changed", fi.href); }; var observer = new MutationObserver(callback); observer.observe(fi, { attributes: true });}catch (e){console.log(e)};');
-	});
-	
+const buildContextMenu = (mainWindow) => {
 	const template = [
 		{
+			"label": WindowManager.getIsThemed() ? "Remove theme (restart)" : "Apply theme",
+			"click": () => {
+				onToggleThemeClicked(mainWindow);
+			}
+		}, {
 			"label": "Show/Hide",
 			"click": () => {
 				onShowEntryClicked();
@@ -64,6 +64,18 @@ const initializeTray = (windowObj) => {
 	});
 
 	return systemTrayIcon;
+}
+
+const initializeTray = (windowObj) => {
+	systemTrayIcon = new Tray(pathsManifest.ICON_NO_NEW_MSG);
+	mainWindow = windowObj;
+	// this requires nodeIntegration: true but breaks Ctrl K
+	mainWindow.webContents.on('dom-ready', () => {
+	    mainWindow.webContents.executeJavaScript('var ipc; try{var ipc = require(\'electron\').ipcRenderer; var fi = document.querySelector("link#favicon256"); console.log(fi); ipc.send("favicon-changed", fi.href); var callback = function(mutationList) { ipc.send("favicon-changed", fi.href); }; var observer = new MutationObserver(callback); observer.observe(fi, { attributes: true });}catch (e){console.log(e)};');
+	});
+
+	return buildContextMenu(mainWindow);
+
 };
 
 ipcMain.on('favicon-changed', (evt, href) => {
