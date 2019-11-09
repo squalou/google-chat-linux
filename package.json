@@ -1,5 +1,5 @@
 {
-  "name": "Google Chat Linux",
+  "name": "google-chat-linux",
   "version": "0.3.0-1",
   "description": "Google Hangouts Chat unofficial linux app",
   "main": "src/index.js",
@@ -13,7 +13,7 @@
   "author": "Roberto Fasciolo <rob@robyf.net> (https://www.robyf.net/)",
   "license": "WTFPL",
   "build": {
-    "appId": "google-chat-linux",
+    "appId": "Google Chat Linux",
     "linux": {
       "category": "Networki;InstantMessaging",
       "desktop": "./google-chat-linux.desktop",
