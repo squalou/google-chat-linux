@@ -10,9 +10,9 @@ I'm barely maintaining it for my own use now that he left off.
 
 ## IMPORTANT NEWS
 
-from 0.3.* version on : **systray icon color change does not work anymore**, I volontarily removed it. Why ? It requires "nodeIntegration: true" in electron, which in turn breaks the "Search" for people (Ctrl K), which is much, much more useful than the icon color change.
+from 0.3.0 version on : **systray icon color change does not work anymore**, I volontarily removed it. Why ? It requires "nodeIntegration: true" in electron, which in turn breaks the "Search" for people (Ctrl K), which is much, much more useful than the icon color change.
 
-As a compensation, there is a custom theme ... :)
+As a compensation, there is a custom theme ... :) (activate it from systray menu)
 
 ## build and run
 
@@ -52,9 +52,7 @@ a package 'google-chat-linux-git' is availabe on AUR for Arch Linux and derivati
 
 ## Debian based (Ubuntu, Mint ...)
 
-**DISCLAIMER** this is completely untested. Used to work on some colleagues distros, but I have lots of issues reports now. If you have issues with a .deb installed app, please first try the manual way (npm install / run .sh stated above)
-
-**HELP REQUIRED** anyone with skills in .deb pacakges ? You're welcome to contribute ;)
+**Tested on** Ubuntu 18.04, Mint
 
 Run :
 
