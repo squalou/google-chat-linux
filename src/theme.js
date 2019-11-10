@@ -274,6 +274,14 @@ javascript: (
             .QTQg5e {
                 background: #CCCCCC;
             }
+            /* + */
+            .KFQQxd {
+                background-color: rgba(95,99,104,0.872);
+            }
+            /* menu fold */
+            .xWyObb{
+                fill: #d0d2fb;
+            }
             `,
 
             head = document.getElementsByTagName('head')[0],
