@@ -39,14 +39,17 @@ const buildContextMenu = (mainWindow) => {
 				onToggleThemeClicked(mainWindow);
 			}
 		}, {
-			"label": "Show/Hide",
-			"click": () => {
-				onShowEntryClicked();
-			},
+			 type: 'separator'
 		}, {
 			label: 'Force reload', click: function () {
 				mainWindow.webContents.reload();
 			}
+		}, {
+			"label": "Show/Hide",
+			"click": () => {
+				onShowEntryClicked();
+			},
+
 		}, {
 			"label": "Quit",
 			"click": () => {
