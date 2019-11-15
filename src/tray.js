@@ -34,23 +34,22 @@ const onSystemTrayIconClicked = () => {
 const buildContextMenu = (mainWindow) => {
 	const template = [
 		{
-			"label": WindowManager.getIsThemed() ? "Remove theme (restart)" : "Apply theme",
+			"label": "Show/Hide",
 			"click": () => {
-				onToggleThemeClicked(mainWindow);
-			}
-		}, {
-			 type: 'separator'
+				onShowEntryClicked();
+			},
 		}, {
 			label: 'Force reload', click: function () {
 				mainWindow.webContents.reload();
 			}
 		}, {
-			"label": "Show/Hide",
+			"label": WindowManager.getIsThemed() ? "Remove theme (restart)" : "Apply theme",
 			"click": () => {
-				onShowEntryClicked();
-			},
-
+				onToggleThemeClicked(mainWindow);
+			}
 		}, {
+			type: 'separator'
+        }, {
 			"label": "Quit",
 			"click": () => {
 				onQuitEntryClicked();
