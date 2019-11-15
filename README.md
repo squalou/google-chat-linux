@@ -10,7 +10,9 @@ I'm barely maintaining it for my own use now that he left off.
 
 ## IMPORTANT NEWS
 
-from 0.3.0 version on : **systray icon color change does not work anymore**, I volontarily removed it. Why ? It requires "nodeIntegration: true" in electron, which in turn breaks the "Search" for people (Ctrl K), which is much, much more useful than the icon color change.
+from 0.3.2 on : **systray icon color change IS BACK** through the use of a hidden window ... kind of dirty but seems to work.
+
+on version 0.3.0 and 0.3.1 : **systray icon color change does not work anymore**, I volontarily removed it. Why ? It requires "nodeIntegration: true" in electron, which in turn breaks the "Search" for people (Ctrl K), which is much, much more useful than the icon color change.
 
 As a compensation, there is a custom theme ... :) (activate it from systray menu)
 
