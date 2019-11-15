@@ -1,6 +1,7 @@
 const {app, Tray, Menu, ipcMain} = require("electron");
 const pathsManifest = require("./paths");
 const WindowManager = require('./window');
+const WindowManager2 = require('./hiddenWindow');
 const fs = require('fs');
 let mainWindow;
 let systemTrayIcon;
@@ -66,12 +67,13 @@ const buildContextMenu = (mainWindow) => {
 	return systemTrayIcon;
 }
 
-const initializeTray = (windowObj) => {
-	systemTrayIcon = new Tray(pathsManifest.ICON_NO_NEW_MSG);
+const initializeTray = (windowObj, windowObj2) => {
+	systemTrayIcon = new Tray(pathsManifest.ICON_OFFLINE_MSG);
 	mainWindow = windowObj;
-	// this requires nodeIntegration: true but breaks Ctrl K
-	mainWindow.webContents.on('dom-ready', () => {
-	    mainWindow.webContents.executeJavaScript('var ipc; try{var ipc = require(\'electron\').ipcRenderer; var fi = document.querySelector("link#favicon256"); console.log(fi); ipc.send("favicon-changed", fi.href); var callback = function(mutationList) { ipc.send("favicon-changed", fi.href); }; var observer = new MutationObserver(callback); observer.observe(fi, { attributes: true });}catch (e){console.log(e)};');
+	hiddenWindow = windowObj2;
+	// this requires nodeIntegration: true but breaks Ctrl K, so we use another windowObj
+	hiddenWindow.webContents.on('dom-ready', () => {
+	    hiddenWindow.webContents.executeJavaScript('var ipc; try{var ipc = require(\'electron\').ipcRenderer; var fi = document.querySelector("link#favicon256"); console.log(fi); ipc.send("favicon-changed", fi.href); var callback = function(mutationList) { ipc.send("favicon-changed", fi.href); }; var observer = new MutationObserver(callback); observer.observe(fi, { attributes: true });}catch (e){console.log(e)};');
 	});
 
 	return buildContextMenu(mainWindow);
