@@ -41,6 +41,7 @@ const buildContextMenu = (mainWindow) => {
 		}, {
 			label: 'Force reload', click: function () {
 				mainWindow.webContents.reload();
+				hiddenWindow.webContents.reload();
 			}
 		}, {
 			"label": WindowManager.getIsThemed() ? "Remove theme (restart)" : "Apply theme",
