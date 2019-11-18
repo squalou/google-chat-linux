@@ -1,7 +1,6 @@
 const {app, Tray, Menu, ipcMain} = require("electron");
 const pathsManifest = require("./paths");
 const WindowManager = require('./window');
-const WindowManager2 = require('./hiddenWindow');
 const fs = require('fs');
 let mainWindow;
 let systemTrayIcon;
