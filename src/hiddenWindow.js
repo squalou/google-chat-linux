@@ -8,7 +8,7 @@ ipcMain.on('open-link', (evt, href) => {
 
 const getBrowserWindowOptions = () => {
 	return {
-		"title": process.title,
+		"title": "hidden-"+process.title,
 		"autoHideMenuBar": true,
 		"webPreferences": {
 			"nodeIntegration": true,
@@ -16,6 +16,9 @@ const getBrowserWindowOptions = () => {
 
 		},
 		"show": false,
+		"focusable": false,
+		"skipTaskbar": true,
+		"paintWhenInitiallyHidden": false,
 		"backgroundColor": "#262727",
 		"icon": pathsManifest.iconPath,
 	}
