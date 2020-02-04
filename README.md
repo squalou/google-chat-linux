@@ -62,7 +62,7 @@ as usual **electron** is a pile of crap, so is electron-builder when it comes to
 
 see [issue-3418](https://github.com/electron-userland/electron-builder/issues/3418)
 
-You should copy `google-chat-linux.desktop` from this repo to you `~/.local/share/applications/`  (or in `/usr/share/applications/ if you have root access and wish a global install)
+You should copy `google-chat-linux.desktop` from this repo to you `~/.local/share/applications/`  (or in `/usr/share/applications/` if you have root access and wish a global install)
 
 Run :
 
