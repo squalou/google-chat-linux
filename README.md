@@ -10,6 +10,8 @@ I'm barely maintaining it for my own use now that he left off.
 
 ## IMPORTANT NEWS
 
+from 0.4.0 on : **systray** color works without hidden window, so everything should be ok again!
+
 from 0.3.2 on : **systray icon color change IS BACK** through the use of a hidden window ... kind of dirty but seems to work.
 
 on version 0.3.0 and 0.3.1 : **systray icon color change does not work anymore**, I volontarily removed it. Why ? It requires "nodeIntegration: true" in electron, which in turn breaks the "Search" for people (Ctrl K), which is much, much more useful than the icon color change.
@@ -25,7 +27,7 @@ npm install
 
 ## make it work manually
 
-electron 6 beta is required
+electron 6 beta is required, 7 recommended
 (works with 5.0.1 and up, with some minor annoyances)
 
 ```sh
@@ -43,7 +45,7 @@ electron .
 OR if you're in a hurry :
 
 ```sh
-export ELECTRON_DISABLE_SANDBOX=true; electron .
+export ELECTRON_DISABLE_SANDBOX=true; export NODE_OPTIONS="--no-force-async-hooks-checks"; electron .
 ```
 
 ## Linux packages

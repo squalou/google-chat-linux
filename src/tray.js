@@ -40,7 +40,6 @@ const buildContextMenu = (mainWindow) => {
 		}, {
 			label: 'Force reload', click: function () {
 				mainWindow.webContents.reload();
-				hiddenWindow.webContents.reload();
 			}
 		}, {
 			"label": WindowManager.getIsThemed() ? "Remove theme (restart)" : "Apply theme",
@@ -69,13 +68,12 @@ const buildContextMenu = (mainWindow) => {
 	return systemTrayIcon;
 }
 
-const initializeTray = (windowObj, windowObj2) => {
+const initializeTray = (windowObj) => {
 	systemTrayIcon = new Tray(pathsManifest.ICON_OFFLINE_MSG);
 	mainWindow = windowObj;
-	hiddenWindow = windowObj2;
 	// this requires nodeIntegration: true but breaks Ctrl K, so we use another windowObj
-	hiddenWindow.webContents.on('dom-ready', () => {
-	    hiddenWindow.webContents.executeJavaScript('var ipc; try{var ipc = require(\'electron\').ipcRenderer; var fi = document.querySelector("link#favicon256"); console.log(fi); ipc.send("favicon-changed", fi.href); var callback = function(mutationList) { ipc.send("favicon-changed", fi.href); }; var observer = new MutationObserver(callback); observer.observe(fi, { attributes: true });}catch (e){console.log(e)};');
+	mainWindow.webContents.on('dom-ready', () => {
+	    mainWindow.webContents.executeJavaScript('var ipc; try{var ipc = require(\'electron\').ipcRenderer; var fi = document.querySelector("link#favicon256"); console.log(fi); ipc.send("favicon-changed", fi.href); var callback = function(mutationList) { ipc.send("favicon-changed", fi.href); }; var observer = new MutationObserver(callback); observer.observe(fi, { attributes: true });}catch (e){console.log(e)};');
 	});
 
 	return buildContextMenu(mainWindow);
