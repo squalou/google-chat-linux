@@ -31,7 +31,7 @@ electron 6 beta is required, 7 recommended
 (works with 5.0.1 and up, with some minor annoyances)
 
 ```sh
-npm install electron@beta
+npm install electron
 export PATH=$HOME/node_modules/.bin:$PATH
 ```
 
@@ -58,6 +58,12 @@ a package 'google-chat-linux-git' is availabe on AUR for Arch Linux and derivati
 
 **Tested on** Ubuntu 18.04, Mint
 
+as usual **electron** is a pile of crap, so is electron-builder when it comes to debian packages.
+
+see [issue-3418](https://github.com/electron-userland/electron-builder/issues/3418)
+
+You should copy `google-chat-linux.desktop` from this repo to you `~/.local/share/applications/`  (or in `/usr/share/applications/ if you have root access and wish a global install)
+
 Run :
 
 ```sh
@@ -71,6 +77,6 @@ Installation of the .deb file is tested under Ubuntu, and works fine. Under Mint
 NOTE : to run from a terminal you'll have to :
 
 - either `sudo chown root:root /opt/google-chat-linux/chrome-sandbox && sudo chown 4755 /opt/google-chat-linux/chrome-sandbox` after the .deb is inYYstalled
-- or run `export ELECTRON_DISABLE_SANDBOX=true` before the launch of `/opt/google-chat-linux/google-chat-linux`
+- or run `export ELECTRON_DISABLE_SANDBOX=true; export NODE_OPTIONS="--no-force-async-hooks-checks"` before the launch of `/opt/google-chat-linux/google-chat-linux`
 
 The provided .desktop file takes care of it, so running from your desktop launcher will work.
