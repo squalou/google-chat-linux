@@ -58,11 +58,7 @@ a package 'google-chat-linux-git' is availabe on AUR for Arch Linux and derivati
 
 **Tested on** Ubuntu 18.04, Mint
 
-as usual **electron** is a pile of crap, so is electron-builder when it comes to debian packages.
-
-see [issue-3418](https://github.com/electron-userland/electron-builder/issues/3418)
-
-You should copy `google-chat-linux.desktop` from this repo to you `~/.local/share/applications/`  (or in `/usr/share/applications/` if you have root access and wish a global install)
+**Note** some envionment varaibles are set in index.js : ELECTRON_DISABLE_SANDBOX and NODE_OPTIONS="--no-force-async-hooks-checks". This *should* work. Else, set them manually.
 
 Run :
 
