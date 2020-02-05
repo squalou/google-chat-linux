@@ -1,9 +1,0 @@
-[Desktop Entry]
-Terminal=false
-Type=Application
-Name=Google Chat Linux
-Comment=Desktop client for Google Chat
-Exec=env ELECTRON_DISABLE_SANDBOX=true NODE_OPTIONS="--no-force-async-hooks-checks" /opt/google-chat-linux/google-chat-linux
-Icon=google-chat-linux.png
-StartupWMClass=google-chat-linux
-Categories=Network;InstantMessaging;
