@@ -10,6 +10,8 @@ I'm barely maintaining it for my own use now that he left off.
 
 ## IMPORTANT NEWS
 
+from 0.4.1 : update to electron 8 for better Systray compatibility on linux when appindicator lib is used. see https://github.com/electron/electron/issues/21445. You may have to install some plugnis depending on your DE (xfce4-statusnotifier-plugin for instance)
+
 from 0.4.0 on : **systray** color works without hidden window, so everything should be ok again!
 
 from 0.3.2 on : **systray icon color change IS BACK** through the use of a hidden window ... kind of dirty but seems to work.
