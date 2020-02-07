@@ -89,9 +89,15 @@ function iconForType(iconType) {
   }
 
 const setIcon = (iconType) => {
-	   const i = iconForType(iconType);
-	   systemTrayIcon.setImage(i);
-	   WindowManager.updateIcon(i);
+		const i = iconForType(iconType);
+		try {
+			systemTrayIcon.setImage(i);
+		}catch (e){
+			//do nothing ... fails on some distribs / OS / window managers
+			console.log("Failed to update window icon :-(")
+			console.log(e)
+		}
+		WindowManager.updateIcon(i);
 }
 	
 

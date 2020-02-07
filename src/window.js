@@ -41,7 +41,13 @@ const onForceReloadClicked = () => {
 }
 
 const updateIcon = (icon) => {
-	mainWindow.setIcon(icon)
+	try{
+		mainWindow.setIcon(icon)
+	}catch (e){
+		//do nothing ... fails on some distribs / OS / window managers
+		console.log("Failed to update window icon :-(")
+		console.log(e)
+	}
 }
 
 const getBrowserWindowOptions = () => {
