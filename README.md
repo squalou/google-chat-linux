@@ -10,10 +10,11 @@ I'm barely maintaining it for my own use now that he left off.
 
 ## IMPORTANT NEWS
 
-0.4.3 by default keep window in wndwos list when 'closing'. Add a 'view' menu to change back to previous behaviour : hiding on 'close'.
-      This is done for DE that does NOT display systray of eletron 8 : Cinnamon for instance.
-      At first run, shows in windows list on close to prevent lost windows on those DE.
-      Change color of minimized window icon for those DE.
+0.4.3
+
+- by default keep window in windows list when 'closing'. Add a 'view' menu to change back to previous behaviour : hiding on 'close'. This is done for DE that does NOT display systray of eletron 8 : *Cinnamon* for instance, any DE that doesn't handle well 'appindicator' in electron 8.
+- At first run, shows in windows list on close to prevent lost windows on those DE.
+- Change color of minimized window icon for those DE.
 
 0.4.2 adds a "Menu" in app, press Alt to reveal it. It's the same as systray menu, for OS's where systray is not (yet?) properly supported
 
