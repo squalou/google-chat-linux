@@ -1,4 +1,4 @@
-const {BrowserWindow, ipcMain, shell} = require("electron");
+const {app, BrowserWindow, ipcMain, shell, Menu} = require("electron");
 const pathsManifest = require('./paths');
 const ConfigManager = require('./configs');
 const fs = require('fs');
@@ -18,6 +18,26 @@ const getIsThemed = () => {
 const setIsThemed = (b) => {
 	isThemed = b;
 };
+
+const onQuitEntryClicked = () => {
+	setIsQuitting(true);
+	app.quit();
+}
+
+const onToggleThemeClicked = () => {
+	setIsThemed(!getIsThemed());
+	const theme = fs.readFileSync(pathsManifest.theme, 'utf8');
+	if (getIsThemed() ){
+		mainWindow.webContents.executeJavaScript(theme);
+	}
+	if (!getIsThemed() ){
+		onQuitEntryClicked();
+	}
+}
+
+const onForceReloadClicked = () => {
+	mainWindow.webContents.reload();
+}
 
 const getBrowserWindowOptions = () => {
 	return {
@@ -89,12 +109,52 @@ const initializeWindow = (config) => {
 	mainWindow.webContents.on('will-navigate', handleRedirect);
 	mainWindow.webContents.on('new-window', handleRedirect);
 
+	buildMenu(mainWindow)
+
 	return mainWindow;
 }
 
+const buildMenu = (mainWindow) => {
+	const template = [
+		{
+			label: 'Menu',
+			submenu: [
+				{
+					label: 'Force reload', click: function () {
+						onForceReloadClicked();
+					}
+				}, {
+					"label": getIsThemed() ? "Remove theme (restart)" : "Apply theme",
+					"click": () => {
+						onToggleThemeClicked();
+					}
+				}, {
+					type: 'separator'
+				}, {
+					"label": "Quit",
+					"click": () => {
+						onQuitEntryClicked();
+					}
+				}
+			]
+		},{
+			label: 'DevTools',
+			"click": () => {
+				mainWindow.webContents.openDevTools();;
+			}
+
+		}
+	]
+	const contextMenu = Menu.buildFromTemplate(template);
+	Menu.setApplicationMenu(contextMenu);
+
+}
+
+
 module.exports = {
 	initializeWindow: initializeWindow,
-	setIsQuitting: setIsQuitting,
 	getIsThemed: getIsThemed,
-	setIsThemed: setIsThemed
+	onForceReloadClicked: onForceReloadClicked,
+	onToggleThemeClicked: onToggleThemeClicked,
+	onQuitEntryClicked: onQuitEntryClicked
 }
