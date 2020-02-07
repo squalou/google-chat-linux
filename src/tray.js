@@ -1,29 +1,11 @@
-const {app, Tray, Menu, ipcMain} = require("electron");
+const {Tray, Menu, ipcMain} = require("electron");
 const pathsManifest = require("./paths");
 const WindowManager = require('./window');
-const fs = require('fs');
 let mainWindow;
 let systemTrayIcon;
 
 const onShowEntryClicked = () => {
 	(! mainWindow.isVisible() || mainWindow.isMinimized()) ? mainWindow.show() : mainWindow.hide();
-}
-
-const onQuitEntryClicked = () => {
-	WindowManager.setIsQuitting(true);
-	app.quit();
-}
-
-const onToggleThemeClicked = (mainWindow) => {
-	WindowManager.setIsThemed(!WindowManager.getIsThemed());
-	const theme = fs.readFileSync(pathsManifest.theme, 'utf8');
-	if (WindowManager.getIsThemed() ){
-		mainWindow.webContents.executeJavaScript(theme);
-	}
-	if (!WindowManager.getIsThemed() ){
-		onQuitEntryClicked();
-	}
-	buildContextMenu();
 }
 
 const onSystemTrayIconClicked = () => {
@@ -39,19 +21,20 @@ const buildContextMenu = (mainWindow) => {
 			},
 		}, {
 			label: 'Force reload', click: function () {
-				mainWindow.webContents.reload();
+				WindowManager.onForceReloadClicked();
 			}
 		}, {
 			"label": WindowManager.getIsThemed() ? "Remove theme (restart)" : "Apply theme",
 			"click": () => {
-				onToggleThemeClicked(mainWindow);
+				WindowManager.onToggleThemeClicked();
+				buildContextMenu();
 			}
 		}, {
 			type: 'separator'
         }, {
 			"label": "Quit",
 			"click": () => {
-				onQuitEntryClicked();
+				WindowManager.onQuitEntryClicked();
 			}
 		}
 	]
