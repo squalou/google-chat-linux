@@ -89,7 +89,9 @@ function iconForType(iconType) {
   }
 
 const setIcon = (iconType) => {
-       systemTrayIcon.setImage(iconForType(iconType));
+	   const i = iconForType(iconType);
+	   systemTrayIcon.setImage(i);
+	   WindowManager.updateIcon(i)
 }
 	
 

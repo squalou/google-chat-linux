@@ -16,6 +16,10 @@ console.log('Node.js runtime version:', process.version);
 
 const initialize = () => {
 	config = ConfigManager.loadConfigs();
+	console.log(config)
+	if (config.keepMinimized === undefined){
+		config.keepMinimized = true;
+	}
 	
 	if(!mainWindow) {
 		mainWindow = WindowManager.initializeWindow(config);

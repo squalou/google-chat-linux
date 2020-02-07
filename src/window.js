@@ -4,6 +4,7 @@ const ConfigManager = require('./configs');
 const fs = require('fs');
 let mainWindow;
 let isQuitting= false;
+let keepMinimized = true;
 let isThemed=false;
 ipcMain.on('open-link', (evt, href) => {
 	shell.openExternal(href);
@@ -37,6 +38,10 @@ const onToggleThemeClicked = () => {
 
 const onForceReloadClicked = () => {
 	mainWindow.webContents.reload();
+}
+
+const updateIcon = (icon) => {
+	mainWindow.setIcon(icon)
 }
 
 const getBrowserWindowOptions = () => {
@@ -99,17 +104,22 @@ const initializeWindow = (config) => {
 			configsData.bounds = mainWindow.getBounds();
 			configsData.wasMaximized = isMaximized;
 			configsData.isThemed = isThemed;
+			configsData.keepMinimized = keepMinimized;
 			ConfigManager.updateConfigs(configsData);
 		}else{
 			e.preventDefault();
-			mainWindow.hide();
+			if (keepMinimized){
+				mainWindow.minimize()
+			}else{
+				mainWindow.hide();
+			}
 		}
 	});
 
 	mainWindow.webContents.on('will-navigate', handleRedirect);
 	mainWindow.webContents.on('new-window', handleRedirect);
 
-	buildMenu(mainWindow)
+	buildMenu(mainWindow);
 
 	return mainWindow;
 }
@@ -120,28 +130,44 @@ const buildMenu = (mainWindow) => {
 			label: 'Menu',
 			submenu: [
 				{
-					label: 'Force reload', click: function () {
+					label: 'Force reload', 
+					click: () => {
 						onForceReloadClicked();
 					}
 				}, {
-					"label": getIsThemed() ? "Remove theme (restart)" : "Apply theme",
-					"click": () => {
+					label: getIsThemed() ? "Remove theme (restart)" : "Apply theme",
+					click: () => {
 						onToggleThemeClicked();
 					}
 				}, {
 					type: 'separator'
 				}, {
-					"label": "Quit",
+					label: "Quit",
 					accelerator: 'CommandOrControl+Q',
-					"click": () => {
+					click: () => {
 						onQuitEntryClicked();
+					}
+				}
+			]
+		},{
+			label: 'View',
+			submenu: [
+				{
+					label: 'Hide from windows list when minimized', 
+					click: () => {
+						keepMinimized = false;
+					}
+				}, {
+					label: 'Show in windows list when minimized', 
+					click: () => {
+						keepMinimized = true;
 					}
 				}
 			]
 		},{
 			label: 'DevTools',
 			accelerator: 'CommandOrControl+Shift+I',
-			"click": () => {
+			click: () => {
 				mainWindow.webContents.openDevTools();;
 			}
 
@@ -149,7 +175,6 @@ const buildMenu = (mainWindow) => {
 	]
 	const menu = Menu.buildFromTemplate(template);
 	Menu.setApplicationMenu(menu);
-
 }
 
 module.exports = {
@@ -157,5 +182,6 @@ module.exports = {
 	getIsThemed: getIsThemed,
 	onForceReloadClicked: onForceReloadClicked,
 	onToggleThemeClicked: onToggleThemeClicked,
-	onQuitEntryClicked: onQuitEntryClicked
+	onQuitEntryClicked: onQuitEntryClicked,
+	updateIcon: updateIcon
 }
