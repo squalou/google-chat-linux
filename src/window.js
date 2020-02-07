@@ -132,6 +132,7 @@ const buildMenu = (mainWindow) => {
 					type: 'separator'
 				}, {
 					"label": "Quit",
+					accelerator: 'CommandOrControl+Q',
 					"click": () => {
 						onQuitEntryClicked();
 					}
@@ -139,17 +140,17 @@ const buildMenu = (mainWindow) => {
 			]
 		},{
 			label: 'DevTools',
+			accelerator: 'CommandOrControl+Shift+I',
 			"click": () => {
 				mainWindow.webContents.openDevTools();;
 			}
 
 		}
 	]
-	const contextMenu = Menu.buildFromTemplate(template);
-	Menu.setApplicationMenu(contextMenu);
+	const menu = Menu.buildFromTemplate(template);
+	Menu.setApplicationMenu(menu);
 
 }
-
 
 module.exports = {
 	initializeWindow: initializeWindow,
