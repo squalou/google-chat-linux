@@ -7,7 +7,9 @@ const loadConfigs = () => {
 		return JSON.parse(fs.readFileSync(pathsManifest.configsPath, "utf8"));
 	} catch (e) {
 		console.error(e);
-		return null;
+		const defconfig = '{"bounds":{"x":456,"y":229,"width":1105,"height":757},"wasMaximized":false,"isThemed":false}'
+		fs.writeFileSync(pathsManifest.configsPath,defconfig, 'utf8');
+		return JSON.parse(defconfig, "utf-8")
 	}
 }
 
