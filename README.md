@@ -10,6 +10,11 @@ I'm barely maintaining it for my own use now that he left off.
 
 ## IMPORTANT NEWS
 
+0.4.3 by default keep window in wndwos list when 'closing'. Add a 'view' menu to change back to previous behaviour : hiding on 'close'.
+      This is done for DE that does NOT display systray of eletron 8 : Cinnamon for instance.
+      At first run, shows in windows list on close to prevent lost windows on those DE.
+      Change color of minimized window icon for those DE.
+
 0.4.2 adds a "Menu" in app, press Alt to reveal it. It's the same as systray menu, for OS's where systray is not (yet?) properly supported
 
 from 0.4.1 : update to electron 8 for better Systray compatibility on linux when appindicator lib is used. see https://github.com/electron/electron/issues/21445. You may have to install some plugnis depending on your DE (xfce4-statusnotifier-plugin for instance)
