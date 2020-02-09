@@ -15,6 +15,7 @@ console.log(process.title + ' - v' + applicationVersion);
 console.log('Node.js runtime version:', process.version);
 
 const initialize = () => {
+	app.allowRendererProcessReuse = true;
 	config = ConfigManager.loadConfigs();
 	console.log(config)
 	if (config.keepMinimized === undefined){
