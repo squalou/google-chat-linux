@@ -8,6 +8,17 @@ I'm not the author of the app : praise **robyf** for his excellent work.
 
 I'm barely maintaining it for my own use now that he left off.
 
+## Systray Support
+
+Note : from 0.4.1 on, electron moved to electron-8, with a different Tray integration implementation. It may fail to work with some window managers (Cinnamon is one of them)
+
+See https://github.com/electron/electron/issues/21445
+
+To use previous Tray implementation :
+- edit package.json
+- replace `"electron": "^8.0.0"` by `"electron": "^7.0.0"`
+- run `npm install`and give it a try. (npm start or ./google-chat-linux.sh, see below for detailed instructions)
+
 ## IMPORTANT NEWS
 
 0.4.3
