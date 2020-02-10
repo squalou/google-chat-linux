@@ -21,7 +21,7 @@ const initialize = () => {
 	if (config.keepMinimized === undefined){
 		config.keepMinimized = true;
 	}
-	
+		
 	if(!mainWindow) {
 		mainWindow = WindowManager.initializeWindow(config);
 	}	

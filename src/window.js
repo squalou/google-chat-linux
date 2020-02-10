@@ -20,6 +20,14 @@ const setIsThemed = (b) => {
 	isThemed = b;
 };
 
+const onKeepMinimizedCliecked = (keep) => {
+	if (keep !== keepMinimized){
+		keepMinimized = keep;
+		app.relaunch();
+		onQuitEntryClicked();
+	}
+}
+
 const onQuitEntryClicked = () => {
 	setIsQuitting(true);
 	app.quit();
@@ -32,6 +40,7 @@ const onToggleThemeClicked = () => {
 		mainWindow.webContents.executeJavaScript(theme);
 	}
 	if (!getIsThemed() ){
+		app.relaunch()
 		onQuitEntryClicked();
 	}
 }
@@ -95,6 +104,7 @@ const initializeWindow = (config) => {
 	const bwOptions = (config && config.bounds) ? Object.assign(getBrowserWindowOptions(), config.bounds) : getBrowserWindowOptions()
 	const extraOptions = getExtraOptions();
 	isThemed = (config && config.isThemed);
+	keepMinimized = (config && config.keepMinimized)
 
 	mainWindow = new BrowserWindow(bwOptions);
 	mainWindow.loadURL(extraOptions.url);
@@ -130,6 +140,23 @@ const initializeWindow = (config) => {
 	return mainWindow;
 }
 
+
+const getHideTick = () => {
+	if (keepMinimized){
+		return '☐';
+	}else{
+		return '☑';
+	}
+}
+
+const getShowTick = () => {
+	if (keepMinimized){
+		return '☑';
+	}else{
+		return '☐';
+	}
+}
+
 const buildMenu = (mainWindow) => {
 	const template = [
 		{
@@ -159,14 +186,14 @@ const buildMenu = (mainWindow) => {
 			label: 'View',
 			submenu: [
 				{
-					label: 'Hide from windows list when minimized', 
+					label: getHideTick() + ' Hide from windows list when minimized (restart)', 
 					click: () => {
-						keepMinimized = false;
+						onKeepMinimizedCliecked(false);
 					}
 				}, {
-					label: 'Show in windows list when minimized', 
+					label: getShowTick() + ' Show in windows list when minimized (restart)', 
 					click: () => {
-						keepMinimized = true;
+						onKeepMinimizedCliecked(true);
 					}
 				}
 			]
