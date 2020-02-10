@@ -42,7 +42,7 @@ const onForceReloadClicked = () => {
 
 const updateIcon = (icon) => {
 	try{
-		mainWindow.setIcon(icon)
+		mainWindow.setIcon(icon);
 	}catch (e){
 		//do nothing ... fails on some distribs / OS / window managers
 		console.log("Failed to update window icon :-(")
@@ -169,6 +169,16 @@ const buildMenu = (mainWindow) => {
 						keepMinimized = true;
 					}
 				}
+			]
+		},{
+			label: 'About',
+			submenu: [
+				{
+					label: app.name + ' '+ app.getVersion() 
+				},{
+					label: 'electron '+process.versions.electron
+				}
+
 			]
 		},{
 			label: 'DevTools',

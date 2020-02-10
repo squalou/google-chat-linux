@@ -64,40 +64,40 @@ const initializeTray = (windowObj) => {
 };
 
 ipcMain.on('favicon-changed', (evt, href) => {
-       var itype = "";
-       if (href.match(/chat-favicon-no-new/)) {
-         itype = "NORMAL";
-       }else if (href.match(/chat-favicon-new-non-notif/)) {
-         itype = "UNREAD";
-       }else if (href.match(/chat-favicon-new-notif/)) {
-         itype = "ATTENTION";
-       }else if (href.match(/^data:image\/png;base64,iVBOR.+/)) {
-         itype = "OFFLINE";
-       }
-       setIcon(itype);
-  });
+	var itype = "";
+	if (href.match(/chat-favicon-no-new/)) {
+		itype = "NORMAL";
+	}else if (href.match(/chat-favicon-new-non-notif/)) {
+		itype = "UNREAD";
+	}else if (href.match(/chat-favicon-new-notif/)) {
+		itype = "ATTENTION";
+	}else if (href.match(/^data:image\/png;base64,iVBOR.+/)) {
+		itype = "OFFLINE";
+	}
+	setIcon(itype);
+});
 
 function iconForType(iconType) {
-       if (iconType == "NORMAL") {
-         return pathsManifest.ICON_NO_NEW_MSG;
-       }else if (iconType == "UNREAD") {
-         return pathsManifest.ICON_NEW_NON_NOTIF_MSG;
-       }else if (iconType == "ATTENTION") {
-         return pathsManifest.ICON_NEW_NOTIF_MSG;
-       }
-       return pathsManifest.ICON_OFFLINE_MSG;
-  }
+	if (iconType == "NORMAL") {
+		return pathsManifest.ICON_NO_NEW_MSG;
+	}else if (iconType == "UNREAD") {
+		return pathsManifest.ICON_NEW_NON_NOTIF_MSG;
+	}else if (iconType == "ATTENTION") {
+		return pathsManifest.ICON_NEW_NOTIF_MSG;
+	}
+	return pathsManifest.ICON_OFFLINE_MSG;
+}
 
 const setIcon = (iconType) => {
-		const i = iconForType(iconType);
-		try {
-			systemTrayIcon.setImage(i);
-		}catch (e){
-			//do nothing ... fails on some distribs / OS / window managers
-			console.log("Failed to update window icon :-(")
-			console.log(e)
-		}
-		WindowManager.updateIcon(i);
+	const i = iconForType(iconType)
+	try {
+		systemTrayIcon.setImage(i);
+	}catch (e){
+		//do nothing ... fails on some distribs / OS / window managers
+		console.log("Failed to update window icon :-(")
+		console.log(e)
+	}
+	WindowManager.updateIcon(i);
 }
 	
 
