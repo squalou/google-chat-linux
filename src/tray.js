@@ -98,6 +98,12 @@ const setIcon = (iconType) => {
 		console.log(e)
 	}
 	WindowManager.updateIcon(i);
+
+	if (iconType == "ATTENTION") {
+		WindowManager.setOverlayIcon();
+	}else{
+		WindowManager.cleanOverlayIcon();
+	}
 }
 	
 

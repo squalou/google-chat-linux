@@ -59,6 +59,24 @@ const updateIcon = (icon) => {
 	}
 }
 
+const setOverlayIcon = () => {
+	try{
+		mainWindow.setOverlayIcon(pathsManifest.OVERLAY_NEW_NOTIF, "!");
+	}catch (e){
+		//do nothing ... fails on some distribs / OS / window managers
+		console.log(e)
+	}
+}
+
+const cleanOverlayIcon = () => {
+	try{
+		mainWindow.setOverlayIcon(null, "");
+	}catch (e){
+		//do nothing ... fails on some distribs / OS / window managers
+		console.log(e)
+	}
+}
+
 const getBrowserWindowOptions = () => {
 	return {
 		"title": process.title,
@@ -226,5 +244,7 @@ module.exports = {
 	onForceReloadClicked: onForceReloadClicked,
 	onToggleThemeClicked: onToggleThemeClicked,
 	onQuitEntryClicked: onQuitEntryClicked,
-	updateIcon: updateIcon
+	updateIcon: updateIcon,
+	setOverlayIcon: setOverlayIcon,
+	cleanOverlayIcon: cleanOverlayIcon
 }
