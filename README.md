@@ -21,6 +21,13 @@ To use previous Tray implementation :
 
 ## IMPORTANT NEWS
 
+0.4.4
+
+- Secure tray icon change.
+- Avoid renderer processes to be restarted on every navigation. 
+- Add 'About' menu to display version.
+- Restart app to 'keep minimized' configuration takes effect.
+
 0.4.3
 
 - by default keep window in windows list when 'closing'. Add a 'view' menu to change back to previous behaviour : hiding on 'close'. This is done for DE that does NOT display systray of eletron 8 : *Cinnamon* for instance, any DE that doesn't handle well 'appindicator' in electron 8.
