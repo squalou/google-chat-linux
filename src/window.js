@@ -20,7 +20,7 @@ const setIsThemed = (b) => {
 	isThemed = b;
 };
 
-const onKeepMinimizedCliecked = (keep) => {
+const onKeepMinimizedClicked = (keep) => {
 	if (keep !== keepMinimized){
 		keepMinimized = keep;
 		app.relaunch();
@@ -206,12 +206,12 @@ const buildMenu = (mainWindow) => {
 				{
 					label: getHideTick() + ' Hide from windows list when minimized (restart)', 
 					click: () => {
-						onKeepMinimizedCliecked(false);
+						onKeepMinimizedClicked(false);
 					}
 				}, {
 					label: getShowTick() + ' Show in windows list when minimized (restart)', 
 					click: () => {
-						onKeepMinimizedCliecked(true);
+						onKeepMinimizedClicked(true);
 					}
 				}
 			]
