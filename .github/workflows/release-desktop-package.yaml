@@ -29,6 +29,10 @@ jobs:
       - name: Build desktop app
         run: npm run dist
 
+      - name: Create check sum file
+        run: sha512sum *.deb > google-chat-linux-SHA512.txt
+        working-directory: dist
+
       - name: Create GitHub release
         id: release
         uses: actions/create-release@latest
@@ -47,3 +51,13 @@ jobs:
           asset_path: dist/google-chat-linux_${{ steps.extract_package_version.outputs.version }}_amd64.deb
           asset_name: google-chat-linux_${{ steps.extract_package_version.outputs.version }}_amd64.deb
           asset_content_type: application/octet-stream
+
+      - name: Upload check sum file to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.release.outputs.upload_url }}
+          asset_path: dist/google-chat-linux-SHA512.txt
+          asset_name: google-chat-linux-SHA512.txt
+          asset_content_type: text/plain
