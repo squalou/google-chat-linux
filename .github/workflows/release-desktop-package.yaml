@@ -1,0 +1,49 @@
+name: Release desktop package
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get tag name
+        id: tag
+        run: echo ::set-output name=NAME::${GITHUB_REF/refs\/tags\//}
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: master
+
+      - name: Extract package version
+        id: extract_package_version
+        uses: Saionaro/extract-package-version@v1.1.1
+
+      - name: Install npm modules
+        run: npm install
+
+      - name: Build desktop app
+        run: npm run dist
+
+      - name: Create GitHub release
+        id: release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ steps.tag.outputs.NAME }}
+
+      - name: Upload Debian package to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.release.outputs.upload_url }}
+          asset_path: dist/google-chat-linux_${{ steps.extract_package_version.outputs.version }}_amd64.deb
+          asset_name: google-chat-linux_${{ steps.extract_package_version.outputs.version }}_amd64.deb
+          asset_content_type: application/octet-stream
