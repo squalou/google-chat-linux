@@ -1,11 +1,13 @@
-const {app, BrowserWindow, ipcMain, shell, Menu} = require("electron");
+const { app, BrowserWindow, ipcMain, shell, Menu } = require("electron");
 const pathsManifest = require('./paths');
 const ConfigManager = require('./configs');
 const fs = require('fs');
 let mainWindow;
-let isQuitting= false;
+let isQuitting = false;
 let keepMinimized = true;
-let isThemed=false;
+let startHidden = true;
+let isThemed = false;
+
 ipcMain.on('open-link', (evt, href) => {
 	shell.openExternal(href);
 });
@@ -105,7 +107,9 @@ const handleTheme = (mainWindow) => {
 		const theme = fs.readFileSync(pathsManifest.theme, 'utf8');
 		mainWindow.webContents.executeJavaScript(theme)
 	}
-	mainWindow.show();
+	if (!startHidden) {
+		mainWindow.show();
+	}
 }
 
 const handleRedirect = (e, url) => {
@@ -123,6 +127,7 @@ const initializeWindow = (config) => {
 	const extraOptions = getExtraOptions();
 	isThemed = (config && config.isThemed);
 	keepMinimized = (config && config.keepMinimized)
+	startHidden = (config && config.startHidden)
 
 	mainWindow = new BrowserWindow(bwOptions);
 	mainWindow.loadURL(extraOptions.url);
@@ -139,6 +144,7 @@ const initializeWindow = (config) => {
 			configsData.wasMaximized = isMaximized;
 			configsData.isThemed = isThemed;
 			configsData.keepMinimized = keepMinimized;
+			configsData.startHidden = startHidden;
 			ConfigManager.updateConfigs(configsData);
 		}else{
 			e.preventDefault();
