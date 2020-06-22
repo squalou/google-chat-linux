@@ -115,7 +115,7 @@ const handleTheme = (mainWindow) => {
 const handleRedirect = (e, url) => {
 	// leave redirect for double auth mechanisme, trap crappy blocked url link
 	if (url == "about:blank#blocked") {
-
+s
 	} else if (! url.includes("accounts/SetOSID?authuser=0&continue=https%3A%2F%2Fchat.google.com")){
 		shell.openExternal(url);
 		e.preventDefault();

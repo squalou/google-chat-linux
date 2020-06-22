@@ -1,6 +1,6 @@
 {
   "name": "google-chat-linux",
-  "version": "0.5.0-1",
+  "version": "0.5.0-2",
   "description": "Google Hangouts Chat unofficial linux app",
   "main": "src/index.js",
   "scripts": {
@@ -14,14 +14,6 @@
   "license": "WTFPL",
   "build": {
     "appId": "Google Chat Linux",
-    "extraResources": [
-      "assets/icon/chat-favicon-new-non-notif-256dp.png",
-      "assets/icon/chat-favicon-new-notif-256dp.png",
-      "assets/icon/chat-favicon-no-new-256dp.png",
-      "assets/icon/chat-favicon-offline-256dp.png",
-      "assets/icon/icon@2x.png",
-      "assets/icon/icon.png"
-    ],
     "linux": {
       "desktop": {
         "Name": "Google Chat Linux"
@@ -33,13 +25,13 @@
     }
   },
   "dependencies": {
-    "electron-context-menu": "^0.9.1",
+    "electron-context-menu": "^2.0.0",
     "electron-localshortcut": "^3.1.0",
     "fs": "0.0.1-security",
     "path": "0.12.7"
   },
   "devDependencies": {
     "electron": "^9.0.0",
-    "electron-builder": ">=22.3.2"
+    "electron-builder": ">=22.6.0"
   }
 }
