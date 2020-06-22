@@ -21,6 +21,16 @@ To use previous Tray implementation :
 
 ## IMPORTANT NEWS
 
+0.5.0-3
+
+Electron 9, which has reverted to 'old' systray integration. Should help someDE users to have this work.
+
+**Notes** 
+
+* going back to electron 8 or previous is not as simple as changing version in package.json anymore. Look at package.json history to see the changes.
+* packages 0.5.0-1 and 0.5.0-2 do **not** work. Avoid tthem, use 0.5.0-3.
+
+
 0.4.4
 
 - Secure tray icon change.
