@@ -54,9 +54,18 @@ const buildContextMenu = (mainWindow) => {
 const initializeTray = (windowObj) => {
 	systemTrayIcon = new Tray(pathsManifest.ICON_OFFLINE_MSG);
 	mainWindow = windowObj;
-	// this requires nodeIntegration: true but breaks Ctrl K, so we use another windowObj
 	mainWindow.webContents.on('dom-ready', () => {
-	    mainWindow.webContents.executeJavaScript('var ipc; try{var ipc = require(\'electron\').ipcRenderer; var fi = document.querySelector("link#favicon256"); console.log(fi); ipc.send("favicon-changed", fi.href); var callback = function(mutationList) { ipc.send("favicon-changed", fi.href); }; var observer = new MutationObserver(callback); observer.observe(fi, { attributes: true });}catch (e){console.log(e)};');
+		mainWindow.webContents.executeJavaScript(
+			'var ipc;'+
+			'try{'+
+			' var ipc = require(\'electron\').ipcRenderer;'+ 
+			' var fi = document.querySelector("link#favicon256");'+
+			' console.log(fi);'+
+			' ipc.send("favicon-changed", fi.href);'+
+			' var callback = function(mutationList) { ipc.send("favicon-changed", fi.href); };'+
+			' var observer = new MutationObserver(callback);'+ 
+			' observer.observe(fi, { attributes: true });'+
+		    '}catch (e){console.log(e)};');
 	});
 
 	return buildContextMenu(mainWindow);
