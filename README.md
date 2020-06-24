@@ -10,7 +10,17 @@ I'm barely maintaining it for my own use now that he left off.
 
 ## Systray Support
 
-Note : from 0.4.1 on, electron moved to electron-8, with a different Tray integration implementation. It may fail to work with some window managers (Cinnamon is one of them)
+**Note** : from 0.5 on, electron 9 bring back Tray integration BUT "click" events are ignored.
+
+More precisely :
+
+* On Linux the app indicator will be used if it is supported, otherwise GtkStatusIcon will be used instead.
+* When app indicator is used on Linux, the click event is ignored.
+* https://www.electronjs.org/docs/api/tray
+* There is sadly nothing I can do about it. (except cry a bit as such nonsenses and wonder how other apps (slack, telegram) deal with all this)
+
+
+**Note** : from 0.4.1 on, electron moved to electron-8, with a different Tray integration implementation. It may fail to work with some window managers (Cinnamon is one of them)
 
 See https://github.com/electron/electron/issues/21445
 
