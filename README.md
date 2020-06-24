@@ -31,6 +31,10 @@ To use previous Tray implementation :
 
 ## IMPORTANT NEWS
 
+0.5.1
+
+Alt-Left / Alt-Right navigation shortcuts are disabled now by default. Reenable them in menu (restart required)
+
 0.5.0-3
 
 Electron 9, which has reverted to 'old' systray integration. Should help someDE users to have this work.
