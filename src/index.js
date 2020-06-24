@@ -17,11 +17,7 @@ console.log('Node.js runtime version:', process.version);
 const initialize = () => {
 	app.allowRendererProcessReuse = true;
 	config = ConfigManager.loadConfigs();
-	console.log(config)
-	if (config.keepMinimized === undefined){
-		config.keepMinimized = true;
-	}
-		
+	
 	if(!mainWindow) {
 		mainWindow = WindowManager.initializeWindow(config);
 	}	
@@ -34,8 +30,9 @@ const initialize = () => {
 		systemTrayIcon = TrayManager.initializeTray(mainWindow, config);
 	}
 
-
-	KeyboardManager.registerKeyboardShortcuts(mainWindow);
+	if (WindowManager.getEnableKeyboardShortcuts()) {
+		KeyboardManager.registerKeyboardShortcuts(mainWindow);
+	}
 	
 };
 

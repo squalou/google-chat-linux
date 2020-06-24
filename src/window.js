@@ -7,6 +7,7 @@ let isQuitting = false;
 let keepMinimized = true;
 let startHidden = true;
 let isThemed = false;
+let enableKeyboardShortcuts = false;
 
 ipcMain.on('open-link', (evt, href) => {
 	shell.openExternal(href);
@@ -22,12 +23,26 @@ const setIsThemed = (b) => {
 	isThemed = b;
 };
 
+const getEnableKeyboardShortcuts = () => {
+	return enableKeyboardShortcuts;
+};
+
+const setEnableKeyboardShortcuts = (b) => {
+	enableKeyboardShortcuts = b;
+};
+
 const onKeepMinimizedClicked = (keep) => {
 	if (keep !== keepMinimized){
 		keepMinimized = keep;
 		app.relaunch();
 		onQuitEntryClicked();
 	}
+}
+
+const onStartHiddenClicked = () => {
+	startHidden = !startHidden;
+	app.relaunch();
+	onQuitEntryClicked();
 }
 
 const onQuitEntryClicked = () => {
@@ -45,6 +60,12 @@ const onToggleThemeClicked = () => {
 		app.relaunch()
 		onQuitEntryClicked();
 	}
+}
+
+const onToggleKeyboardShortcuts = () => {
+	setEnableKeyboardShortcuts(!getEnableKeyboardShortcuts());
+	app.relaunch();
+	onQuitEntryClicked();
 }
 
 const onForceReloadClicked = () => {
@@ -126,8 +147,9 @@ const initializeWindow = (config) => {
 	const bwOptions = (config && config.bounds) ? Object.assign(getBrowserWindowOptions(), config.bounds) : getBrowserWindowOptions()
 	const extraOptions = getExtraOptions();
 	isThemed = (config && config.isThemed);
-	keepMinimized = (config && config.keepMinimized)
-	startHidden = (config && config.startHidden)
+	keepMinimized = (config && config.keepMinimized);
+	startHidden = (config && config.startHidden);
+	enableKeyboardShortcuts = (config && config.enableKeyboardShortcuts);
 
 	mainWindow = new BrowserWindow(bwOptions);
 	mainWindow.loadURL(extraOptions.url);
@@ -145,6 +167,8 @@ const initializeWindow = (config) => {
 			configsData.isThemed = isThemed;
 			configsData.keepMinimized = keepMinimized;
 			configsData.startHidden = startHidden;
+			configsData.enableKeyboardShortcuts = enableKeyboardShortcuts;
+		    
 			ConfigManager.updateConfigs(configsData);
 		}else{
 			e.preventDefault();
@@ -181,6 +205,14 @@ const getShowTick = () => {
 	}
 }
 
+const getStartHiddenTick = () => {
+	if (startHidden){
+		return '☑';
+	}else{
+		return '☐';
+	}
+}
+
 const buildMenu = (mainWindow) => {
 	const template = [
 		{
@@ -195,6 +227,11 @@ const buildMenu = (mainWindow) => {
 					label: getIsThemed() ? "Remove theme (restart)" : "Apply theme",
 					click: () => {
 						onToggleThemeClicked();
+					}
+				}, {
+					label: getEnableKeyboardShortcuts() ? "Disable alt left/right shortcuts (restart)" : "Enable alt left/right shortcuts (restart)",
+					click: () => {
+						onToggleKeyboardShortcuts();
 					}
 				}, {
 					type: 'separator'
@@ -218,6 +255,13 @@ const buildMenu = (mainWindow) => {
 					label: getShowTick() + ' Show in windows list when minimized (restart)', 
 					click: () => {
 						onKeepMinimizedClicked(true);
+					}
+				}, {
+					type: 'separator'
+				}, {
+					label: getStartHiddenTick() + ' Start hidden (restart)', 
+					click: () => {
+						onStartHiddenClicked();
 					}
 				}
 			]
@@ -247,6 +291,8 @@ const buildMenu = (mainWindow) => {
 module.exports = {
 	initializeWindow: initializeWindow,
 	getIsThemed: getIsThemed,
+	getEnableKeyboardShortcuts: getEnableKeyboardShortcuts,
+	onToggleKeyboardShortcuts: onToggleKeyboardShortcuts,
 	onForceReloadClicked: onForceReloadClicked,
 	onToggleThemeClicked: onToggleThemeClicked,
 	onQuitEntryClicked: onQuitEntryClicked,

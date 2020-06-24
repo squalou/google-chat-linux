@@ -1,15 +1,27 @@
 const {app} = require("electron");
 const fs = require("fs");
 const pathsManifest = require("./paths");
+const { config } = require("process");
+
+const setConfigDefaults = (configuration) => {
+	configuration.keepMinimized = configuration.keepMinimized === undefined ? true : configuration.keepMinimized;
+	configuration.startHidden = configuration.startHidden === undefined ? false : configuration.startHidden;
+	configuration.enableKeyboardShortcuts = configuration.enableKeyboardShortcuts === undefined ? false : configuration.enableKeyboardShortcuts;
+	console.log(configuration)
+}
 
 const loadConfigs = () => {
 	try {
-		return JSON.parse(fs.readFileSync(pathsManifest.configsPath, "utf8"));
+		c = JSON.parse(fs.readFileSync(pathsManifest.configsPath, "utf8"));
+		setConfigDefaults(c);
+		return c;
 	} catch (e) {
 		console.error(e);
-		const defconfig = '{"bounds":{"x":456,"y":229,"width":1105,"height":757},"wasMaximized":false,"isThemed":false,"keepMinimized":true,"startHidden":false}'
+		const defconfig = '{"bounds":{"x":456,"y":229,"width":1105,"height":757},"wasMaximized":false,"isThemed":false}'
 		fs.writeFileSync(pathsManifest.configsPath,defconfig, 'utf8');
-		return JSON.parse(defconfig, "utf-8")
+		c = JSON.parse(defconfig, "utf-8");
+		setConfigDefaults(c);
+		return c;
 	}
 }
 
