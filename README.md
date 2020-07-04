@@ -31,6 +31,10 @@ To use previous Tray implementation :
 
 ## IMPORTANT NEWS
 
+0.5.2
+
+customize spellcheck language (Windows + Linux) by editing `$HOME/.config/google-hangouts-chat-linux.json`, add `"languages": ["fr","en-US"]` in the json for instance to override default OS locale.
+
 0.5.1
 
 Alt-Left / Alt-Right navigation shortcuts are disabled now by default. Reenable them in menu (restart required)

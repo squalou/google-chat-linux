@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, shell, Menu } = require("electron");
+const { session } = require('electron')
 const pathsManifest = require('./paths');
 const ConfigManager = require('./configs');
 const fs = require('fs');
@@ -106,8 +107,8 @@ const getBrowserWindowOptions = () => {
 		"autoHideMenuBar": true,
 		"webPreferences": {
 			"nodeIntegration": true,
-			"sandbox": false
-
+			"sandbox": false,
+			"spellcheck": true
 		},
 		"show": false,
 		"backgroundColor": "#262727",
@@ -153,7 +154,10 @@ const initializeWindow = (config) => {
 
 	mainWindow = new BrowserWindow(bwOptions);
 	mainWindow.loadURL(extraOptions.url);
-
+	if (config.languages !== undefined){
+		const ses = mainWindow.webContents.session
+		ses.setSpellCheckerLanguages(config.languages)
+	}
 	mainWindow.once('ready-to-show', () => {
 		handleTheme(mainWindow);
 	});
