@@ -61,6 +61,17 @@
 /* Sidebar Search section text color */
 .HLTcjb {
     color: rgb(202, 196, 201);
+    font-size: .750rem!important;
+}
+
+/* Sidebar ugly icon size */
+.OcqlLb {
+    width: 22px!important;
+    height: 22px!important;
+}
+.DO97we {
+    width: 22px!important;
+    height: 22px!important;
 }
 .D3DXDc {
     fill: rgb(202, 196, 201) !important;
