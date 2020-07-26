@@ -61,21 +61,32 @@
 /* Sidebar Search section text color */
 .HLTcjb {
     color: rgb(202, 196, 201);
-    font-size: .750rem!important;
+    font-size: .850rem!important;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
-
-/* Sidebar ugly icon size */
+.GbZFNe {
+    min-height: 36px;
+}
+.d6pS5 {
+    height: 30px;
+    min-height: unset;
+}
+/* Sidebar ugly icon : removed */
 .OcqlLb {
-    width: 22px!important;
-    height: 22px!important;
+    display:none;
 }
 .DO97we {
-    width: 22px!important;
-    height: 22px!important;
-}
+    width: 28px!important;
+    height: 28px!important;
+}           
 .D3DXDc {
     fill: rgb(202, 196, 201) !important;
 }
+/* below would remove all side icons including people availability
+/*.WmSnJd {display:none;}
+*/
+
 /* Sidebar search button hovering bg color */
 .GbZFNe:focus,
 .GbZFNe:hover {
