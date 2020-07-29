@@ -65,6 +65,9 @@ javascript: (
                 font-size: 16px;
                 margin-left: 16px;
             }
+            .OcqlLb.vif9vc {
+                background-color: transparent;
+            }
             /* Sidebar Search section text color */
             .HLTcjb {
                 color: rgb(202, 196, 201);

@@ -86,7 +86,9 @@
 /* below would remove all side icons including people availability
 /*.WmSnJd {display:none;}
 */
-
+.vif9vc {
+    background-color: transparent;
+}
 /* Sidebar search button hovering bg color */
 .GbZFNe:focus,
 .GbZFNe:hover {
