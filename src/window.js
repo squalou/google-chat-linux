@@ -138,7 +138,7 @@ const handleRedirect = (e, url) => {
 	// leave redirect for double auth mechanisme, trap crappy blocked url link
 	if (url.includes("about:blank")) {
 		e.preventDefault();
-	} else if (! url.includes("accounts/SetOSID?authuser=0&continue=https%3A%2F%2Fchat.google.com")){
+	} else if (! url.includes("accounts/SetOSID?authuser=0&continue=https%3A%2F%2Fchat.google.com") && ! url.includes("accounts.google.com/signin")){
 		shell.openExternal(url);
 		e.preventDefault();
 	}
