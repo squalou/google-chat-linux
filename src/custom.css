@@ -7,6 +7,31 @@
     background-color: transparent;
 }
 
+.d6pS5 {
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+.SwwApf {
+    height: 24px;
+    width: 24px;
+}
+
+/* discussion pic */
+.biNtD,
+.tzwwSb {
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color: transparent;
+    height: 24px;
+    width: 24px;;
+}
+
+/* remove last text */
+.kjWKTd {
+    display: none;
+}
+
 /* Reduce left and right margins in the chat area */
 .BEjUKc .cFc9ae {
     margin-left: 10px;
@@ -161,7 +186,7 @@
 }
 /* Sidebar channels elements height */
 .LoYJxb {
-    height: 26px;
+    height: 18px;
 }
 /* Vertically align triple dots buttons on
  channels in sidebar with the new height */

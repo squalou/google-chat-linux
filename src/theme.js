@@ -8,9 +8,35 @@ javascript: (
                 -ms-filter: invert(0%); 
             }
 
+            /* left icons */
             .SwwApf,
             .SwwApf.qkl0pe {
                 background-color: transparent;
+            }
+
+            .d6pS5 {
+                -moz-box-shadow: none;
+                box-shadow: none;
+            }
+          
+            .SwwApf {
+                height: 24px;
+                width: 24px;
+            }
+            
+            /* discussion pic */
+            .biNtD,
+            .tzwwSb {
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                background-color: transparent;
+                height: 24px;
+                width: 24px;;
+            }
+
+            /* remove last text */
+            .kjWKTd {
+                display: none;
             }
 
             /* Reduce left and right margins in the chat area */
