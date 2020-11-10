@@ -8,6 +8,10 @@ javascript: (
                 -ms-filter: invert(0%); 
             }
 
+            .SwwApf,
+            .SwwApf.qkl0pe {
+                background-color: transparent;
+            }
 
             /* Reduce left and right margins in the chat area */
             .BEjUKc .cFc9ae {
