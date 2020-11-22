@@ -9,6 +9,7 @@ let keepMinimized = true;
 let startHidden = true;
 let isThemed = false;
 let enableKeyboardShortcuts = false;
+let enableNodeIntegration = true;
 
 ipcMain.on('open-link', (evt, href) => {
 	shell.openExternal(href);
@@ -30,6 +31,14 @@ const getEnableKeyboardShortcuts = () => {
 
 const setEnableKeyboardShortcuts = (b) => {
 	enableKeyboardShortcuts = b;
+};
+
+const getEnableNodeIntegration = () => {
+	return enableNodeIntegration;
+};
+
+const setEnableNodeIntegration = (b) => {
+	enableNodeIntegration = b;
 };
 
 const onKeepMinimizedClicked = (keep) => {
@@ -69,6 +78,12 @@ const onToggleKeyboardShortcuts = () => {
 	onQuitEntryClicked();
 }
 
+const onToggleNodeIntegration = () => {
+	setEnableNodeIntegration(!getEnableNodeIntegration());
+	app.relaunch();
+	onQuitEntryClicked();
+}
+
 const onForceReloadClicked = () => {
 	mainWindow.webContents.reload();
 }
@@ -101,12 +116,12 @@ const cleanOverlayIcon = () => {
 	}
 }
 
-const getBrowserWindowOptions = () => {
+const getBrowserWindowOptions = (config) => {
 	return {
 		"title": process.title,
 		"autoHideMenuBar": true,
 		"webPreferences": {
-			"nodeIntegration": true,
+			"nodeIntegration": config.enableNodeIntegration,
 			"sandbox": false,
 			"spellcheck": true
 		},
@@ -145,12 +160,13 @@ const handleRedirect = (e, url) => {
 };
 
 const initializeWindow = (config) => {
-	const bwOptions = (config && config.bounds) ? Object.assign(getBrowserWindowOptions(), config.bounds) : getBrowserWindowOptions()
+	const bwOptions = (config && config.bounds) ? Object.assign(getBrowserWindowOptions(config), config.bounds) : getBrowserWindowOptions()
 	const extraOptions = getExtraOptions();
 	isThemed = (config && config.isThemed);
 	keepMinimized = (config && config.keepMinimized);
 	startHidden = (config && config.startHidden);
 	enableKeyboardShortcuts = (config && config.enableKeyboardShortcuts);
+	enableNodeIntegration = (config && config.enableNodeIntegration);
 
 	mainWindow = new BrowserWindow(bwOptions);
 	mainWindow.loadURL(extraOptions.url);
@@ -172,6 +188,7 @@ const initializeWindow = (config) => {
 			configsData.keepMinimized = keepMinimized;
 			configsData.startHidden = startHidden;
 			configsData.enableKeyboardShortcuts = enableKeyboardShortcuts;
+			configsData.enableNodeIntegration = enableNodeIntegration;
 		    
 			ConfigManager.updateConfigs(configsData);
 		}else{
@@ -236,6 +253,11 @@ const buildMenu = (mainWindow) => {
 					label: getEnableKeyboardShortcuts() ? "Disable alt left/right shortcuts (restart)" : "Enable alt left/right shortcuts (restart)",
 					click: () => {
 						onToggleKeyboardShortcuts();
+					}
+				},{
+					label: getEnableNodeIntegration() ? "Disable Node integration (break icon color change, may help with some issues) (restart)" : "Enable Node integration (enables icon color change) (restart)",
+					click: () => {
+						onToggleNodeIntegration();
 					}
 				}, {
 					type: 'separator'

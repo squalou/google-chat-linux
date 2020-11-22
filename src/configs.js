@@ -7,6 +7,7 @@ const setConfigDefaults = (configuration) => {
 	configuration.keepMinimized = configuration.keepMinimized === undefined ? true : configuration.keepMinimized;
 	configuration.startHidden = configuration.startHidden === undefined ? false : configuration.startHidden;
 	configuration.enableKeyboardShortcuts = configuration.enableKeyboardShortcuts === undefined ? false : configuration.enableKeyboardShortcuts;
+	configuration.enableNodeIntegration = configuration.enableNodeIntegration === undefined ? true : configuration.enableNodeIntegration;
 	console.log(configuration)
 }
 
