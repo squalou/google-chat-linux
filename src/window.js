@@ -11,6 +11,11 @@ let isThemed = false;
 let enableKeyboardShortcuts = false;
 let enableNodeIntegration = true;
 let openUrlInside = false;
+let thirdPartyAuthLoginMode = false;
+
+const urlNotRedirected = ["accounts/SetOSID?authuser=0&continue=https%3A%2F%2Fchat.google.com"
+						,"accounts.google.com/signin",
+						"https://chat.google.com/"]
 
 ipcMain.on('open-link', (evt, href) => {
 	shell.openExternal(href);
@@ -50,6 +55,14 @@ const setEnableNodeIntegration = (b) => {
 	enableNodeIntegration = b;
 };
 
+const getThirdPartyAuthLoginMode = () => {
+	return thirdPartyAuthLoginMode;
+};
+
+const setThirdPartyAuthLoginMode = (b) => {
+	thirdPartyAuthLoginMode = b;
+};
+
 const onKeepMinimizedClicked = (keep) => {
 	if (keep !== keepMinimized){
 		keepMinimized = keep;
@@ -79,6 +92,19 @@ const onToggleThemeClicked = () => {
 		app.relaunch()
 		onQuitEntryClicked();
 	}
+}
+
+const onToggleThirdPartyAuthLoginMode = () => {
+	setThirdPartyAuthLoginMode(!getThirdPartyAuthLoginMode());
+	if (getThirdPartyAuthLoginMode()){
+		setOpenUrlInside(true);
+		setEnableNodeIntegration(false);
+	} else {
+		setOpenUrlInside(false);
+		setEnableNodeIntegration(true);
+	}
+	app.relaunch();
+	onQuitEntryClicked();
 }
 
 const onToggleOpenUrlInside = (window) => {
@@ -163,11 +189,15 @@ const handleTheme = (mainWindow) => {
 	}
 }
 
+const doNotRedirect = (url) => {
+	return urlNotRedirected.some((e)=>url.includes(e))
+}
+
 const handleRedirect = (e, url) => {
-	// leave redirect for double auth mechanisme, trap crappy blocked url link
+	// leave redirect for double auth mechanism, trap crappy blocked url link
 	if (url.includes("about:blank")) {
 		e.preventDefault();
-	} else if ( ! openUrlInside && ! url.includes("accounts/SetOSID?authuser=0&continue=https%3A%2F%2Fchat.google.com") && ! url.includes("accounts.google.com/signin")  && ! url.includes("https://chat.google.com/")){
+	} else if ( ! openUrlInside && ! doNotRedirect(url)){
 		shell.openExternal(url);
 		e.preventDefault();
 	}
@@ -182,6 +212,7 @@ const initializeWindow = (config) => {
 	enableKeyboardShortcuts = (config && config.enableKeyboardShortcuts);
 	enableNodeIntegration = (config && config.enableNodeIntegration);
 	openUrlInside = (config && config.openUrlInside);
+	thirdPartyAuthLoginMode = (config && config.thirdPartyAuthLoginMode);
 
 	mainWindow = new BrowserWindow(bwOptions);
 	mainWindow.loadURL(extraOptions.url);
@@ -205,6 +236,7 @@ const initializeWindow = (config) => {
 			configsData.enableKeyboardShortcuts = enableKeyboardShortcuts;
 			configsData.enableNodeIntegration = enableNodeIntegration;
 			configsData.openUrlInside = openUrlInside;
+			configsData.thirdPartyAuthLoginMode = thirdPartyAuthLoginMode;
 		    
 			ConfigManager.updateConfigs(configsData);
 		}else{
@@ -227,27 +259,19 @@ const initializeWindow = (config) => {
 
 
 const getHideTick = () => {
-	if (keepMinimized){
-		return '☐';
-	}else{
-		return '☑';
-	}
+	return keepMinimized ? '☐' : '☑';
 }
 
 const getShowTick = () => {
-	if (keepMinimized){
-		return '☑';
-	}else{
-		return '☐';
-	}
+	return keepMinimized ? '☑' : '☐';
 }
 
 const getStartHiddenTick = () => {
-	if (startHidden){
-		return '☑';
-	}else{
-		return '☐';
-	}
+	return startHidden ? '☑' : '☐';
+}
+
+const getOpenUrlInsideTick= () => {
+	return getOpenUrlInside() ? '☐' : '☑';
 }
 
 const buildMenu = (mainWindow) => {
@@ -266,17 +290,26 @@ const buildMenu = (mainWindow) => {
 						onToggleThemeClicked();
 					}
 				}, {
-					label: getOpenUrlInside() ? "Opening all URLs inside - click to use browser" : "Opening URLs in external browser - click to keep inside",
-					click: () => {
-						onToggleOpenUrlInside(mainWindow);
-					}
-				}, {
 					label: getEnableKeyboardShortcuts() ? "Disable alt left/right shortcuts (restart)" : "Enable alt left/right shortcuts (restart)",
 					click: () => {
 						onToggleKeyboardShortcuts();
 					}
+				}, {
+					type: 'separator'
 				},{
-					label: getEnableNodeIntegration() ? "Disable Node integration (break icon color change, may help with some issues) (restart)" : "Enable Node integration (enables icon color change) (restart)",
+					label: getThirdPartyAuthLoginMode() ? "Back to regular mode after auth (restart)" : "Use temporary third party auth mode (restart)",
+					click: () => {
+						onToggleThirdPartyAuthLoginMode();
+					}
+				}, {
+					type: 'separator'
+				}, {
+					label: getOpenUrlInsideTick() +	" Open URLs in external default browser",
+					click: () => {
+						onToggleOpenUrlInside(mainWindow);
+					}
+				},{
+					label: getEnableNodeIntegration() ? "Disable Node integration (breaks icon color change) (restart)" : "Enable Node integration (enables icon color change) (restart)",
 					click: () => {
 						onToggleNodeIntegration();
 					}
