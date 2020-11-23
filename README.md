@@ -31,6 +31,12 @@ To use previous Tray implementation :
 
 ## IMPORTANT NEWS
 
+0.5.7-3
+
+cleanup Menu.
+
+Use `Menu / Use temporary thirs party auth mode` in case your login doesn't work (see 0.5.7-2)
+
 0.5.7-2
 
 better support for external auth system at login page (starting with 0.5.7-1 but incomplete)
