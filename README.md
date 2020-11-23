@@ -31,6 +31,17 @@ To use previous Tray implementation :
 
 ## IMPORTANT NEWS
 
+0.5.7-2
+
+better support for external auth system at login page (starting with 0.5.7-1 but incomplete)
+
+- add option to disable Node Integration (from Menu). It breaks systray **but** may help with some auth redirection mechanisms (Atlassian Crowd for instance)
+- add option to keep  all URL's inside electron client (from Menu), to help debugging some situations
+- always keep chat.google.com url inside client
+
+The "Menu" shows up when hitting "Alt" key.
+
+
 0.5.2
 
 customize spellcheck language (Windows + Linux) by editing `$HOME/.config/google-hangouts-chat-linux.json`, add `"languages": ["fr","en-US"]` in the json for instance to override default OS locale.

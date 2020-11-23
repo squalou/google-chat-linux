@@ -10,6 +10,7 @@ let startHidden = true;
 let isThemed = false;
 let enableKeyboardShortcuts = false;
 let enableNodeIntegration = true;
+let openUrlInside = false;
 
 ipcMain.on('open-link', (evt, href) => {
 	shell.openExternal(href);
@@ -23,6 +24,14 @@ const getIsThemed = () => {
 };
 const setIsThemed = (b) => {
 	isThemed = b;
+};
+
+const getOpenUrlInside = () => {
+	return openUrlInside;
+};
+
+const setOpenUrlInside = (b) => {
+	openUrlInside = b;
 };
 
 const getEnableKeyboardShortcuts = () => {
@@ -70,6 +79,11 @@ const onToggleThemeClicked = () => {
 		app.relaunch()
 		onQuitEntryClicked();
 	}
+}
+
+const onToggleOpenUrlInside = (window) => {
+	setOpenUrlInside(!getOpenUrlInside());
+	buildMenu(window)
 }
 
 const onToggleKeyboardShortcuts = () => {
@@ -153,7 +167,7 @@ const handleRedirect = (e, url) => {
 	// leave redirect for double auth mechanisme, trap crappy blocked url link
 	if (url.includes("about:blank")) {
 		e.preventDefault();
-	} else if (! url.includes("accounts/SetOSID?authuser=0&continue=https%3A%2F%2Fchat.google.com") && ! url.includes("accounts.google.com/signin")){
+	} else if ( ! openUrlInside && ! url.includes("accounts/SetOSID?authuser=0&continue=https%3A%2F%2Fchat.google.com") && ! url.includes("accounts.google.com/signin")  && ! url.includes("https://chat.google.com/")){
 		shell.openExternal(url);
 		e.preventDefault();
 	}
@@ -167,6 +181,7 @@ const initializeWindow = (config) => {
 	startHidden = (config && config.startHidden);
 	enableKeyboardShortcuts = (config && config.enableKeyboardShortcuts);
 	enableNodeIntegration = (config && config.enableNodeIntegration);
+	openUrlInside = (config && config.openUrlInside);
 
 	mainWindow = new BrowserWindow(bwOptions);
 	mainWindow.loadURL(extraOptions.url);
@@ -189,6 +204,7 @@ const initializeWindow = (config) => {
 			configsData.startHidden = startHidden;
 			configsData.enableKeyboardShortcuts = enableKeyboardShortcuts;
 			configsData.enableNodeIntegration = enableNodeIntegration;
+			configsData.openUrlInside = openUrlInside;
 		    
 			ConfigManager.updateConfigs(configsData);
 		}else{
@@ -248,6 +264,11 @@ const buildMenu = (mainWindow) => {
 					label: getIsThemed() ? "Remove theme (restart)" : "Apply theme",
 					click: () => {
 						onToggleThemeClicked();
+					}
+				}, {
+					label: getOpenUrlInside() ? "Opening all URLs inside - click to use browser" : "Opening URLs in external browser - click to keep inside",
+					click: () => {
+						onToggleOpenUrlInside(mainWindow);
 					}
 				}, {
 					label: getEnableKeyboardShortcuts() ? "Disable alt left/right shortcuts (restart)" : "Enable alt left/right shortcuts (restart)",

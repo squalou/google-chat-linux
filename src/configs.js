@@ -8,6 +8,7 @@ const setConfigDefaults = (configuration) => {
 	configuration.startHidden = configuration.startHidden === undefined ? false : configuration.startHidden;
 	configuration.enableKeyboardShortcuts = configuration.enableKeyboardShortcuts === undefined ? false : configuration.enableKeyboardShortcuts;
 	configuration.enableNodeIntegration = configuration.enableNodeIntegration === undefined ? true : configuration.enableNodeIntegration;
+	configuration.openUrlInside = configuration.openUrlInside === undefined ? false : configuration.openUrlInside;
 	console.log(configuration)
 }
 
