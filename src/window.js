@@ -304,18 +304,6 @@ const buildMenu = (mainWindow) => {
 				}, {
 					type: 'separator'
 				}, {
-					label: getOpenUrlInsideTick() +	" Open URLs in external default browser",
-					click: () => {
-						onToggleOpenUrlInside(mainWindow);
-					}
-				},{
-					label: getEnableNodeIntegration() ? "Disable Node integration (breaks icon color change) (restart)" : "Enable Node integration (enables icon color change) (restart)",
-					click: () => {
-						onToggleNodeIntegration();
-					}
-				}, {
-					type: 'separator'
-				}, {
 					label: "Quit",
 					accelerator: 'CommandOrControl+Q',
 					click: () => {
@@ -342,6 +330,25 @@ const buildMenu = (mainWindow) => {
 					label: getStartHiddenTick() + ' Start hidden (restart)', 
 					click: () => {
 						onStartHiddenClicked();
+					}
+				}
+			]
+		},{
+			label: 'Advanced',
+			submenu: [
+				{
+					label: 'You should probably not tweak things here :-)', 
+				}, {
+					type: 'separator'
+				}, {
+					label: getOpenUrlInsideTick() +	" Open URLs in external default browser",
+					click: () => {
+						onToggleOpenUrlInside(mainWindow);
+					}
+				},{
+					label: getEnableNodeIntegration() ? "Disable Node integration (breaks icon color change) (restart)" : "Enable Node integration (enables icon color change) (restart)",
+					click: () => {
+						onToggleNodeIntegration();
 					}
 				}
 			]
