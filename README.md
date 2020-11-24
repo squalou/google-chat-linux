@@ -29,7 +29,11 @@ To use previous Tray implementation :
 - replace `"electron": "^8.0.0"` by `"electron": "^7.0.0"`
 - run `npm install`and give it a try. (npm start or ./google-chat-linux.sh, see below for detailed instructions)
 
-## IMPORTANT NEWS
+## CHANGELOG and IMPORTANT NEWS
+
+0.5.7-4
+
+on Force reload : re-apply theme if needed. Useful when Gogole forces a "REFRESH" action that tends toremove theme.
 
 0.5.7-3
 
@@ -44,6 +48,8 @@ better support for external auth system at login page (starting with 0.5.7-1 but
 - add option to disable Node Integration (from Menu). It breaks systray **but** may help with some auth redirection mechanisms (Atlassian Crowd for instance)
 - add option to keep  all URL's inside electron client (from Menu), to help debugging some situations
 - always keep chat.google.com url inside client
+
+Google 'refresh' action stays inside client.
 
 The "Menu" shows up when hitting "Alt" key.
 

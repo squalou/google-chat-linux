@@ -84,10 +84,7 @@ const onQuitEntryClicked = () => {
 
 const onToggleThemeClicked = () => {
 	setIsThemed(!getIsThemed());
-	const theme = fs.readFileSync(pathsManifest.theme, 'utf8');
-	if (getIsThemed() ){
-		mainWindow.webContents.executeJavaScript(theme);
-	}
+	applyTheme(window)
 	if (!getIsThemed() ){
 		app.relaunch()
 		onQuitEntryClicked();
@@ -124,8 +121,16 @@ const onToggleNodeIntegration = () => {
 	onQuitEntryClicked();
 }
 
-const onForceReloadClicked = () => {
+const onForceReloadClicked = (window) => {
 	mainWindow.webContents.reload();
+	applyTheme(window);
+}
+
+const applyTheme = (window) => {
+	if (getIsThemed() ){
+		const theme = fs.readFileSync(pathsManifest.theme, 'utf8');
+		mainWindow.webContents.executeJavaScript(theme);
+	}
 }
 
 const updateIcon = (icon) => {
@@ -282,7 +287,7 @@ const buildMenu = (mainWindow) => {
 				{
 					label: 'Force reload', 
 					click: () => {
-						onForceReloadClicked();
+						onForceReloadClicked(mainWindow);
 					}
 				}, {
 					label: getIsThemed() ? "Remove theme (restart)" : "Apply theme",
