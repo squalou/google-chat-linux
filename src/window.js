@@ -82,7 +82,7 @@ const onQuitEntryClicked = () => {
 	app.quit();
 }
 
-const onToggleThemeClicked = () => {
+const onToggleThemeClicked = (window) => {
 	setIsThemed(!getIsThemed());
 	applyTheme(window)
 	if (!getIsThemed() ){
@@ -104,9 +104,9 @@ const onToggleThirdPartyAuthLoginMode = () => {
 	onQuitEntryClicked();
 }
 
-const onToggleOpenUrlInside = (window) => {
+const onToggleOpenUrlInside = () => {
 	setOpenUrlInside(!getOpenUrlInside());
-	buildMenu(window)
+	buildMenu()
 }
 
 const onToggleKeyboardShortcuts = () => {
@@ -121,15 +121,16 @@ const onToggleNodeIntegration = () => {
 	onQuitEntryClicked();
 }
 
-const onForceReloadClicked = (window) => {
+const onForceReloadClicked = () => {
 	mainWindow.webContents.reload();
-	applyTheme(window);
+	applyTheme();
 }
 
-const applyTheme = (window) => {
+const applyTheme = () => {
 	if (getIsThemed() ){
 		const theme = fs.readFileSync(pathsManifest.theme, 'utf8');
 		mainWindow.webContents.executeJavaScript(theme);
+		buildMenu()
 	}
 }
 
@@ -184,7 +185,7 @@ const getExtraOptions = () => {
 	};
 }
 
-const handleTheme = (mainWindow) => {
+const handleTheme = () => {
 	if (isThemed){
 		const theme = fs.readFileSync(pathsManifest.theme, 'utf8');
 		mainWindow.webContents.executeJavaScript(theme)
@@ -226,7 +227,7 @@ const initializeWindow = (config) => {
 		ses.setSpellCheckerLanguages(config.languages)
 	}
 	mainWindow.once('ready-to-show', () => {
-		handleTheme(mainWindow);
+		handleTheme();
 	});
 
 	mainWindow.on('close', (e) => {
@@ -257,7 +258,7 @@ const initializeWindow = (config) => {
 	mainWindow.webContents.on('will-navigate', handleRedirect);
 	mainWindow.webContents.on('new-window', handleRedirect);
 
-	buildMenu(mainWindow);
+	buildMenu();
 
 	return mainWindow;
 }
@@ -279,7 +280,7 @@ const getOpenUrlInsideTick= () => {
 	return getOpenUrlInside() ? '☐' : '☑';
 }
 
-const buildMenu = (mainWindow) => {
+const buildMenu = () => {
 	const template = [
 		{
 			label: 'Menu',
@@ -287,7 +288,7 @@ const buildMenu = (mainWindow) => {
 				{
 					label: 'Force reload', 
 					click: () => {
-						onForceReloadClicked(mainWindow);
+						onForceReloadClicked();
 					}
 				}, {
 					label: getIsThemed() ? "Remove theme (restart)" : "Apply theme",
@@ -302,7 +303,7 @@ const buildMenu = (mainWindow) => {
 				}, {
 					type: 'separator'
 				},{
-					label: getThirdPartyAuthLoginMode() ? "Back to regular mode after auth (restart)" : "Use temporary third party auth mode (restart)",
+					label: getThirdPartyAuthLoginMode() ? "Back to regular mode after auth (restart)" : "Use third party auth mode (restart)",
 					click: () => {
 						onToggleThirdPartyAuthLoginMode();
 					}
@@ -348,7 +349,7 @@ const buildMenu = (mainWindow) => {
 				}, {
 					label: getOpenUrlInsideTick() +	" Open URLs in external default browser",
 					click: () => {
-						onToggleOpenUrlInside(mainWindow);
+						onToggleOpenUrlInside();
 					}
 				},{
 					label: getEnableNodeIntegration() ? "Disable Node integration (breaks icon color change) (restart)" : "Enable Node integration (enables icon color change) (restart)",
@@ -388,6 +389,8 @@ module.exports = {
 	onForceReloadClicked: onForceReloadClicked,
 	onToggleThemeClicked: onToggleThemeClicked,
 	onQuitEntryClicked: onQuitEntryClicked,
+	onToggleThirdPartyAuthLoginMode: onToggleThirdPartyAuthLoginMode,
+	getThirdPartyAuthLoginMode: getThirdPartyAuthLoginMode,
 	updateIcon: updateIcon,
 	setOverlayIcon: setOverlayIcon,
 	cleanOverlayIcon: cleanOverlayIcon

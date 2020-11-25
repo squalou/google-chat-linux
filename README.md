@@ -31,6 +31,10 @@ To use previous Tray implementation :
 
 ## CHANGELOG and IMPORTANT NEWS
 
+0.5.7-5
+
+add "third party auth" in systray menu, and fix a bug there by the way
+
 0.5.7-4
 
 on Force reload : re-apply theme if needed. Useful when Gogole forces a "REFRESH" action that tends toremove theme.

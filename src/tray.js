@@ -26,7 +26,15 @@ const buildContextMenu = (mainWindow) => {
 		}, {
 			"label": WindowManager.getIsThemed() ? "Remove theme (restart)" : "Apply theme",
 			"click": () => {
-				WindowManager.onToggleThemeClicked();
+				WindowManager.onToggleThemeClicked(mainWindow);
+				buildContextMenu();
+			}
+		}, {
+			type: 'separator'
+        }, {
+			"label": WindowManager.getThirdPartyAuthLoginMode() ? "Regular mode after auth (restart)" : "Use third party auth mode (restart)",
+			"click": () => {
+				WindowManager.onToggleThirdPartyAuthLoginMode();
 				buildContextMenu();
 			}
 		}, {
