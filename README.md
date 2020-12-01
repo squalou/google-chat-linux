@@ -12,7 +12,7 @@ I'm barely maintaining it for my own use now that he left off.
 
 **Note** : from 0.5 on, electron 9 bring back Tray integration BUT "click" events are ignored.
 
-### Workaround for the 'click' event
+### Workaround for the tray 'click' event
 
 
 ```bash
@@ -22,14 +22,12 @@ sudo touch /opt/google-chat-linux/libappindicator3.so.1
 
 this way : left click raises the window again !
 
-I'll try to add this tweak in distribution ... but I fear it has side effects depending on DEs...
+These files are added in distributed packages... in hope there are no side effects.
 
 
 https://github.com/electron/electron/issues/14941
 
-### 
-
-More precisely :
+### More precisely :
 
 * On Linux the app indicator will be used if it is supported, otherwise GtkStatusIcon will be used instead.
 * When app indicator is used on Linux, the click event is ignored.
@@ -47,6 +45,14 @@ To use previous Tray implementation :
 - run `npm install`and give it a try. (npm start or ./google-chat-linux.sh, see below for detailed instructions)
 
 ## CHANGELOG and IMPORTANT NEWS
+
+0.5.8-1
+
+add FAKE `libappindicator3.so` and `libappindicator3.so1` in /opt/google-chat-linux to fix left click on TRay icon.
+
+**In case tere are side effects** ... remove the files, and open an issue, I'll see what I can do.
+
+see https://github.com/electron/electron/issues/14941
 
 0.5.7-5
 
