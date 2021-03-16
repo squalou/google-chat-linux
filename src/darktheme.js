@@ -427,7 +427,7 @@ javascript: (
             }
             
             /* Emoji reactions */
-            .dIC9Jb {
+            .dIC9Jb .lFwksc, .YJxKBc .JGMh2e {
                 background-color: #2d2d2d;
                 border: 1px solid #6a6a6a;
             }
@@ -446,6 +446,15 @@ javascript: (
             .xTcvqe .fKz7Od, .wbJc4 .fKz7Od {
                 color: #000 !important;
                 fill: #000 !important;
+            }
+
+            /* webhook msg */
+            .aPoydb .PiXiEf .ohJDzb .Iia6Bd {
+                background-color: #aaa;
+            }
+
+            .hg6pPc {
+                background-color: #aaa!important;
             }
             
             .SwwApf,
