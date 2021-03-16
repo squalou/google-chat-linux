@@ -11,6 +11,8 @@ See [Systray support](#systray-support) notes.
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+5.11.10-1: add experimental dark theme (activate on "View" menu)
+
 5.11.9-1: electron 11 (*Apple M1* native support)
 
 Change versioning scheme : 

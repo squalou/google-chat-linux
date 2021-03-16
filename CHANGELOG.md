@@ -4,6 +4,10 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.11.10-1
+
+Add a secondary "dark theme" accessible in "View" Menu.
+
 ### 5.11.9-1
 
 Move to **electron 11** that brings *Apple M1* native support.

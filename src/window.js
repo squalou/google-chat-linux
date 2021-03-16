@@ -8,6 +8,7 @@ let isQuitting = false;
 let keepMinimized = true;
 let startHidden = true;
 let isThemed = false;
+let isDarkTheme = true;
 let enableKeyboardShortcuts = false;
 let enableNodeIntegration = true;
 let openUrlInside = false;
@@ -29,6 +30,13 @@ const getIsThemed = () => {
 };
 const setIsThemed = (b) => {
 	isThemed = b;
+};
+
+const getIsDarkTheme = () => {
+	return isDarkTheme
+};
+const setIsDarkTheme = (b) => {
+	isDarkTheme = b;
 };
 
 const getOpenUrlInside = () => {
@@ -75,6 +83,13 @@ const onStartHiddenClicked = () => {
 	startHidden = !startHidden;
 	app.relaunch();
 	onQuitEntryClicked();
+}
+
+const onUseDarkThemeClicked = () => {
+	setIsDarkTheme(! getIsDarkTheme());
+	if (getIsThemed()){
+		app.relaunch();
+	}
 }
 
 const onQuitEntryClicked = () => {
@@ -126,10 +141,17 @@ const onForceReloadClicked = () => {
 	applyTheme();
 }
 
+const themeFile = () => {
+	if (getIsDarkTheme()){
+		return fs.readFileSync(pathsManifest.darktheme, 'utf8');
+	}else{
+		return fs.readFileSync(pathsManifest.theme, 'utf8');
+	}
+}
+
 const applyTheme = () => {
 	if (getIsThemed() ){
-		const theme = fs.readFileSync(pathsManifest.theme, 'utf8');
-		mainWindow.webContents.executeJavaScript(theme);
+		mainWindow.webContents.executeJavaScript(themeFile());
 		buildMenu()
 	}
 }
@@ -186,10 +208,7 @@ const getExtraOptions = () => {
 }
 
 const handleTheme = () => {
-	if (isThemed){
-		const theme = fs.readFileSync(pathsManifest.theme, 'utf8');
-		mainWindow.webContents.executeJavaScript(theme)
-	}
+	applyTheme();
 	if (!startHidden) {
 		mainWindow.show();
 	}
@@ -213,6 +232,7 @@ const initializeWindow = (config) => {
 	const bwOptions = (config && config.bounds) ? Object.assign(getBrowserWindowOptions(config), config.bounds) : getBrowserWindowOptions()
 	const extraOptions = getExtraOptions();
 	isThemed = (config && config.isThemed);
+	isDarkTheme = (config && config.isDarkTheme);
 	keepMinimized = (config && config.keepMinimized);
 	startHidden = (config && config.startHidden);
 	enableKeyboardShortcuts = (config && config.enableKeyboardShortcuts);
@@ -237,6 +257,7 @@ const initializeWindow = (config) => {
 			configsData.bounds = mainWindow.getBounds();
 			configsData.wasMaximized = isMaximized;
 			configsData.isThemed = isThemed;
+			configsData.isDarkTheme = isDarkTheme;
 			configsData.keepMinimized = keepMinimized;
 			configsData.startHidden = startHidden;
 			configsData.enableKeyboardShortcuts = enableKeyboardShortcuts;
@@ -278,6 +299,10 @@ const getStartHiddenTick = () => {
 
 const getOpenUrlInsideTick= () => {
 	return getOpenUrlInside() ? '☐' : '☑';
+}
+
+const getIsDarkThemeTick= () => {
+	return getIsDarkTheme() ? '☑' : '☐' ;
 }
 
 const buildMenu = () => {
@@ -329,6 +354,13 @@ const buildMenu = () => {
 					label: getShowTick() + ' Show in windows list when minimized (restart)', 
 					click: () => {
 						onKeepMinimizedClicked(true);
+					}
+				}, {
+					type: 'separator'
+				}, {
+					label: getIsDarkThemeTick() + ' Use dark theme',
+					click: () => {
+						onUseDarkThemeClicked();
 					}
 				}, {
 					type: 'separator'
