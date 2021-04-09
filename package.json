@@ -23,6 +23,11 @@
         "deb"
       ]
     },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
     "extraFiles": [
       "libappindicator3.so.1",
       "libappindicator3.so"
