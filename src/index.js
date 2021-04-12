@@ -10,7 +10,7 @@ let mainWindow, systemTrayIcon, config, contextMenu;
 process.env.NODE_OPTIONS="--no-force-async-hooks-checks";
 process.env.ELECTRON_DISABLE_SANDBOX=true;
 
-process.title = 'Google Chat Linux (Unofficial)';
+process.title = 'Google Chat Linux';
 console.log(process.title + ' - v' + applicationVersion);
 console.log('Node.js runtime version:', process.version);
 

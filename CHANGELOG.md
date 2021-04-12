@@ -4,6 +4,19 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.12.10-1
+
+Upgrade electron version to 12.
+
+With electron 12 : The default values of contextIsolation and worldSafeExecuteJavaScript are now true. #27949 #27502
+As a result in this app : contextIsolation is forced to `false` in order to have systray integration work as previously.
+
+### 5.11.10-2 and -3
+
+Upgrade dependencies (vulnerability fix)
+
+Add "windows" packaging configuration : `npm run dist` produces a nice installer on windows platform now :-)
+
 ### 5.11.10-1
 
 Add a secondary "dark theme" accessible in "View" Menu.

@@ -11,6 +11,10 @@ See [Systray support](#systray-support) notes.
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+5.12.10-1: electron 12
+
+- Windows support : `npm install && npm run dist` can now be run on Windows platform to build an installer.
+
 5.11.10-1: add experimental dark theme (activate on "View" menu)
 
 5.11.9-1: electron 11 (*Apple M1* native support)

@@ -190,6 +190,7 @@ const getBrowserWindowOptions = (config) => {
 		"autoHideMenuBar": true,
 		"webPreferences": {
 			"nodeIntegration": config.enableNodeIntegration,
+			"contextIsolation": false,
 			"sandbox": false,
 			"spellcheck": true
 		},
