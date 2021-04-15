@@ -7,9 +7,32 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+
 jobs:
   release:
+    name: Create release
     runs-on: ubuntu-latest
+    # Note this. We are going to use that in further jobs.
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ steps.tag.outputs.NAME }}
+  release_assets:
+    name: Release assets
+    needs: release # we need to know the upload URL
+    runs-on: ${{ matrix.config.os }} # we run many different builds
+    strategy:
+      matrix:
+        config:
+          - os: ubuntu-latest
+          - os: windows-latest
     steps:
       - name: Get tag name
         id: tag
@@ -28,20 +51,13 @@ jobs:
       - name: Build desktop app
         run: npm run dist
 
-      - name: Create check sum file
+      - name: Create Debian check sum file
+        if: matrix.config.os == 'ubuntu-latest'
         run: sha512sum *.deb > google-chat-linux-SHA512.txt
         working-directory: dist
 
-      - name: Create GitHub release
-        id: release
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ steps.tag.outputs.NAME }}
-
       - name: Upload Debian package to release
+        if: matrix.config.os == 'ubuntu-latest'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -51,7 +67,8 @@ jobs:
           asset_name: google-chat-linux_${{ steps.extract_package_version.outputs.version }}_amd64.deb
           asset_content_type: application/octet-stream
 
-      - name: Upload check sum file to release
+      - name: Upload Debian check sum file to release
+        if: matrix.config.os == 'ubuntu-latest'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -61,33 +78,13 @@ jobs:
           asset_name: google-chat-linux-SHA512.txt
           asset_content_type: text/plain
 
-
-
-  winrelease:
-    runs-on: windows-latest
-    steps:
-      - name: Get tag name
-        id: tag
-        run: echo ::set-output name=NAME::${GITHUB_REF/refs\/tags\//}
-
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Extract package version
-        id: extract_package_version
-        uses: Saionaro/extract-package-version@v1.1.1
-
-      - name: Install npm modules
-        run: npm install
-
-      - name: Build desktop app
-        run: npm run dist
-
-      - name: Create check sum file
-        run: sha512sum *.exe > google-chat-linux-win-SHA512.txt
+      - name: Create Exe check sum file
+        if: matrix.config.os == 'windows-latest'
+        run: sha512sum *.exe > google-chat-win-SHA512.txt
         working-directory: dist
 
-      - name: Upload Windows package to release
+      - name: Upload Exe package to release
+        if: matrix.config.os == 'windows-latest'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -97,13 +94,14 @@ jobs:
           asset_name: google-chat-linux Setup ${{ steps.extract_package_version.outputs.version }}.exe
           asset_content_type: application/octet-stream
 
-      - name: Upload check sum file to release
+      - name: Upload Debian check sum file to release
+        if: matrix.config.os == 'windows-latest'
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.release.outputs.upload_url }}
-          asset_path: dist/google-chat-linux-win-SHA512.txt
-          asset_name: google-chat-linux-win-SHA512.txt
+          asset_path: dist/google-chat-win-SHA512.txt
+          asset_name: google-chat-linux-SHA512.txt
           asset_content_type: text/plain
 
