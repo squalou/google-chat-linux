@@ -4,6 +4,12 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.12.11-1
+
+Better windows support :
+- add taskbar menu to Quit
+- remove option to hide from taskbar (new windows paradigm tends to do without systray and use taskbar instead)
+
 ### 5.12.10-1
 
 Upgrade electron version to 12.

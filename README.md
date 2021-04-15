@@ -11,6 +11,10 @@ See [Systray support](#systray-support) notes.
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+5.12.11-1: better windows support
+
+Respect windows UI integration a bit more.
+
 5.12.10-1: electron 12
 
 - Windows support : `npm install && npm run dist` can now be run on Windows platform to build an installer.

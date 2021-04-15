@@ -10,6 +10,9 @@ const setConfigDefaults = (configuration) => {
 	configuration.enableNodeIntegration = configuration.enableNodeIntegration === undefined ? true : configuration.enableNodeIntegration;
 	configuration.openUrlInside = configuration.openUrlInside === undefined ? false : configuration.openUrlInside;
 	configuration.thirdPartyAuthLoginMode = configuration.thirdPartyAuthLoginMode === undefined ? false : configuration.thirdPartyAuthLoginMode;
+	if(process.platform === 'win32'){
+		configuration.keepMinimized = true;
+	}
 	console.log(configuration)
 }
 

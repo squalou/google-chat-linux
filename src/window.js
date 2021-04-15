@@ -3,6 +3,7 @@ const { session } = require('electron')
 const pathsManifest = require('./paths');
 const ConfigManager = require('./configs');
 const fs = require('fs');
+const { platform } = require("process");
 let mainWindow;
 let isQuitting = false;
 let keepMinimized = true;
@@ -306,6 +307,54 @@ const getIsDarkThemeTick= () => {
 	return getIsDarkTheme() ? '☑' : '☐' ;
 }
 
+const viewSubMenu= () => {
+	if (platform === 'win32'){
+		return [
+			{
+				label: getIsDarkThemeTick() + ' Use dark theme',
+				click: () => {
+					onUseDarkThemeClicked();
+				}
+			}, {
+				type: 'separator'
+			}, {
+				label: getStartHiddenTick() + ' Start hidden (restart)',
+				click: () => {
+					onStartHiddenClicked();
+				}
+			}
+		]
+	} else {
+		return [
+			{
+				label: getHideTick() + ' Hide from windows list when minimized (restart)',
+				click: () => {
+					onKeepMinimizedClicked(false);
+				}
+			}, {
+				label: getShowTick() + ' Show in windows list when minimized (restart)',
+				click: () => {
+					onKeepMinimizedClicked(true);
+				}
+			}, {
+				type: 'separator'
+			}, {
+				label: getIsDarkThemeTick() + ' Use dark theme',
+				click: () => {
+					onUseDarkThemeClicked();
+				}
+			}, {
+				type: 'separator'
+			}, {
+				label: getStartHiddenTick() + ' Start hidden (restart)',
+				click: () => {
+					onStartHiddenClicked();
+				}
+			}
+		]
+	}
+}
+
 const buildMenu = () => {
 	const template = [
 		{
@@ -345,33 +394,7 @@ const buildMenu = () => {
 			]
 		},{
 			label: 'View',
-			submenu: [
-				{
-					label: getHideTick() + ' Hide from windows list when minimized (restart)', 
-					click: () => {
-						onKeepMinimizedClicked(false);
-					}
-				}, {
-					label: getShowTick() + ' Show in windows list when minimized (restart)', 
-					click: () => {
-						onKeepMinimizedClicked(true);
-					}
-				}, {
-					type: 'separator'
-				}, {
-					label: getIsDarkThemeTick() + ' Use dark theme',
-					click: () => {
-						onUseDarkThemeClicked();
-					}
-				}, {
-					type: 'separator'
-				}, {
-					label: getStartHiddenTick() + ' Start hidden (restart)', 
-					click: () => {
-						onStartHiddenClicked();
-					}
-				}
-			]
+			submenu: viewSubMenu()
 		},{
 			label: 'Advanced',
 			submenu: [
