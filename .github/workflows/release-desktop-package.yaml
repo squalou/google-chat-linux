@@ -1,4 +1,4 @@
-name: Release Windows desktop package
+name: Release desktop package
 
 on:
   push:
