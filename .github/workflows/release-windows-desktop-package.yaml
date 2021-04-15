@@ -16,6 +16,9 @@ jobs:
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
+      - name: Get tag name
+        id: tag
+        run: echo ::set-output name=NAME::${GITHUB_REF/refs\/tags\//}
       - name: Create release
         id: create_release
         uses: actions/create-release@latest
@@ -24,6 +27,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ steps.tag.outputs.NAME }}
+          
   release_assets:
     name: Release assets
     needs: release # we need to know the upload URL
@@ -34,10 +38,6 @@ jobs:
           - os: ubuntu-latest
           - os: windows-latest
     steps:
-      - name: Get tag name
-        id: tag
-        run: echo ::set-output name=NAME::${GITHUB_REF/refs\/tags\//}
-
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -62,7 +62,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.release.outputs.upload_url }}
+          upload_url: ${{ needs.release.outputs.upload_url }}
           asset_path: dist/google-chat-linux_${{ steps.extract_package_version.outputs.version }}_amd64.deb
           asset_name: google-chat-linux_${{ steps.extract_package_version.outputs.version }}_amd64.deb
           asset_content_type: application/octet-stream
@@ -73,7 +73,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.release.outputs.upload_url }}
+          upload_url: ${{ needs.release.outputs.upload_url }}
           asset_path: dist/google-chat-linux-SHA512.txt
           asset_name: google-chat-linux-SHA512.txt
           asset_content_type: text/plain
@@ -89,7 +89,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.release.outputs.upload_url }}
+          upload_url: ${{ needs.release.outputs.upload_url }}
           asset_path: dist/google-chat-linux Setup ${{ steps.extract_package_version.outputs.version }}.exe
           asset_name: google-chat-linux Setup ${{ steps.extract_package_version.outputs.version }}.exe
           asset_content_type: application/octet-stream
@@ -100,7 +100,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.release.outputs.upload_url }}
+          upload_url: ${{ needs.release.outputs.upload_url }}
           asset_path: dist/google-chat-win-SHA512.txt
           asset_name: google-chat-linux-SHA512.txt
           asset_content_type: text/plain
