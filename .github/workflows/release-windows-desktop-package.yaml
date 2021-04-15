@@ -1,0 +1,64 @@
+name: Release Windows desktop package
+
+on:
+  push:
+    tags:
+      - '*'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+
+  release:
+    runs-on: windows-latest
+    steps:
+     # - name: Get tag name
+     #   id: tag
+     #   run: echo ::set-output name=NAME::${GITHUB_REF/refs\/tags\//}
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Extract package version
+        id: extract_package_version
+        uses: Saionaro/extract-package-version@v1.1.1
+
+      - name: Install npm modules
+        run: npm install
+
+      - name: Build desktop app
+        run: npm run dist
+
+      - name: Create check sum file
+        run: sha512sum *.exe > google-chat-linux-win-SHA512.txt
+        working-directory: dist
+
+#      - name: Create GitHub release
+#        id: release
+#        uses: actions/create-release@latest
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          tag_name: ${{ github.ref }}
+#          release_name: ${{ steps.tag.outputs.NAME }}
+
+      - name: Upload Windows package to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.release.outputs.upload_url }}
+          asset_path: dist/google-chat-linux Setup ${{ steps.extract_package_version.outputs.version }}.exe
+          asset_name: google-chat-linux Setup ${{ steps.extract_package_version.outputs.version }}.exe
+          asset_content_type: application/octet-stream
+
+      - name: Upload check sum file to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.release.outputs.upload_url }}
+          asset_path: dist/google-chat-linux-win-SHA512.txt
+          asset_name: google-chat-linux-win-SHA512.txt
+          asset_content_type: text/plain
+
