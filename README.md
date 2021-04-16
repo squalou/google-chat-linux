@@ -6,6 +6,14 @@ upstream project : https://github.com/robyf/google-chat-linux
 
 See [Systray support](#systray-support) notes.
 
+## Windows support
+
+Electron is cross platform. I added the minimum required tweaks to have a decently working app on Windows. You can install the _Setup_.exe from [releases](https://github.com/squalou/google-chat-linux/releases).
+
+There will be "SmartScreen" warning about how unsafe this `.exe` is, Windows pretending it has detected something nasty and is protecting you. **I Don't Care** and won't buy a certificate.
+
+If you're now happy with this, build from sources with `npm install && npm run dist` or get a proper OS with a proper distribution system.
+
 
 ## CHANGELOG and news
 
@@ -35,7 +43,7 @@ After first run, quit, then edit $HOME/.config/google-hangouts-chat-linux.json, 
 
 ## auth with third party provider
 
-If your login redirects to some OAuth provider, login may fail.
+If your login redirects to some OAuth provider (other than Google), login may fail.
 
 In Menu (Alt, or systray right click), choose `use third party auth mode`. Login should work but you loose some features (systray related). Use the same menu after login to restore normal mode. Repeat anytime login is required.
 
@@ -47,9 +55,6 @@ npm install
 ```
 
 ## make it work manually
-
-electron 6 beta is required, 7 recommended
-(works with 5.0.1 and up, with some minor annoyances)
 
 ```sh
 npm install electron
@@ -71,15 +76,15 @@ export ELECTRON_DISABLE_SANDBOX=true; export NODE_OPTIONS="--no-force-async-hook
 
 ## Linux packages
 
-## Arch (Manjaro, Antergos)
+### Arch (Manjaro, Antergos)
 
 a package 'google-chat-linux-bin' is availabe on AUR for Arch Linux and derivatives.
 
-## Debian based (Ubuntu, Mint ...)
+### Debian based (Ubuntu, Mint ...)
 
 [Have a look in tags](https://github.com/squalou/google-chat-linux/tags) section, download the relevant .deb file and install with `sudo dpkg -i <package-name.db>` command. (Thank you CYOSP ;-) )
 
-**Tested on** Ubuntu 18.04, Mint
+**Tested on** Ubuntu 18.04, 20.04, Mint
 
 **Note** some environment variables are set in index.js : ELECTRON_DISABLE_SANDBOX and NODE_OPTIONS="--no-force-async-hooks-checks". This *should* work. Else, set them manually.
 
@@ -101,6 +106,15 @@ NOTE : to run from a terminal you'll have to :
 - or run `export ELECTRON_DISABLE_SANDBOX=true; export NODE_OPTIONS="--no-force-async-hooks-checks"` before the launch of `/opt/google-chat-linux/google-chat-linux`
 
 The provided .desktop file takes care of it, so running from your desktop launcher will work.
+
+## Windows package
+
+A package is available in [releases](https://github.com/squalou/google-chat-linux/releases). Or else build it yourself : 
+
+```sh
+npm run dist
+```
+A _Setup_.exe will be built under `\dist\` directory. 
 
 
 ## Systray Support
