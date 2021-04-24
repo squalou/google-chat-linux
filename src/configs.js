@@ -9,6 +9,7 @@ const setConfigDefaults = (configuration) => {
 	configuration.enableKeyboardShortcuts = configuration.enableKeyboardShortcuts === undefined ? false : configuration.enableKeyboardShortcuts;
 	configuration.enableNodeIntegration = configuration.enableNodeIntegration === undefined ? true : configuration.enableNodeIntegration;
 	configuration.openUrlInside = configuration.openUrlInside === undefined ? false : configuration.openUrlInside;
+	configuration.useXdgOpen = configuration.useXdgOpen === undefined ? false : configuration.useXdgOpen;
 	configuration.thirdPartyAuthLoginMode = configuration.thirdPartyAuthLoginMode === undefined ? false : configuration.thirdPartyAuthLoginMode;
 	if(process.platform === 'win32'){
 		configuration.keepMinimized = true;

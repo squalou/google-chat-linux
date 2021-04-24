@@ -4,6 +4,9 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.12.11-2
+
+fix #34 : Additional 'Advanced' option to open urls using `xdg-open` rather than `shell.openExternal`. Works better for some users.
 ### 5.12.11-1
 
 Better windows support :

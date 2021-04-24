@@ -13,6 +13,7 @@ let isDarkTheme = true;
 let enableKeyboardShortcuts = false;
 let enableNodeIntegration = true;
 let openUrlInside = false;
+let useXdgOpen = false;
 let thirdPartyAuthLoginMode = false;
 
 const urlNotRedirected = ["accounts/SetOSID?authuser=0&continue=https%3A%2F%2Fchat.google.com"
@@ -46,6 +47,14 @@ const getOpenUrlInside = () => {
 
 const setOpenUrlInside = (b) => {
 	openUrlInside = b;
+};
+
+const getUseXdgOpen = () => {
+	return useXdgOpen;
+};
+
+const setUseXdgOpen = (b) => {
+	useXdgOpen = b;
 };
 
 const getEnableKeyboardShortcuts = () => {
@@ -122,7 +131,15 @@ const onToggleThirdPartyAuthLoginMode = () => {
 
 const onToggleOpenUrlInside = () => {
 	setOpenUrlInside(!getOpenUrlInside());
-	buildMenu()
+	buildMenu();
+}
+
+const onToggleUseXdgOpen = () => {
+	setUseXdgOpen(!getUseXdgOpen());
+	if (getUseXdgOpen()){
+		setOpenUrlInside(false);
+	}
+	buildMenu();
 }
 
 const onToggleKeyboardShortcuts = () => {
@@ -225,7 +242,11 @@ const handleRedirect = (e, url) => {
 	if (url.includes("about:blank")) {
 		e.preventDefault();
 	} else if ( ! openUrlInside && ! doNotRedirect(url)){
-		shell.openExternal(url);
+		if (process.platform === 'linux' && getUseXdgOpen()){
+			require('child_process').exec('xdg-open ' + url);
+		}else{
+			shell.openExternal(url);
+		}
 		e.preventDefault();
 	}
 };
@@ -303,8 +324,48 @@ const getOpenUrlInsideTick= () => {
 	return getOpenUrlInside() ? '☐' : '☑';
 }
 
+const getUseXdgOpenTick= () => {
+	return getUseXdgOpen() ? '☑' : '☐';
+}
+
 const getIsDarkThemeTick= () => {
 	return getIsDarkTheme() ? '☑' : '☐' ;
+}
+
+const menuSubMenu= () => {
+	return [
+		{
+			label: 'Force reload',
+			click: () => {
+				onForceReloadClicked();
+			}
+		}, {
+			label: getIsThemed() ? "Remove theme (restart)" : "Apply theme",
+			click: () => {
+				onToggleThemeClicked();
+			}
+		}, {
+			label: getEnableKeyboardShortcuts() ? "Disable alt left/right shortcuts (restart)" : "Enable alt left/right shortcuts (restart)",
+			click: () => {
+				onToggleKeyboardShortcuts();
+			}
+		}, {
+			type: 'separator'
+		},{
+			label: getThirdPartyAuthLoginMode() ? "Back to regular mode after auth (restart)" : "Use third party auth mode (restart)",
+			click: () => {
+				onToggleThirdPartyAuthLoginMode();
+			}
+		}, {
+			type: 'separator'
+		}, {
+			label: "Quit",
+			accelerator: 'CommandOrControl+Q',
+			click: () => {
+				onQuitEntryClicked();
+			}
+		}
+	];
 }
 
 const viewSubMenu= () => {
@@ -355,65 +416,48 @@ const viewSubMenu= () => {
 	}
 }
 
+const advancedSubMenu= () => {
+	let mn = []
+	mn.push({
+		label: 'You should probably not tweak things here :-)',
+	});
+	mn.push({
+		type: 'separator'
+	});
+	mn.push({
+		label: getOpenUrlInsideTick() +	" Open URLs in external default browser",
+		click: () => {
+			onToggleOpenUrlInside();
+		}
+	});
+	if (process.platform === 'linux'){
+		mn.push({
+			label: getUseXdgOpenTick() +	" Open URLs using xdg-open rather than default method",
+			click: () => {
+				onToggleUseXdgOpen();
+			}
+		});
+	}
+	mn.push({
+		label: getEnableNodeIntegration() ? "Disable Node integration (breaks icon color change) (restart)" : "Enable Node integration (enables icon color change) (restart)",
+		click: () => {
+			onToggleNodeIntegration();
+		}
+	});
+	return mn;
+}
+
 const buildMenu = () => {
 	const template = [
 		{
 			label: 'Menu',
-			submenu: [
-				{
-					label: 'Force reload', 
-					click: () => {
-						onForceReloadClicked();
-					}
-				}, {
-					label: getIsThemed() ? "Remove theme (restart)" : "Apply theme",
-					click: () => {
-						onToggleThemeClicked();
-					}
-				}, {
-					label: getEnableKeyboardShortcuts() ? "Disable alt left/right shortcuts (restart)" : "Enable alt left/right shortcuts (restart)",
-					click: () => {
-						onToggleKeyboardShortcuts();
-					}
-				}, {
-					type: 'separator'
-				},{
-					label: getThirdPartyAuthLoginMode() ? "Back to regular mode after auth (restart)" : "Use third party auth mode (restart)",
-					click: () => {
-						onToggleThirdPartyAuthLoginMode();
-					}
-				}, {
-					type: 'separator'
-				}, {
-					label: "Quit",
-					accelerator: 'CommandOrControl+Q',
-					click: () => {
-						onQuitEntryClicked();
-					}
-				}
-			]
+			submenu: menuSubMenu()
 		},{
 			label: 'View',
 			submenu: viewSubMenu()
 		},{
 			label: 'Advanced',
-			submenu: [
-				{
-					label: 'You should probably not tweak things here :-)', 
-				}, {
-					type: 'separator'
-				}, {
-					label: getOpenUrlInsideTick() +	" Open URLs in external default browser",
-					click: () => {
-						onToggleOpenUrlInside();
-					}
-				},{
-					label: getEnableNodeIntegration() ? "Disable Node integration (breaks icon color change) (restart)" : "Enable Node integration (enables icon color change) (restart)",
-					click: () => {
-						onToggleNodeIntegration();
-					}
-				}
-			]
+			submenu: advancedSubMenu()
 		},{
 			label: 'About',
 			submenu: [

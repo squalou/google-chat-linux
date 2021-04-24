@@ -19,6 +19,10 @@ If you're now happy with this, build from sources with `npm install && npm run d
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+5.12.11-2: tweak for linux url open
+
+fix #34 : Additional 'Advanced' option to open urls using `xdg-open` rather than `shell.openExternal`. Works better for some users.
+
 5.12.11-1: better windows support
 
 Respect windows UI integration a bit more.
