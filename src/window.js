@@ -261,6 +261,7 @@ const initializeWindow = (config) => {
 	enableKeyboardShortcuts = (config && config.enableKeyboardShortcuts);
 	enableNodeIntegration = (config && config.enableNodeIntegration);
 	openUrlInside = (config && config.openUrlInside);
+	useXdgOpen = (config && config.useXdgOpen);
 	thirdPartyAuthLoginMode = (config && config.thirdPartyAuthLoginMode);
 
 	mainWindow = new BrowserWindow(bwOptions);
@@ -286,6 +287,7 @@ const initializeWindow = (config) => {
 			configsData.enableKeyboardShortcuts = enableKeyboardShortcuts;
 			configsData.enableNodeIntegration = enableNodeIntegration;
 			configsData.openUrlInside = openUrlInside;
+			configsData.useXdgOpen = useXdgOpen;
 			configsData.thirdPartyAuthLoginMode = thirdPartyAuthLoginMode;
 		    
 			ConfigManager.updateConfigs(configsData);
