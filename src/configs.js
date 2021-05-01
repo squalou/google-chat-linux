@@ -15,6 +15,7 @@ const setConfigDefaults = (configuration) => {
 		configuration.keepMinimized = true;
 	}
 	console.log(configuration)
+	console.log("?disable-gpu:"+app.commandLine.hasSwitch('disable-gpu'));
 }
 
 const loadConfigs = () => {
