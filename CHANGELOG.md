@@ -3,6 +3,9 @@
 An electron-base client for Google Hangouts Chat, since Google didn't see fit to provide one.
 
 ## CHANGELOG
+### 5.12.12-1
+
+Allow to open previous chat url to restore previous behaviour and fix notification in systray + theme support. (see #35)
 
 ### 5.12.11-2
 

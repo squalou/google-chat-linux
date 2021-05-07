@@ -11,6 +11,7 @@ const setConfigDefaults = (configuration) => {
 	configuration.openUrlInside = configuration.openUrlInside === undefined ? false : configuration.openUrlInside;
 	configuration.useXdgOpen = configuration.useXdgOpen === undefined ? false : configuration.useXdgOpen;
 	configuration.thirdPartyAuthLoginMode = configuration.thirdPartyAuthLoginMode === undefined ? false : configuration.thirdPartyAuthLoginMode;
+	configuration.useOldUrl = configuration.useOldUrl === undefined ? false : configuration.useOldUrl;
 	if(process.platform === 'win32'){
 		configuration.keepMinimized = true;
 	}

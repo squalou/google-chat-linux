@@ -15,6 +15,7 @@ let enableNodeIntegration = true;
 let openUrlInside = false;
 let useXdgOpen = false;
 let thirdPartyAuthLoginMode = false;
+let useOldUrl = false;
 
 const urlNotRedirected = ["accounts/SetOSID?authuser=0&continue=https%3A%2F%2Fchat.google.com"
 						,"accounts.google.com/signin",
@@ -55,6 +56,14 @@ const getUseXdgOpen = () => {
 
 const setUseXdgOpen = (b) => {
 	useXdgOpen = b;
+};
+
+const getUseOldUrl = () => {
+	return useOldUrl;
+};
+
+const setUseOldUrl = (b) => {
+	useOldUrl = b;
 };
 
 const getEnableKeyboardShortcuts = () => {
@@ -142,6 +151,14 @@ const onToggleUseXdgOpen = () => {
 	buildMenu();
 }
 
+const onToggleUseOldUrl = () => {
+	console.log("before toggle "+getUseOldUrl())
+	setUseOldUrl(!getUseOldUrl());
+	console.log("after toggle "+getUseOldUrl())
+	app.relaunch();
+	onQuitEntryClicked();
+}
+
 const onToggleKeyboardShortcuts = () => {
 	setEnableKeyboardShortcuts(!getEnableKeyboardShortcuts());
 	app.relaunch();
@@ -222,6 +239,7 @@ const getExtraOptions = () => {
 	return {
 		"name": "Google Hangouts Chat for Linux",
 		"url": "https://chat.google.com",
+		"oldUrl": "https://chat.google.com/?shell=8&lfhs=2",
 		"openLocally": true
 	};
 }
@@ -263,9 +281,15 @@ const initializeWindow = (config) => {
 	openUrlInside = (config && config.openUrlInside);
 	useXdgOpen = (config && config.useXdgOpen);
 	thirdPartyAuthLoginMode = (config && config.thirdPartyAuthLoginMode);
+	useOldUrl = (config && config.useOldUrl);
 
 	mainWindow = new BrowserWindow(bwOptions);
-	mainWindow.loadURL(extraOptions.url);
+	if (useOldUrl){
+		mainWindow.loadURL(extraOptions.oldUrl);
+	}else{
+		mainWindow.loadURL(extraOptions.url);
+	}
+
 	if (config.languages !== undefined){
 		const ses = mainWindow.webContents.session
 		ses.setSpellCheckerLanguages(config.languages)
@@ -289,6 +313,7 @@ const initializeWindow = (config) => {
 			configsData.openUrlInside = openUrlInside;
 			configsData.useXdgOpen = useXdgOpen;
 			configsData.thirdPartyAuthLoginMode = thirdPartyAuthLoginMode;
+			configsData.useOldUrl = useOldUrl;
 		    
 			ConfigManager.updateConfigs(configsData);
 		}else{
@@ -334,14 +359,24 @@ const getIsDarkThemeTick= () => {
 	return getIsDarkTheme() ? '☑' : '☐' ;
 }
 
+const getUseOldUrlTick= () => {
+	return getUseOldUrl() ? '☑' : '☐' ;
+}
+
 const menuSubMenu= () => {
+
 	return [
 		{
 			label: 'Force reload',
 			click: () => {
 				onForceReloadClicked();
 			}
-		}, {
+		},{
+			label: getUseOldUrlTick() +	" Use old version of chat, to restore themes and notifications",
+			click: () => {
+				onToggleUseOldUrl();
+			}
+		},{
 			label: getIsThemed() ? "Remove theme (restart)" : "Apply theme",
 			click: () => {
 				onToggleThemeClicked();
@@ -493,6 +528,8 @@ module.exports = {
 	onQuitEntryClicked: onQuitEntryClicked,
 	onToggleThirdPartyAuthLoginMode: onToggleThirdPartyAuthLoginMode,
 	getThirdPartyAuthLoginMode: getThirdPartyAuthLoginMode,
+	onToggleUseOldUrl: onToggleUseOldUrl,
+	getUseOldUrl: getUseOldUrl,
 	updateIcon: updateIcon,
 	setOverlayIcon: setOverlayIcon,
 	cleanOverlayIcon: cleanOverlayIcon

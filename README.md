@@ -19,6 +19,15 @@ If you're now happy with this, build from sources with `npm install && npm run d
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+5.12.12-1
+
+Google did it again : a new UI that breaks everything. There is still hope (for a time). Default URL i redirected to https://mail.google.com/chat ...
+but previous one is still accessible.
+
+To activate it, go to `Menu`, and tick `use old version of chat` OR `right click` in systray icon and choose `Use previous chat UI`.
+
+I don't know how long it will work but for now, it does and make systray notifiction and theme work again.
+
 5.12.11-2: tweak for linux url open
 
 fix #34 : Additional 'Advanced' option to open urls using `xdg-open` rather than `shell.openExternal`. Works better for some users.

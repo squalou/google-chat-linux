@@ -32,6 +32,14 @@ const buildContextMenu = (mainWindow) => {
 		}, {
 			type: 'separator'
         }, {
+			"label": WindowManager.getUseOldUrl() ? "Use current ugly UI (restart)" : "Use previous chat UI (restart)",
+			"click": () => {
+				WindowManager.onToggleUseOldUrl();
+				buildContextMenu();
+			}
+		}, {
+			type: 'separator'
+		}, {
 			"label": WindowManager.getThirdPartyAuthLoginMode() ? "Regular mode after auth (restart)" : "Use third party auth mode (restart)",
 			"click": () => {
 				WindowManager.onToggleThirdPartyAuthLoginMode();
