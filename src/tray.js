@@ -3,7 +3,6 @@ const pathsManifest = require("./paths");
 const WindowManager = require('./window');
 let mainWindow;
 let systemTrayIcon;
-
 const onShowEntryClicked = () => {
 	(! mainWindow.isVisible() || mainWindow.isMinimized()) ? mainWindow.show() : mainWindow.hide();
 }
@@ -67,54 +66,70 @@ const buildContextMenu = (mainWindow) => {
 	return systemTrayIcon;
 }
 
-const initializeTray = (windowObj) => {
-	systemTrayIcon = new Tray(pathsManifest.ICON_OFFLINE_MSG);
+const initializeTray = (windowObj, config) => {
+	// pb : favicon object changes so the observer .... cannot observe ! or even be initialized
+	// -> moved things to ipcRenderer preload mechanism in faviconChange.js - thank you ankurk91 :-)
+	// see https://github.com/ankurk91/google-chat-electron.git
+	if (config && config.useOldUrl){
+		systemTrayIcon = new Tray(pathsManifest.ICON_OFFLINE_MSG);
+	}else{
+		systemTrayIcon = new Tray(pathsManifest.OFFLINE);
+	}
 	mainWindow = windowObj;
-	mainWindow.webContents.on('dom-ready', () => {
-		mainWindow.webContents.executeJavaScript(
-			'var ipc;'+
-			'try{'+
-			' var ipc = require(\'electron\').ipcRenderer;'+ 
-			' var fi = document.querySelector("link#favicon256");'+
-			' console.log(fi);'+
-			' ipc.send("favicon-changed", fi.href);'+
-			' var callback = function(mutationList) { ipc.send("favicon-changed", fi.href); };'+
-			' var observer = new MutationObserver(callback);'+ 
-			' observer.observe(fi, { attributes: true });'+
-		    '}catch (e){console.log(e)};');
-	});
-
-	return buildContextMenu(mainWindow);
+	return buildContextMenu(windowObj);
 
 };
 
 ipcMain.on('favicon-changed', (evt, href) => {
 	var itype = "";
+	let oldStyle = false;
 	if (href.match(/chat-favicon-no-new/)) {
 		itype = "NORMAL";
+		oldStyle = true;
 	}else if (href.match(/chat-favicon-new-non-notif/)) {
 		itype = "UNREAD";
+		oldStyle = true;
 	}else if (href.match(/chat-favicon-new-notif/)) {
 		itype = "ATTENTION";
+		oldStyle = true;
 	}else if (href.match(/^data:image\/png;base64,iVBOR.+/)) {
 		itype = "OFFLINE";
+		oldStyle = true;
+	}else if (href.match(/favicon_chat_r2/) ||
+    	href.match(/favicon_chat_new_non_notif_r2/)) {
+		itype = "NORMAL";
+	}else if (href.match(/favicon_chat_new_notif_r2/)) {
+		itype = "ATTENTION";
+	}else {
+		itype = "OFFLINE";
 	}
-	setIcon(itype);
+	setIcon(itype, oldStyle);
 });
 
-function iconForType(iconType) {
-	if (iconType == "NORMAL") {
-		return pathsManifest.ICON_NO_NEW_MSG;
-	}else if (iconType == "UNREAD") {
-		return pathsManifest.ICON_NEW_NON_NOTIF_MSG;
-	}else if (iconType == "ATTENTION") {
-		return pathsManifest.ICON_NEW_NOTIF_MSG;
+function iconForType(iconType, oldStyle) {
+	if (oldStyle){
+		if (iconType == "NORMAL") {
+			return pathsManifest.ICON_NO_NEW_MSG;
+		}else if (iconType == "UNREAD") {
+			return pathsManifest.ICON_NEW_NON_NOTIF_MSG;
+		}else if (iconType == "ATTENTION") {
+			return pathsManifest.ICON_NEW_NOTIF_MSG;
+		} else {
+			return pathsManifest.ICON_OFFLINE_MSG;
+		}
+	}else{
+		if (iconType == "NORMAL") {
+			return pathsManifest.NORMAL;
+		}else if (iconType == "ATTENTION") {
+			return pathsManifest.BADGE;
+		}else{
+			return pathsManifest.OFFLINE;
+		}
 	}
-	return pathsManifest.ICON_OFFLINE_MSG;
 }
 
-const setIcon = (iconType) => {
-	const i = iconForType(iconType)
+const setIcon = (iconType, oldStyle) => {
+	const i = iconForType(iconType, oldStyle)
 	try {
 		systemTrayIcon.setImage(i);
 	}catch (e){

@@ -10,5 +10,7 @@ module.exports = {
 	"ICON_NEW_NON_NOTIF_MSG" : path.join(__dirname, "../assets/icon/chat-favicon-new-non-notif-256dp.png"),
 	"ICON_NEW_NOTIF_MSG" : path.join(__dirname, "../assets/icon/chat-favicon-new-notif-256dp.png"),
 	"ICON_OFFLINE_MSG" : path.join(__dirname, "../assets/icon/chat-favicon-offline-256dp.png"),
-	"OVERLAY_NEW_NOTIF" : path.join(__dirname, "../assets/icon/overlay-new-xs.png")
+	"NORMAL" : path.join(__dirname, "../assets/icon/normal-64.png"),
+	"BADGE" : path.join(__dirname, "../assets/icon/badge-64.png"),
+	"OFFLINE" : path.join(__dirname, "../assets/icon/offline-64.png")
 }

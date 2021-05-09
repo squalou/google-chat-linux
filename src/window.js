@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, shell, Menu } = require("electron");
+const path = require("path");
 const { session } = require('electron')
 const pathsManifest = require('./paths');
 const ConfigManager = require('./configs');
@@ -225,9 +226,10 @@ const getBrowserWindowOptions = (config) => {
 		"autoHideMenuBar": true,
 		"webPreferences": {
 			"nodeIntegration": config.enableNodeIntegration,
-			"contextIsolation": false,
-			"sandbox": false,
-			"spellcheck": true
+			"contextIsolation": true,
+			"sandbox": true,
+			"spellcheck": true,
+			"preload": path.join(__dirname, 'faviconChanged.js'),
 		},
 		"show": false,
 		"backgroundColor": "#262727",
@@ -238,7 +240,7 @@ const getBrowserWindowOptions = (config) => {
 const getExtraOptions = () => {
 	return {
 		"name": "Google Hangouts Chat for Linux",
-		"url": "https://chat.google.com",
+		"url": "https://mail.google.com/chat/u/0",
 		"oldUrl": "https://chat.google.com/?shell=8&lfhs=2",
 		"openLocally": true
 	};

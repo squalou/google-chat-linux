@@ -1,6 +1,6 @@
 {
   "name": "google-chat-linux",
-  "version": "5.12.12-1",
+  "version": "5.12.13-1",
   "description": "Google Hangouts Chat unofficial linux app",
   "main": "src/index.js",
   "scripts": {

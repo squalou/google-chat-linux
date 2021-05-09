@@ -19,9 +19,15 @@ If you're now happy with this, build from sources with `npm install && npm run d
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+5.12.13-1
+
+Fix support for new chat UI notifications. Thak you @ankurk91 : you should check his fork https://github.com/ankurk91/google-chat-electron.
+
+Keep mechanism to revert to old one while it still works, UI is so much better.
+  
 5.12.12-1
 
-Google did it again : a new UI that breaks everything. There is still hope (for a time). Default URL i redirected to https://mail.google.com/chat ...
+Google did it again : a new UI that breaks everything. There is still hope (for a time). Default URL is redirected to https://mail.google.com/chat ...
 but previous one is still accessible.
 
 To activate it, go to `Menu`, and tick `use old version of chat` OR `right click` in systray icon and choose `Use previous chat UI`.

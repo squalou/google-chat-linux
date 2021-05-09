@@ -3,6 +3,13 @@
 An electron-base client for Google Hangouts Chat, since Google didn't see fit to provide one.
 
 ## CHANGELOG
+
+### 5.12.13-1
+
+- Fix support for new chat UI notifications
+- Cleaner notification detection with ipcRenderer, thanks to @ankurk91 (check his fork here https://github.com/ankurk91/google-chat-electron)
+- Runs now in sandbox and with contextisolation
+
 ### 5.12.12-1
 
 Allow to open previous chat url to restore previous behaviour and fix notification in systray + theme support. (see #35)
