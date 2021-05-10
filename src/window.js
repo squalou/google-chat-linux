@@ -221,13 +221,14 @@ const cleanOverlayIcon = () => {
 }
 
 const getBrowserWindowOptions = (config) => {
+	// sandbox still required for url opens
 	return {
 		"title": process.title,
 		"autoHideMenuBar": true,
 		"webPreferences": {
 			"nodeIntegration": config.enableNodeIntegration,
 			"contextIsolation": true,
-			"sandbox": true,
+			"sandbox": false,
 			"spellcheck": true,
 			"preload": path.join(__dirname, 'faviconChanged.js'),
 		},
