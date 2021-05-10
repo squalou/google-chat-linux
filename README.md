@@ -3,6 +3,7 @@
 An electron-base client for Google Hangouts Chat, since Google didn't see fit to provide one.
 
 upstream project : https://github.com/robyf/google-chat-linux
+clever other for : https://github.com/ankurk91/google-chat-electron
 
 See [Systray support](#systray-support) notes.
 
@@ -19,7 +20,7 @@ If you're now happy with this, build from sources with `npm install && npm run d
 
 See full [CHANGELOG](./CHANGELOG.md).
 
-5.12.13-1
+5.12.13-2
 
 Fix support for new chat UI notifications. Thak you @ankurk91 : you should check his fork https://github.com/ankurk91/google-chat-electron.
 

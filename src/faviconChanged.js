@@ -3,7 +3,7 @@ const { ipcRenderer } = require('electron');
 // but replace it with rel="shortcut icon" when a new message appears.
 // We need to query for both elements
 const targetSelectors = [
-    'link#favicon256',
+    'link[id=#favicon256]',
     'link[rel="shortcut icon"]',
     'link[rel="icon"]'
   ];
@@ -21,18 +21,21 @@ const emitFaviconChanged = (favicon) => {
 }
 
 const initObserver = () => {
-    let favicons = document.head.querySelectorAll(targetSelectors.join(','));
-    emitFaviconChanged(favicons[0]);
+    // convert NodeList to array so we can use 'some' iteration on it
+    let favicons = [].slice.call(document.head.querySelectorAll(targetSelectors.join(',')));
+    let fi = favicons[0];
+    favicons.some(function(d){
+        // compat with old chat : selectAll returns too many things
+        if (d.id === "favicon256"){
+            fi=d
+            return true;
+        }
+    })
+    emitFaviconChanged(fi);
 }
 
 let interval;
 window.addEventListener('DOMContentLoaded', () => {
     clearInterval(interval);
-    interval = setInterval(initObserver, 1000)
+    interval = setInterval(initObserver, 1500)
 });
-console.log("RKHGSFDHSGJHSFGJDFHFGHKFGJKg");
-
-window.open = function customWindowOpen (url, ...args) {
-    ipcRenderer.send('report-window-open', location.origin, url, args)
-    return defaultWindowOpen(url + '?from_electron=1', ...args)
-  }

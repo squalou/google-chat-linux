@@ -4,6 +4,10 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+
+### 5.12.13-2
+
+- Fix again old notifications : too many favicons were selected, the wrong ones got displayed.
 ### 5.12.13-1
 
 - Fix support for new chat UI notifications
