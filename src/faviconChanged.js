@@ -3,7 +3,7 @@ const { ipcRenderer } = require('electron');
 // but replace it with rel="shortcut icon" when a new message appears.
 // We need to query for both elements
 const targetSelectors = [
-    'link[id=#favicon256]',
+    'link#favicon256',
     'link[rel="shortcut icon"]',
     'link[rel="icon"]'
   ];
