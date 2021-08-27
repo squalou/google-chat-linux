@@ -20,6 +20,10 @@ If you're now happy with this, build from sources with `npm install && npm run d
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+5.12.14-1
+
+Details about systray click behaiour and google account login page.
+
 5.12.13-2
 
 Fix support for new chat UI notifications. Thak you @ankurk91 : you should check his fork https://github.com/ankurk91/google-chat-electron.
