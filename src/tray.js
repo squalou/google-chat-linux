@@ -8,7 +8,7 @@ const onShowEntryClicked = () => {
 }
 
 const onSystemTrayIconClicked = () => {
-	(! mainWindow.isVisible() || mainWindow.isMinimized()) ? mainWindow.show() : mainWindow.focus();
+	(! mainWindow.isVisible() || mainWindow.isMinimized() || ! mainWindow.isFocused()) ? mainWindow.show() : mainWindow.hide();
 }
 
 const buildContextMenu = (mainWindow) => {
