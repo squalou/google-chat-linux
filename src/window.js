@@ -19,8 +19,9 @@ let thirdPartyAuthLoginMode = false;
 let useOldUrl = false;
 
 const urlNotRedirected = ["accounts/SetOSID?authuser=0&continue=https%3A%2F%2Fchat.google.com"
-						,"accounts.google.com/signin",
-						"https://chat.google.com/"]
+						,"accounts.google.com",
+						"https://chat.google.com/"
+						]
 
 ipcMain.on('open-link', (evt, href) => {
 	shell.openExternal(href);
