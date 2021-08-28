@@ -5,6 +5,9 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 ## CHANGELOG
 
 
+### 5.12.14-2
+- apply node dependencies security fixes
+
 ### 5.12.14-1
 - Fix #36 : google account login page stays inside client instead of opening in default browser
 - Improve #37 : click systray when window is visible without focus gives focus. When has focus : hides it.
