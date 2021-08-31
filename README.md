@@ -20,9 +20,14 @@ If you're now happy with this, build from sources with `npm install && npm run d
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+5.14.1-1
+
+* electron 14
+* support native filechooser instead of GTK only ! [see here](README.md/#support-native-filechooser)
+
 5.12.14-1
 
-Details about systray click behaiour and google account login page.
+Details about systray click behaviour and google account login page.
 
 5.12.13-2
 
@@ -61,6 +66,11 @@ Change versioning scheme :
 - third is a 'feature' level
 - dash-number is a packaging number : same features, only minor bugfix and packaging changes : no news, only better things
 
+## support native filechooser
+
+   * make sure you install `xdg-desktop-portal-gtk` or `xdg-desktop-portal-kde` or `xdg-desktop-portal-wlr` ... depending on your DE and distrib.
+   * set `GTK_USE_PORTAL=1` in your login script (.bashrc, whatever)
+   * logout / login and open google-chat-linux, whenever needing to use the filechooser it should use your DE default one.
 ## configure spellcheck language
 
 After first run, quit, then edit $HOME/.config/google-hangouts-chat-linux.json, add "languages": ["fr","en-US"] in the json to override default OS locale.

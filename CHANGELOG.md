@@ -4,6 +4,14 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.14.1-1
+
+* electron 14
+* support native filechooser instead of GTK only !
+   * make sure you install `xdg-desktop-portal-gtk` or `xdg-desktop-portal-kde` or xdg-desktop-portal-wlr ... depending on your DE and distrib.
+   * then set `GTK_USE_PORTAL=1` in your login script (.bashrc, whatever)
+   * logout / login and open google-chat-linux, whenever needing to use the filechooser it should use your DE default one.
+   * details here https://tristan.partin.io/blog/2021/04/01/electron-linux-and-your-file-chooser
 
 ### 5.12.14-2
 - apply node dependencies security fixes
