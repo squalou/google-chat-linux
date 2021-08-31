@@ -9,6 +9,7 @@ let mainWindow, systemTrayIcon, config, contextMenu;
 
 process.env.NODE_OPTIONS="--no-force-async-hooks-checks";
 process.env.ELECTRON_DISABLE_SANDBOX=true;
+process.env.GTK_USE_PORTAL=1;
 
 process.title = 'Google Chat Linux';
 console.log(process.title + ' - v' + applicationVersion);

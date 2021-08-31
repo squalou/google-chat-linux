@@ -13,16 +13,27 @@ Electron is cross platform. I added the minimum required tweaks to have a decent
 
 There will be "SmartScreen" warning about how unsafe this `.exe` is, Windows pretending it has detected something nasty and is protecting you. **I Don't Care** and won't buy a certificate.
 
-If you're now happy with this, build from sources with `npm install && npm run dist` or get a proper OS with a proper distribution system.
+If you're not happy with this, build from sources with `npm install && npm run dist` or get a proper OS with a proper distribution system.
 
+## Linux dependencies
+
+Starting with 5.14.x, xdg-desktop-portal must be installed. It's probably already the case on most distributions. [see here](README.md/#support-native-filechooser)
+
+Dependency is taken care of in AUR Arch package and Debian package.
 
 ## CHANGELOG and news
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+5.14.15-1
+
+* electron 14
+* support native filechooser instead of GTK only. [see here](README.md/#support-native-filechooser)
+* WARNING : native filechooser may not work as nicely as expected on all distributions, see [#38](https://github.com/squalou/google-chat-linux/issues/38)
+
 5.12.14-1
 
-Details about systray click behaiour and google account login page.
+Details about systray click behaviour and google account login page.
 
 5.12.13-2
 
@@ -55,11 +66,29 @@ Respect windows UI integration a bit more.
 
 5.11.9-1: electron 11 (*Apple M1* native support)
 
-Change versioning scheme : 
+## versioning scheme
+
+Starting with 5.11.9-1 :
+
 - first number is internal architecture, won't change anytime soon
 - second is the electron version.
 - third is a 'feature' level
 - dash-number is a packaging number : same features, only minor bugfix and packaging changes : no news, only better things
+
+## support native filechooser
+
+   * make sure you install `xdg-desktop-portal` or `xdg-desktop-portal` or `xdg-desktop-portal-kde` or `xdg-desktop-portal-wlr` ... depending on your DE and distrib.
+   * logout / login and open google-chat-linux, whenever needing to use the filechooser it should use your DE default one.
+
+Troubleshooting
+
+   * in case nothing happens when needing to upload / download a file
+      * launch from console, and check for `Can't open portal file chooser: GDBus.Error`. If
+   it is displayed, then your `xdg-desktop-portal` is not installed.
+
+   * if the wrong filechooser is displayed (gtk on kde), make sure `GTK_USE_PORTAL=1` is set. It should be set by the app itself, you may want to set it yourself and check if it works better. `export GTK_USE_PORTAL=1; /opt/google-chat-linux/google-chat-linux` for instance
+
+      * if necessary set `GTK_USE_PORTAL=1` in your login script (`/etc/profile.d/custom.sh`, or `$HOME/.bashrc`, whatever).
 
 ## configure spellcheck language
 
@@ -106,7 +135,7 @@ export ELECTRON_DISABLE_SANDBOX=true; export NODE_OPTIONS="--no-force-async-hook
 
 ## Linux packages
 
-### Arch (Manjaro, Antergos)
+### Arch (Manjaro, Anarchy)
 
 a package 'google-chat-linux-bin' is availabe on AUR for Arch Linux and derivatives.
 
@@ -114,9 +143,9 @@ a package 'google-chat-linux-bin' is availabe on AUR for Arch Linux and derivati
 
 [Have a look in tags](https://github.com/squalou/google-chat-linux/tags) section, download the relevant .deb file and install with `sudo dpkg -i <package-name.db>` command. (Thank you CYOSP ;-) )
 
-**Tested on** Ubuntu 18.04, 20.04, Mint
+**Tested on** Ubuntu 18.04, 20.04, 21.04, Mint 20.1
 
-**Note** some environment variables are set in index.js : ELECTRON_DISABLE_SANDBOX and NODE_OPTIONS="--no-force-async-hooks-checks". This *should* work. Else, set them manually.
+**Note** some environment variables are set in index.js : GTK_USE_PORTAL, ELECTRON_DISABLE_SANDBOX and NODE_OPTIONS="--no-force-async-hooks-checks". This *should* work. Else, set them manually.
 
 ### manually build a deb package
 
@@ -172,14 +201,4 @@ https://github.com/electron/electron/issues/14941
 * When app indicator is used on Linux, the click event is ignored.
 * https://www.electronjs.org/docs/api/tray
 * There is sadly nothing I can do about it. (except cry a bit as such nonsenses and wonder how other apps (slack, telegram) deal with all this)
-
-
-**Note** : from 0.4.1 on, electron moved to electron-8, with a different Tray integration implementation. It may fail to work with some window managers (Cinnamon is one of them)
-
-See https://github.com/electron/electron/issues/21445
-
-To use previous Tray implementation :
-- edit package.json
-- replace `"electron": "^8.0.0"` by `"electron": "^7.0.0"`
-- run `npm install`and give it a try. (npm start or ./google-chat-linux.sh, see below for detailed instructions)
 
