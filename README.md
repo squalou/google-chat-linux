@@ -13,11 +13,11 @@ Electron is cross platform. I added the minimum required tweaks to have a decent
 
 There will be "SmartScreen" warning about how unsafe this `.exe` is, Windows pretending it has detected something nasty and is protecting you. **I Don't Care** and won't buy a certificate.
 
-If you're now happy with this, build from sources with `npm install && npm run dist` or get a proper OS with a proper distribution system.
+If you're not happy with this, build from sources with `npm install && npm run dist` or get a proper OS with a proper distribution system.
 
 ## Linux dependencies
 
-Starting with 5.14.x, xdg-desktop-portal should be installed. It's probably already the case on most distributions. [see here](README.md/#support-native-filechooser)
+Starting with 5.14.x, xdg-desktop-portal must be installed. It's probably already the case on most distributions. [see here](README.md/#support-native-filechooser)
 
 Dependency is taken care of in AUR Arch package and Debian package.
 
@@ -25,10 +25,10 @@ Dependency is taken care of in AUR Arch package and Debian package.
 
 See full [CHANGELOG](./CHANGELOG.md).
 
-5.14.1-1
+5.14.15-1
 
 * electron 14
-* support native filechooser instead of GTK only ! [see here](README.md/#support-native-filechooser)
+* support native filechooser instead of GTK only. [see here](README.md/#support-native-filechooser)
 
 5.12.14-1
 
@@ -65,7 +65,10 @@ Respect windows UI integration a bit more.
 
 5.11.9-1: electron 11 (*Apple M1* native support)
 
-Change versioning scheme : 
+## versioning scheme
+
+Starting with 5.11.9-1 :
+
 - first number is internal architecture, won't change anytime soon
 - second is the electron version.
 - third is a 'feature' level
@@ -73,12 +76,18 @@ Change versioning scheme :
 
 ## support native filechooser
 
-   * make sure you install `xdg-desktop-portal-gtk` or `xdg-desktop-portal-kde` or `xdg-desktop-portal-wlr` ... depending on your DE and distrib.
-   * set `GTK_USE_PORTAL=1` in your login script (`/etc/profile.d/custom.sh`, or `$HOME/.bashrc`, whatever).
+   * make sure you install `xdg-desktop-portal` or `xdg-desktop-portal` or `xdg-desktop-portal-kde` or `xdg-desktop-portal-wlr` ... depending on your DE and distrib.
    * logout / login and open google-chat-linux, whenever needing to use the filechooser it should use your DE default one.
-   * in case nothing happens : launch from console, and check for `Can't open portal file chooser: GDBus.Error`. If
-   it is disaplyed, then your `xdg-desktop-portal` is not installed.
 
+Troubleshooting
+
+   * in case nothing happens when needing to upload / download a file
+      * launch from console, and check for `Can't open portal file chooser: GDBus.Error`. If
+   it is displayed, then your `xdg-desktop-portal` is not installed.
+
+   * if the wrong filechooser is displayed (gtk on kde), make sure `GTK_USE_PORTAL=1` is set. It should be set by the app itself, you may want to set it yourself and check if it works better. `export GTK_USE_PORTAL=1; /opt/google-chat-linux/google-chat-linux` for instance
+
+      * if necessary set `GTK_USE_PORTAL=1` in your login script (`/etc/profile.d/custom.sh`, or `$HOME/.bashrc`, whatever).
 
 ## configure spellcheck language
 
@@ -135,7 +144,7 @@ a package 'google-chat-linux-bin' is availabe on AUR for Arch Linux and derivati
 
 **Tested on** Ubuntu 18.04, 20.04, Mint
 
-**Note** some environment variables are set in index.js : ELECTRON_DISABLE_SANDBOX and NODE_OPTIONS="--no-force-async-hooks-checks". This *should* work. Else, set them manually.
+**Note** some environment variables are set in index.js : GTK_USE_PORTAL, ELECTRON_DISABLE_SANDBOX and NODE_OPTIONS="--no-force-async-hooks-checks". This *should* work. Else, set them manually.
 
 ### manually build a deb package
 
