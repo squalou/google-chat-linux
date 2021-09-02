@@ -15,6 +15,11 @@ There will be "SmartScreen" warning about how unsafe this `.exe` is, Windows pre
 
 If you're now happy with this, build from sources with `npm install && npm run dist` or get a proper OS with a proper distribution system.
 
+## Linux dependencies
+
+Starting with 5.14.x, xdg-desktop-portal should be installed. It's probably already the case on most distributions. [see here](README.md/#support-native-filechooser)
+
+Dependency is taken care of in AUR Arch package and Debian package.
 
 ## CHANGELOG and news
 
@@ -69,8 +74,12 @@ Change versioning scheme :
 ## support native filechooser
 
    * make sure you install `xdg-desktop-portal-gtk` or `xdg-desktop-portal-kde` or `xdg-desktop-portal-wlr` ... depending on your DE and distrib.
-   * set `GTK_USE_PORTAL=1` in your login script (.bashrc, whatever)
+   * set `GTK_USE_PORTAL=1` in your login script (`/etc/profile.d/custom.sh`, or `$HOME/.bashrc`, whatever).
    * logout / login and open google-chat-linux, whenever needing to use the filechooser it should use your DE default one.
+   * in case nothing happens : launch from console, and check for `Can't open portal file chooser: GDBus.Error`. If
+   it is disaplyed, then your `xdg-desktop-portal` is not installed.
+
+
 ## configure spellcheck language
 
 After first run, quit, then edit $HOME/.config/google-hangouts-chat-linux.json, add "languages": ["fr","en-US"] in the json to override default OS locale.

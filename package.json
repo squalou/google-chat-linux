@@ -1,6 +1,6 @@
 {
   "name": "google-chat-linux",
-  "version": "5.14.1-1",
+  "version": "5.14.1-beta1",
   "description": "Google Hangouts Chat unofficial linux app",
   "main": "src/index.js",
   "scripts": {
@@ -19,9 +19,10 @@
         "Name": "Google Chat Linux"
       },
       "category": "Network;InstantMessaging",
-      "target": [
-        "deb"
-      ]
+      "target": "deb"
+    },
+    "deb": {
+        "depends": ["xdg-desktop-portal"]
     },
     "win": {
       "target": [
@@ -41,6 +42,6 @@
   },
   "devDependencies": {
     "electron": "=14.0.0",
-    "electron-builder": ">=22.6.0"
+    "electron-builder": ">=22.11.0"
   }
 }
