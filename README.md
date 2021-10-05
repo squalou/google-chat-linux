@@ -25,6 +25,15 @@ Dependency is taken care of in AUR Arch package and Debian package.
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+### 5.14.16-1
+
+* Good Bye Themes ! (they didn't work anymore anyway)
+* Good bye Old UI support : Google removed it
+
+This **may be the last version**, since ... it doesn't bring anything more than using Ferdi, or the native "installed" app from Chrome. Except systray integration 
+for people where it works anyway.
+
+
 5.14.15-1
 
 * electron 14

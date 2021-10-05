@@ -9,18 +9,17 @@ let mainWindow;
 let isQuitting = false;
 let keepMinimized = true;
 let startHidden = true;
-let isThemed = false;
-let isDarkTheme = true;
 let enableKeyboardShortcuts = false;
 let enableNodeIntegration = true;
 let openUrlInside = false;
 let useXdgOpen = false;
 let thirdPartyAuthLoginMode = false;
-let useOldUrl = false;
 
 const urlNotRedirected = ["accounts/SetOSID?authuser=0&continue=https%3A%2F%2Fchat.google.com"
-						,"accounts.google.com",
-						"https://chat.google.com/"
+						,"accounts.google.com"
+						,"accounts.youtube.com"
+						,"mail.google.com/ServiceLogin"
+						,"https://chat.google.com/"
 						]
 
 ipcMain.on('open-link', (evt, href) => {
@@ -29,19 +28,6 @@ ipcMain.on('open-link', (evt, href) => {
 
 const setIsQuitting = (b) => {
 	isQuitting = b;
-};
-const getIsThemed = () => {
-	return isThemed
-};
-const setIsThemed = (b) => {
-	isThemed = b;
-};
-
-const getIsDarkTheme = () => {
-	return isDarkTheme
-};
-const setIsDarkTheme = (b) => {
-	isDarkTheme = b;
 };
 
 const getOpenUrlInside = () => {
@@ -58,14 +44,6 @@ const getUseXdgOpen = () => {
 
 const setUseXdgOpen = (b) => {
 	useXdgOpen = b;
-};
-
-const getUseOldUrl = () => {
-	return useOldUrl;
-};
-
-const setUseOldUrl = (b) => {
-	useOldUrl = b;
 };
 
 const getEnableKeyboardShortcuts = () => {
@@ -106,25 +84,9 @@ const onStartHiddenClicked = () => {
 	onQuitEntryClicked();
 }
 
-const onUseDarkThemeClicked = () => {
-	setIsDarkTheme(! getIsDarkTheme());
-	if (getIsThemed()){
-		app.relaunch();
-	}
-}
-
 const onQuitEntryClicked = () => {
 	setIsQuitting(true);
 	app.quit();
-}
-
-const onToggleThemeClicked = (window) => {
-	setIsThemed(!getIsThemed());
-	applyTheme(window)
-	if (!getIsThemed() ){
-		app.relaunch()
-		onQuitEntryClicked();
-	}
 }
 
 const onToggleThirdPartyAuthLoginMode = () => {
@@ -153,14 +115,6 @@ const onToggleUseXdgOpen = () => {
 	buildMenu();
 }
 
-const onToggleUseOldUrl = () => {
-	console.log("before toggle "+getUseOldUrl())
-	setUseOldUrl(!getUseOldUrl());
-	console.log("after toggle "+getUseOldUrl())
-	app.relaunch();
-	onQuitEntryClicked();
-}
-
 const onToggleKeyboardShortcuts = () => {
 	setEnableKeyboardShortcuts(!getEnableKeyboardShortcuts());
 	app.relaunch();
@@ -175,22 +129,6 @@ const onToggleNodeIntegration = () => {
 
 const onForceReloadClicked = () => {
 	mainWindow.webContents.reload();
-	applyTheme();
-}
-
-const themeFile = () => {
-	if (getIsDarkTheme()){
-		return fs.readFileSync(pathsManifest.darktheme, 'utf8');
-	}else{
-		return fs.readFileSync(pathsManifest.theme, 'utf8');
-	}
-}
-
-const applyTheme = () => {
-	if (getIsThemed() ){
-		mainWindow.webContents.executeJavaScript(themeFile());
-		buildMenu()
-	}
 }
 
 const updateIcon = (icon) => {
@@ -243,20 +181,12 @@ const getExtraOptions = () => {
 	return {
 		"name": "Google Hangouts Chat for Linux",
 		"url": "https://mail.google.com/chat/u/0",
-		"oldUrl": "https://chat.google.com/?shell=8&lfhs=2",
 		"openLocally": true
 	};
 }
 
-const handleTheme = () => {
-	applyTheme();
-	if (!startHidden) {
-		mainWindow.show();
-	}
-}
-
 const doNotRedirect = (url) => {
-	return urlNotRedirected.some((e)=>url.includes(e))
+	return urlNotRedirected.some((e)=>url.includes(e));
 }
 
 const handleRedirect = (e, url) => {
@@ -276,8 +206,6 @@ const handleRedirect = (e, url) => {
 const initializeWindow = (config) => {
 	const bwOptions = (config && config.bounds) ? Object.assign(getBrowserWindowOptions(config), config.bounds) : getBrowserWindowOptions()
 	const extraOptions = getExtraOptions();
-	isThemed = (config && config.isThemed);
-	isDarkTheme = (config && config.isDarkTheme);
 	keepMinimized = (config && config.keepMinimized);
 	startHidden = (config && config.startHidden);
 	enableKeyboardShortcuts = (config && config.enableKeyboardShortcuts);
@@ -285,21 +213,18 @@ const initializeWindow = (config) => {
 	openUrlInside = (config && config.openUrlInside);
 	useXdgOpen = (config && config.useXdgOpen);
 	thirdPartyAuthLoginMode = (config && config.thirdPartyAuthLoginMode);
-	useOldUrl = (config && config.useOldUrl);
 
 	mainWindow = new BrowserWindow(bwOptions);
-	if (useOldUrl){
-		mainWindow.loadURL(extraOptions.oldUrl);
-	}else{
-		mainWindow.loadURL(extraOptions.url);
-	}
+	mainWindow.loadURL(extraOptions.url);
 
 	if (config.languages !== undefined){
 		const ses = mainWindow.webContents.session
 		ses.setSpellCheckerLanguages(config.languages)
 	}
 	mainWindow.once('ready-to-show', () => {
-		handleTheme();
+		if (!startHidden) {
+			mainWindow.show();
+		}
 	});
 
 	mainWindow.on('close', (e) => {
@@ -308,8 +233,6 @@ const initializeWindow = (config) => {
 			configsData = {};
 			configsData.bounds = mainWindow.getBounds();
 			configsData.wasMaximized = isMaximized;
-			configsData.isThemed = isThemed;
-			configsData.isDarkTheme = isDarkTheme;
 			configsData.keepMinimized = keepMinimized;
 			configsData.startHidden = startHidden;
 			configsData.enableKeyboardShortcuts = enableKeyboardShortcuts;
@@ -317,7 +240,6 @@ const initializeWindow = (config) => {
 			configsData.openUrlInside = openUrlInside;
 			configsData.useXdgOpen = useXdgOpen;
 			configsData.thirdPartyAuthLoginMode = thirdPartyAuthLoginMode;
-			configsData.useOldUrl = useOldUrl;
 		    
 			ConfigManager.updateConfigs(configsData);
 		}else{
@@ -359,14 +281,6 @@ const getUseXdgOpenTick= () => {
 	return getUseXdgOpen() ? '☑' : '☐';
 }
 
-const getIsDarkThemeTick= () => {
-	return getIsDarkTheme() ? '☑' : '☐' ;
-}
-
-const getUseOldUrlTick= () => {
-	return getUseOldUrl() ? '☑' : '☐' ;
-}
-
 const menuSubMenu= () => {
 
 	return [
@@ -376,16 +290,6 @@ const menuSubMenu= () => {
 				onForceReloadClicked();
 			}
 		},{
-			label: getUseOldUrlTick() +	" Use old version of chat, to restore themes and notifications",
-			click: () => {
-				onToggleUseOldUrl();
-			}
-		},{
-			label: getIsThemed() ? "Remove theme (restart)" : "Apply theme",
-			click: () => {
-				onToggleThemeClicked();
-			}
-		}, {
 			label: getEnableKeyboardShortcuts() ? "Disable alt left/right shortcuts (restart)" : "Enable alt left/right shortcuts (restart)",
 			click: () => {
 				onToggleKeyboardShortcuts();
@@ -413,13 +317,6 @@ const viewSubMenu= () => {
 	if (platform === 'win32'){
 		return [
 			{
-				label: getIsDarkThemeTick() + ' Use dark theme',
-				click: () => {
-					onUseDarkThemeClicked();
-				}
-			}, {
-				type: 'separator'
-			}, {
 				label: getStartHiddenTick() + ' Start hidden (restart)',
 				click: () => {
 					onStartHiddenClicked();
@@ -438,15 +335,6 @@ const viewSubMenu= () => {
 				click: () => {
 					onKeepMinimizedClicked(true);
 				}
-			}, {
-				type: 'separator'
-			}, {
-				label: getIsDarkThemeTick() + ' Use dark theme',
-				click: () => {
-					onUseDarkThemeClicked();
-				}
-			}, {
-				type: 'separator'
 			}, {
 				label: getStartHiddenTick() + ' Start hidden (restart)',
 				click: () => {
@@ -513,7 +401,7 @@ const buildMenu = () => {
 			label: 'DevTools',
 			accelerator: 'CommandOrControl+Shift+I',
 			click: () => {
-				mainWindow.webContents.openDevTools();;
+				mainWindow.webContents.openDevTools();
 			}
 
 		}
@@ -524,16 +412,12 @@ const buildMenu = () => {
 
 module.exports = {
 	initializeWindow: initializeWindow,
-	getIsThemed: getIsThemed,
 	getEnableKeyboardShortcuts: getEnableKeyboardShortcuts,
 	onToggleKeyboardShortcuts: onToggleKeyboardShortcuts,
 	onForceReloadClicked: onForceReloadClicked,
-	onToggleThemeClicked: onToggleThemeClicked,
 	onQuitEntryClicked: onQuitEntryClicked,
 	onToggleThirdPartyAuthLoginMode: onToggleThirdPartyAuthLoginMode,
 	getThirdPartyAuthLoginMode: getThirdPartyAuthLoginMode,
-	onToggleUseOldUrl: onToggleUseOldUrl,
-	getUseOldUrl: getUseOldUrl,
 	updateIcon: updateIcon,
 	setOverlayIcon: setOverlayIcon,
 	cleanOverlayIcon: cleanOverlayIcon

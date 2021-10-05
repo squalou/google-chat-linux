@@ -26,7 +26,7 @@ const loadConfigs = () => {
 		return c;
 	} catch (e) {
 		console.error(e);
-		const defconfig = '{"bounds":{"x":456,"y":229,"width":1105,"height":757},"wasMaximized":false,"isThemed":false}'
+		const defconfig = '{"bounds":{"x":456,"y":229,"width":1105,"height":757},"wasMaximized":false}'
 		fs.writeFileSync(pathsManifest.configsPath,defconfig, 'utf8');
 		c = JSON.parse(defconfig, "utf-8");
 		setConfigDefaults(c);

@@ -23,20 +23,8 @@ const buildContextMenu = (mainWindow) => {
 				WindowManager.onForceReloadClicked();
 			}
 		}, {
-			"label": WindowManager.getIsThemed() ? "Remove theme (restart)" : "Apply theme",
-			"click": () => {
-				WindowManager.onToggleThemeClicked(mainWindow);
-				buildContextMenu();
-			}
-		}, {
 			type: 'separator'
         }, {
-			"label": WindowManager.getUseOldUrl() ? "Use current ugly UI (restart)" : "Use previous chat UI (restart)",
-			"click": () => {
-				WindowManager.onToggleUseOldUrl();
-				buildContextMenu();
-			}
-		}, {
 			type: 'separator'
 		}, {
 			"label": WindowManager.getThirdPartyAuthLoginMode() ? "Regular mode after auth (restart)" : "Use third party auth mode (restart)",
@@ -70,11 +58,7 @@ const initializeTray = (windowObj, config) => {
 	// pb : favicon object changes so the observer .... cannot observe ! or even be initialized
 	// -> moved things to ipcRenderer preload mechanism in faviconChange.js - thank you ankurk91 :-)
 	// see https://github.com/ankurk91/google-chat-electron.git
-	if (config && config.useOldUrl){
-		systemTrayIcon = new Tray(pathsManifest.ICON_OFFLINE_MSG);
-	}else{
-		systemTrayIcon = new Tray(pathsManifest.OFFLINE);
-	}
+	systemTrayIcon = new Tray(pathsManifest.OFFLINE);
 	mainWindow = windowObj;
 	return buildContextMenu(windowObj);
 
@@ -82,20 +66,7 @@ const initializeTray = (windowObj, config) => {
 
 ipcMain.on('favicon-changed', (evt, href) => {
 	var itype = "";
-	let oldStyle = false;
-	if (href.match(/chat-favicon-no-new/)) {
-		itype = "NORMAL";
-		oldStyle = true;
-	}else if (href.match(/chat-favicon-new-non-notif/)) {
-		itype = "UNREAD";
-		oldStyle = true;
-	}else if (href.match(/chat-favicon-new-notif/)) {
-		itype = "ATTENTION";
-		oldStyle = true;
-	}else if (href.match(/^data:image\/png;base64,iVBOR.+/)) {
-		itype = "OFFLINE";
-		oldStyle = true;
-	}else if (href.match(/favicon_chat_r2/) ||
+if (href.match(/favicon_chat_r2/) ||
     	href.match(/favicon_chat_new_non_notif_r2/)) {
 		itype = "NORMAL";
 	}else if (href.match(/favicon_chat_new_notif_r2/)) {
@@ -103,33 +74,21 @@ ipcMain.on('favicon-changed', (evt, href) => {
 	}else {
 		itype = "OFFLINE";
 	}
-	setIcon(itype, oldStyle);
+	setIcon(itype);
 });
 
-function iconForType(iconType, oldStyle) {
-	if (oldStyle){
-		if (iconType == "NORMAL") {
-			return pathsManifest.ICON_NO_NEW_MSG;
-		}else if (iconType == "UNREAD") {
-			return pathsManifest.ICON_NEW_NON_NOTIF_MSG;
-		}else if (iconType == "ATTENTION") {
-			return pathsManifest.ICON_NEW_NOTIF_MSG;
-		} else {
-			return pathsManifest.ICON_OFFLINE_MSG;
-		}
+function iconForType(iconType) {
+	if (iconType == "NORMAL") {
+		return pathsManifest.NORMAL;
+	}else if (iconType == "ATTENTION") {
+		return pathsManifest.BADGE;
 	}else{
-		if (iconType == "NORMAL") {
-			return pathsManifest.NORMAL;
-		}else if (iconType == "ATTENTION") {
-			return pathsManifest.BADGE;
-		}else{
-			return pathsManifest.OFFLINE;
-		}
+		return pathsManifest.OFFLINE;
 	}
 }
 
-const setIcon = (iconType, oldStyle) => {
-	const i = iconForType(iconType, oldStyle)
+const setIcon = (iconType) => {
+	const i = iconForType(iconType)
 	try {
 		systemTrayIcon.setImage(i);
 	}catch (e){

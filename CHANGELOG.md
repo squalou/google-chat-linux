@@ -4,6 +4,15 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.14.16-1
+
+* Good Bye Themes !
+   * they never worked in new UI
+   * they ceased to work in old UI
+   * new UI has native dark theme support ...
+   * ... no more theme support !
+* Good bye Old UI support : it was finally completely disabled by Google.
+
 ### 5.14.15-1
 
 * electron 14
