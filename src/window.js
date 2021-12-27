@@ -191,6 +191,8 @@ const doNotRedirect = (url) => {
 
 const handleRedirect = (e, url) => {
 	// leave redirect for double auth mechanism, trap crappy blocked url link
+	console.log(url)
+	console.log(e)
 	if (url.includes("about:blank")) {
 		e.preventDefault();
 	} else if ( ! openUrlInside && ! doNotRedirect(url)){

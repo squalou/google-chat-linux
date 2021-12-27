@@ -25,6 +25,10 @@ Dependency is taken care of in AUR Arch package and Debian package.
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+### 5.15.16-1
+
+electron 15
+
 ### 5.14.16-1
 
 * Good Bye Themes ! (they didn't work anymore anyway)

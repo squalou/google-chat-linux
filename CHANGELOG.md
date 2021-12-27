@@ -4,6 +4,10 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.15.16-1
+
+Update to electron 15.3.2
+
 ### 5.14.16-1
 
 * Good Bye Themes !
