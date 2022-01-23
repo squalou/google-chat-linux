@@ -12,6 +12,7 @@ const setConfigDefaults = (configuration) => {
 	configuration.useXdgOpen = configuration.useXdgOpen === undefined ? false : configuration.useXdgOpen;
 	configuration.thirdPartyAuthLoginMode = configuration.thirdPartyAuthLoginMode === undefined ? false : configuration.thirdPartyAuthLoginMode;
 	configuration.useOldUrl = configuration.useOldUrl === undefined ? false : configuration.useOldUrl;
+	configuration.languages = configuration.languages === undefined ? undefined : configuration.languages;
 	if(process.platform === 'win32'){
 		configuration.keepMinimized = true;
 	}

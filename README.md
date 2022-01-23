@@ -25,6 +25,13 @@ Dependency is taken care of in AUR Arch package and Debian package.
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+
+### 5.15.16-2
+
+Fix language support https://github.com/squalou/google-chat-linux/issues/42
+
+Add "languages": ["fr","en-US"] in the json to override default OS locale.
+
 ### 5.15.16-1
 
 electron 15

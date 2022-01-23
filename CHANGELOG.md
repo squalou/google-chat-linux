@@ -4,6 +4,12 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.15.16-2
+
+Fix language support https://github.com/squalou/google-chat-linux/issues/42
+
+Add "languages": ["fr","en-US"] in the json to override default OS locale.
+
 ### 5.15.16-1
 
 Update to electron 15.3.2
