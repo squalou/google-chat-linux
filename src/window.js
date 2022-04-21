@@ -19,6 +19,7 @@ const urlNotRedirected = ["accounts/SetOSID?authuser=0&continue=https%3A%2F%2Fch
 						,"accounts.google.com"
 						,"accounts.youtube.com"
 						,"mail.google.com/ServiceLogin"
+						,"mail.google.com/chat"
 						,"https://chat.google.com/"
 						]
 
