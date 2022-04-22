@@ -25,6 +25,9 @@ Dependency is taken care of in AUR Arch package and Debian package.
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+### 5.15.17-1
+
+Fix #40 : client breaks out to browser when login needed.
 
 ### 5.15.16-2
 

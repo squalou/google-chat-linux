@@ -4,6 +4,10 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.15.17-1
+
+Fix #40 : client breaks out to browser when login needed.
+
 ### 5.15.16-2
 
 Fix language support https://github.com/squalou/google-chat-linux/issues/42
