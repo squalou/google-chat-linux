@@ -1,6 +1,6 @@
 {
   "name": "google-chat-linux",
-  "version": "5.15.17-1",
+  "version": "5.20.18-1",
   "description": "Google Hangouts Chat unofficial linux app",
   "main": "src/index.js",
   "scripts": {
@@ -22,26 +22,33 @@
       "target": "deb"
     },
     "deb": {
-        "depends": ["xdg-desktop-portal"]
+      "depends": [
+        "xdg-desktop-portal"
+      ]
     },
     "win": {
       "target": [
         "nsis"
       ]
     },
-    "extraFiles": [
-      "libappindicator3.so.1",
-      "libappindicator3.so"
+    "extraResources": [
+      {
+        "filter": [
+          "**/*"
+        ],
+        "from": "assets"
+      }
     ]
   },
+  "engines": {
+    "node": "16.17.0",
+    "npm": ">=8.15.0"
+  },
   "dependencies": {
-    "electron-context-menu": "^2.0.0",
-    "electron-localshortcut": "^3.1.0",
-    "fs": "0.0.1-security",
-    "path": "0.12.7"
+    "electron-context-menu": "^3.5.0"
   },
   "devDependencies": {
-    "electron": "=15.3.5",
-    "electron-builder": ">=22.11.0"
+    "electron": "^20.1.0",
+    "electron-builder": "^23.3.3"
   }
 }
