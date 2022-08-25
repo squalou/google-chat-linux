@@ -25,6 +25,11 @@ Dependency is taken care of in AUR Arch package and Debian package.
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+### 5.20.18-2
+
+- update to electron 20
+- Fix #54 (systray in wayland)
+
 ### 5.15.17-1
 
 Fix #40 : client breaks out to browser when login needed.
