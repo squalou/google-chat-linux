@@ -25,6 +25,11 @@ Dependency is taken care of in AUR Arch package and Debian package.
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+### 5.21.18-3
+
+- update to electron 21
+- set `--ozone-platform-hint=auto` to for better wayland support when available.
+
 ### 5.20.18-2
 
 - update to electron 20

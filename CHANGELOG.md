@@ -4,6 +4,17 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.21.18-3
+
+- update to electron 21
+- set `--ozone-platform-hint=auto` to for better wayland support when available. (https://releases.electronjs.org/releases/stable?version=21&page=6&limit=2)
+
+### 5.20.18-2
+
+- update to electron 20
+- Fix #54 (systray in wayland)
+
+
 ### 5.15.17-1
 
 Fix #40 : client breaks out to browser when login needed.
