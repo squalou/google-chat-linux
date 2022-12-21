@@ -6,10 +6,14 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ### 5.21.18-3
 
+- remove `--ozone-platform-hint=auto` from default launcher
+- add a word in README about wayland
+### 5.21.18-2
+
 - update to electron 21
 - set `--ozone-platform-hint=auto` to for better wayland support when available. (https://releases.electronjs.org/releases/stable?version=21&page=6&limit=2)
 
-### 5.20.18-2
+### 5.20.18-1
 
 - update to electron 20
 - Fix #54 (systray in wayland)

@@ -21,16 +21,33 @@ Starting with 5.14.x, xdg-desktop-portal must be installed. It's probably alread
 
 Dependency is taken care of in AUR Arch package and Debian package.
 
+## Wayland support
+
+Electron 20 introduced a command line to mimic chromium way to switch to Wayland if available. Simply run electron ap with `--ozone-platform-hint=auto` to make it use Wayland if available, Xorg else. The default value is `default` and does not try Wayland at all.
+
+This has side effects on window decoration (absent on Gnome for instance).
+
+I first enforced it in the .desktop shortcut, bad idea sorry about that ;-)
+
+I didn't find a way to make this a runtime option, this setting must be taken into account very early in electron startup I'm not even sure it's possible to do that.
+
+So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google-chat-linux.desktop` and add `--ozone-platform-hint=auto`.
+
 ## CHANGELOG and news
 
 See full [CHANGELOG](./CHANGELOG.md).
 
 ### 5.21.18-3
 
+- remove `--ozone-platform-hint=auto` from default launcher
+- add a word in README about wayland
+- 
+### 5.21.18-2
+
 - update to electron 21
 - set `--ozone-platform-hint=auto` to for better wayland support when available.
 
-### 5.20.18-2
+### 5.20.18-1
 
 - update to electron 20
 - Fix #54 (systray in wayland)
