@@ -23,15 +23,28 @@ Dependency is taken care of in AUR Arch package and Debian package.
 
 ## Wayland support
 
+### TL/DR; 
+
+Run with **both** command line options : `--enable-features=WaylandWindowDecorations --ozone-platform-hint=auto`
+
+
+### Detailed story
+
 Electron 20 introduced a command line to mimic chromium way to switch to Wayland if available. Simply run electron ap with `--ozone-platform-hint=auto` to make it use Wayland if available, Xorg else. The default value is `default` and does not try Wayland at all.
 
 This has side effects on window decoration (absent on Gnome for instance).
 
-I first enforced it in the .desktop shortcut, bad idea sorry about that ;-)
+Another side effect is the lack of notification in systray. (Which only works already with a workaround on Gnome, see further). 
+
+So you have to enable yet another feature flag (see https://github.com/electron/electron/pull/29618) `--enable-features=WaylandWindowDecorations`
+
+So, feel free to enable **both** options if you want, it will work with this lmitation.
+
+I first enforced the ozone flag in the .desktop shortcut, bad idea sorry about that ;-), forget the 5.21-18-2 version.
 
 I didn't find a way to make this a runtime option, this setting must be taken into account very early in electron startup I'm not even sure it's possible to do that.
 
-So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google-chat-linux.desktop` and add `--ozone-platform-hint=auto`.
+So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google-chat-linux.desktop` and add `--enable-features=WaylandWindowDecorations --ozone-platform-hint=auto`.
 
 ## CHANGELOG and news
 
