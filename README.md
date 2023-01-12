@@ -52,13 +52,13 @@ See full [CHANGELOG](./CHANGELOG.md).
 
 ### 5.21.19-1
 
-- #51 : manually set `NO_REDIRECT_URL` to solve login with custom OAuth SSO providers issues. Comma separated list of urls is accepted ! (see issue in github for more details)
+- https://github.com/squalou/google-chat-linux/issues/#51 : manually set `NO_REDIRECT_URL` to solve login with custom OAuth SSO providers issues. Comma separated list of urls is accepted ! (see issue in github for more details)
 
 ### 5.21.18-3
 
 - remove `--ozone-platform-hint=auto` from default launcher
 - add a word in README about wayland
-- 
+ 
 ### 5.21.18-2
 
 - update to electron 21
