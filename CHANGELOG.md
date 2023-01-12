@@ -6,7 +6,7 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ### 5.21.19-1
 
-- https://github.com/squalou/google-chat-linux/issues/#51 : manually set `NO_REDIRECT_URL` to solve login with custom OAuth SSO providers issues. Comma separated list of urls is accepted ! (see issue in github for more details)
+- https://github.com/squalou/google-chat-linux/issues/51 : manually set `NO_REDIRECT_URL` to solve login with custom OAuth SSO providers issues. Comma separated list of urls is accepted ! (see issue in github for more details)
 
 ### 5.21.18-3
 
