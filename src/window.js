@@ -15,13 +15,23 @@ let openUrlInside = false;
 let useXdgOpen = false;
 let thirdPartyAuthLoginMode = false;
 
-const urlNotRedirected = ["accounts/SetOSID?authuser=0&continue=https%3A%2F%2Fchat.google.com"
+const noRedirectUrlArrayHardcoded = ["accounts/SetOSID?authuser=0&continue=https%3A%2F%2Fchat.google.com"
 						,"accounts.google.com"
 						,"accounts.youtube.com"
 						,"mail.google.com/ServiceLogin"
 						,"mail.google.com/chat"
 						,"https://chat.google.com/"
-						]
+						];
+
+let urlNotRedirectedTmp;
+if (process.env.NO_REDIRECT_URL){
+	urlNotRedirectedTmp = noRedirectUrlArrayHardcoded.concat(process.env.NO_REDIRECT_URL.toString().split(","));
+} else {
+	urlNotRedirectedTmp = noRedirectUrlArrayHardcoded;
+}
+const urlNotRedirected = urlNotRedirectedTmp;
+console.log("not redirected urls:");
+console.log(urlNotRedirected);
 
 ipcMain.on('open-link', (evt, href) => {
 	shell.openExternal(href);

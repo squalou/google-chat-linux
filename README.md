@@ -50,6 +50,10 @@ So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+### 5.21.19-1
+
+- #51 : manually set `NO_REDIRECT_URL` to solve login with custom OAuth SSO providers issues. Comma separated list of urls is accepted ! (see issue in github for more details)
+
 ### 5.21.18-3
 
 - remove `--ozone-platform-hint=auto` from default launcher
@@ -162,6 +166,8 @@ After first run, quit, then edit $HOME/.config/google-hangouts-chat-linux.json, 
 If your login redirects to some OAuth provider (other than Google), login may fail.
 
 In Menu (Alt, or systray right click), choose `use third party auth mode`. Login should work but you loose some features (systray related). Use the same menu after login to restore normal mode. Repeat anytime login is required.
+
+**NEW** Since 5.21.19-1 you can also set `NO_REDIRECT_URL` environment variable to the url (or a comma separated list of urls) of the OAuth provider.
 
 ## Freeze ?
 
