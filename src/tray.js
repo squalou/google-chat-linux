@@ -1,4 +1,5 @@
 const {Tray, Menu, ipcMain} = require("electron");
+//const path = require("path");
 const pathsManifest = require("./paths");
 const WindowManager = require('./window');
 let mainWindow;
@@ -11,7 +12,7 @@ const onSystemTrayIconClicked = () => {
 	(! mainWindow.isVisible() || mainWindow.isMinimized() || ! mainWindow.isFocused()) ? mainWindow.show() : mainWindow.hide();
 }
 
-const buildContextMenu = (mainWindow) => {
+const buildContextMenu = () => {
 	const template = [
 		{
 			"label": "Show/Hide",
@@ -54,27 +55,32 @@ const buildContextMenu = (mainWindow) => {
 	return systemTrayIcon;
 }
 
-const initializeTray = (windowObj, config) => {
+const initializeTray = (windowObj) => {
 	// pb : favicon object changes so the observer .... cannot observe ! or even be initialized
 	// -> moved things to ipcRenderer preload mechanism in faviconChange.js - thank you ankurk91 :-)
 	// see https://github.com/ankurk91/google-chat-electron.git
-	systemTrayIcon = new Tray(pathsManifest.OFFLINE);
+	try {
+		systemTrayIcon = new Tray(pathsManifest.OFFLINE);
+	} catch (e){
+		console.log(e)
+		console.log("set Tray icon failed !")
+	}
 	mainWindow = windowObj;
-	return buildContextMenu(windowObj);
+	return buildContextMenu();
 
 };
 
 ipcMain.on('favicon-changed', (evt, href) => {
 	var itype = "";
-if (href.match(/favicon_chat_r2/) ||
-    	href.match(/favicon_chat_new_non_notif_r2/)) {
+    if (href.match(/favicon_chat_new_non_notif_r2/) ||
+		href.match(/favicon_chat_r2/)) {
 		itype = "NORMAL";
 	}else if (href.match(/favicon_chat_new_notif_r2/)) {
 		itype = "ATTENTION";
 	}else {
 		itype = "OFFLINE";
 	}
-	setIcon(itype);
+    setIcon(itype);
 });
 
 function iconForType(iconType) {

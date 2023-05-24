@@ -1,4 +1,4 @@
-const {app} = require('electron');
+const {app, Tray} = require('electron');
 const WindowManager = require('./window');
 const TrayManager = require('./tray');
 const KeyboardManager = require('./keyboard');
@@ -29,7 +29,7 @@ const initialize = () => {
 	}
 
 	if(!systemTrayIcon) {
-		systemTrayIcon = TrayManager.initializeTray(mainWindow, config);
+		systemTrayIcon = TrayManager.initializeTray(mainWindow);
 	}
 
 	if (WindowManager.getEnableKeyboardShortcuts()) {
