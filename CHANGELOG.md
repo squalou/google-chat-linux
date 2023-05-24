@@ -4,6 +4,10 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.24.19-2
+
+Fix open links in external browser (https://github.com/squalou/google-chat-linux/issues/65)
+
 ### 5.24.19-1
 
 - Update to electron 24 to support new functions added to google chat (quote reply among them). As a result, tray icon support gets worse. See https://github.com/squalou/google-chat-linux/issues/63

@@ -59,6 +59,10 @@ So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+### 5.24.19-2
+
+Fix open links in external browser (https://github.com/squalou/google-chat-linux/issues/65)
+
 ### 5.24.19-1
 
 Update to electron 24.

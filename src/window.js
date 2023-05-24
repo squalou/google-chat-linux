@@ -204,7 +204,7 @@ const handleRedirect = (e, url) => {
 	// leave redirect for double auth mechanism, trap crappy blocked url link
 	console.log(url)
 	console.log(e)
-	if (url.includes("about:blank")) {
+	if (e!==undefined && url.includes("about:blank")) {
 		e.preventDefault();
 	} else if ( ! openUrlInside && ! doNotRedirect(url)){
 		if (process.platform === 'linux' && getUseXdgOpen()){
@@ -212,7 +212,7 @@ const handleRedirect = (e, url) => {
 		}else{
 			shell.openExternal(url);
 		}
-		e.preventDefault();
+		if (e!==undefined) e.preventDefault();
 	}
 };
 
@@ -266,7 +266,10 @@ const initializeWindow = (config) => {
 	});
 
 	mainWindow.webContents.on('will-navigate', handleRedirect);
-	mainWindow.webContents.on('new-window', handleRedirect);
+	mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+		handleRedirect(undefined, url);
+		return { action: 'deny' };
+	  });
 
 	buildMenu();
 
