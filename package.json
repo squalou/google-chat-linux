@@ -1,6 +1,6 @@
 {
   "name": "google-chat-linux",
-  "version": "5.21.19-1",
+  "version": "5.24.19-1",
   "description": "Google Hangouts Chat unofficial linux app",
   "main": "src/index.js",
   "scripts": {
@@ -41,14 +41,14 @@
     ]
   },
   "engines": {
-    "node": "16.17.0",
+    "node": "18.14.0",
     "npm": ">=8.15.0"
   },
   "dependencies": {
     "electron-context-menu": "^3.5.0"
   },
   "devDependencies": {
-    "electron": "^21.0.0",
-    "electron-builder": "^23.6.0"
+    "electron": "^24.3.1",
+    "electron-builder": "^22.10.3"
   }
 }

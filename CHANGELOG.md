@@ -4,6 +4,11 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.24.19-1
+
+- Update to electron 24 to support new functions added to google chat (quote reply among them). As a result, tray icon support gets worse. See https://github.com/squalou/google-chat-linux/issues/63
+- Clean some outdated icons.
+
 ### 5.21.19-1
 
 - https://github.com/squalou/google-chat-linux/issues/51 : manually set `NO_REDIRECT_URL` to solve login with custom OAuth SSO providers issues. Comma separated list of urls is accepted ! (see issue in github for more details)

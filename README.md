@@ -1,3 +1,12 @@
+Tray has changed ... again
+https://github.com/electron/electron/pull/36472
+https://github.com/electron/electron/pull/36333
+https://github.com/electron/electron/issues/36602
+
+broken *again* on electron 22+
+
+See below Changelog **5.24.19-1**
+
 # google-chat-linux-git
 
 An electron-base client for Google Hangouts Chat, since Google didn't see fit to provide one.
@@ -49,6 +58,43 @@ So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google
 ## CHANGELOG and news
 
 See full [CHANGELOG](./CHANGELOG.md).
+
+### 5.24.19-1
+
+Update to electron 24.
+
+**Why ?**
+
+Some functionalities are blocked for older browsers, for instance "quoted-reply", which has finally arrived in google chat. (2023, hello guys, wake up)
+
+**Bad news**
+
+electron sucks with Tray ... again
+
+gnome users will want to try https://extensions.gnome.org//extension/615/appindicator-support/
+
+instead of Ubuntu Appindicators (if in use on the distro)
+
+Note that ... looks like it's a crappy situation (again)
+- Ubuntu Appindicator required for electron -> 21, wont work for 22+
+- Appindicator and KStatusNotifierItem required for electron 22+
+
+AND THEN AGAIN ! Double click must be used instead of single click,
+
+and that shit is on Gnome only, and of course poor to no wayland support
+
+Tray F***ng Icons still failing in 2023, not like it's been around since 28 years.
+
+
+**Weird news** though : notification on application shortcut seems to work on Gnome ... only when app is launched from sources ! (`./google-chat-linux.sh`)
+
+I'm probably definitively done with this electron nightmare.
+
+Best solution is probably hte ArchLinux packagine approach : without electron embedded/packaged. go wonder.
+
+I've added `google-chat-linux-nvm-launcher.sh` that uses nvm, uses `nvm use --lts`, then starts `./google-chat-linux/google-chat-linux.sh`,
+it can be referenced in a local .desktop file, and it will work. That's hjow I personally launch it.
+
 
 ### 5.21.19-1
 

@@ -157,7 +157,7 @@ const setOverlayIcon = () => {
 		mainWindow.setOverlayIcon(pathsManifest.OVERLAY_NEW_NOTIF, "!");
 	}catch (e){
 		//do nothing ... fails on some distribs / OS / window managers
-		// console.log(e)
+		//console.log(e)
 	}
 }
 
@@ -166,7 +166,7 @@ const cleanOverlayIcon = () => {
 		mainWindow.setOverlayIcon(null, "");
 	}catch (e){
 		//do nothing ... fails on some distribs / OS / window managers
-		// console.log(e)
+		//console.log(e)
 	}
 }
 
@@ -184,7 +184,7 @@ const getBrowserWindowOptions = (config) => {
 		},
 		"show": false,
 		"backgroundColor": "#262727",
-		"icon": pathsManifest.iconPath,
+		"icon": pathsManifest.NORMAL,
 	}
 }
 
