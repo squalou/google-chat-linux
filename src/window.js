@@ -16,15 +16,15 @@ let useXdgOpen = false;
 let thirdPartyAuthLoginMode = false;
 
 const noRedirectUrlArrayHardcoded = ["accounts/SetOSID?authuser=0&continue=https%3A%2F%2Fchat.google.com"
-						,"accounts.google.com"
-						,"accounts.youtube.com"
-						,"mail.google.com/ServiceLogin"
-						,"mail.google.com/chat"
-						,"https://chat.google.com/"
-						];
+	, "accounts.google.com"
+	, "accounts.youtube.com"
+	, "mail.google.com/ServiceLogin"
+	, "mail.google.com/chat"
+	, "https://chat.google.com/"
+];
 
 let urlNotRedirectedTmp;
-if (process.env.NO_REDIRECT_URL){
+if (process.env.NO_REDIRECT_URL) {
 	urlNotRedirectedTmp = noRedirectUrlArrayHardcoded.concat(process.env.NO_REDIRECT_URL.toString().split(","));
 } else {
 	urlNotRedirectedTmp = noRedirectUrlArrayHardcoded;
@@ -82,7 +82,7 @@ const setThirdPartyAuthLoginMode = (b) => {
 };
 
 const onKeepMinimizedClicked = (keep) => {
-	if (keep !== keepMinimized){
+	if (keep !== keepMinimized) {
 		keepMinimized = keep;
 		app.relaunch();
 		onQuitEntryClicked();
@@ -102,7 +102,7 @@ const onQuitEntryClicked = () => {
 
 const onToggleThirdPartyAuthLoginMode = () => {
 	setThirdPartyAuthLoginMode(!getThirdPartyAuthLoginMode());
-	if (getThirdPartyAuthLoginMode()){
+	if (getThirdPartyAuthLoginMode()) {
 		setOpenUrlInside(true);
 		setEnableNodeIntegration(false);
 	} else {
@@ -120,7 +120,7 @@ const onToggleOpenUrlInside = () => {
 
 const onToggleUseXdgOpen = () => {
 	setUseXdgOpen(!getUseXdgOpen());
-	if (getUseXdgOpen()){
+	if (getUseXdgOpen()) {
 		setOpenUrlInside(false);
 	}
 	buildMenu();
@@ -143,9 +143,9 @@ const onForceReloadClicked = () => {
 }
 
 const updateIcon = (icon) => {
-	try{
+	try {
 		mainWindow.setIcon(icon);
-	}catch (e){
+	} catch (e) {
 		//do nothing ... fails on some distribs / OS / window managers
 		console.log("Failed to update window icon :-(")
 		console.log(e)
@@ -153,18 +153,18 @@ const updateIcon = (icon) => {
 }
 
 const setOverlayIcon = () => {
-	try{
+	try {
 		mainWindow.setOverlayIcon(pathsManifest.OVERLAY_NEW_NOTIF, "!");
-	}catch (e){
+	} catch (e) {
 		//do nothing ... fails on some distribs / OS / window managers
 		//console.log(e)
 	}
 }
 
 const cleanOverlayIcon = () => {
-	try{
+	try {
 		mainWindow.setOverlayIcon(null, "");
-	}catch (e){
+	} catch (e) {
 		//do nothing ... fails on some distribs / OS / window managers
 		//console.log(e)
 	}
@@ -197,22 +197,22 @@ const getExtraOptions = () => {
 }
 
 const doNotRedirect = (url) => {
-	return urlNotRedirected.some((e)=>url.includes(e));
+	return urlNotRedirected.some((e) => url.includes(e));
 }
 
 const handleRedirect = (e, url) => {
 	// leave redirect for double auth mechanism, trap crappy blocked url link
 	console.log(url)
 	console.log(e)
-	if (e!==undefined && url.includes("about:blank")) {
+	if (e !== undefined && url.includes("about:blank")) {
 		e.preventDefault();
-	} else if ( ! openUrlInside && ! doNotRedirect(url)){
-		if (process.platform === 'linux' && getUseXdgOpen()){
+	} else if (!openUrlInside && !doNotRedirect(url)) {
+		if (process.platform === 'linux' && getUseXdgOpen()) {
 			require('child_process').exec('xdg-open ' + url);
-		}else{
+		} else {
 			shell.openExternal(url);
 		}
-		if (e!==undefined) e.preventDefault();
+		if (e !== undefined) e.preventDefault();
 	}
 };
 
@@ -230,7 +230,7 @@ const initializeWindow = (config) => {
 	mainWindow = new BrowserWindow(bwOptions);
 	mainWindow.loadURL(extraOptions.url);
 
-	if (config.languages !== undefined){
+	if (config.languages !== undefined) {
 		const ses = mainWindow.webContents.session
 		ses.setSpellCheckerLanguages(config.languages)
 	}
@@ -241,7 +241,7 @@ const initializeWindow = (config) => {
 	});
 
 	mainWindow.on('close', (e) => {
-		if(isQuitting){
+		if (isQuitting) {
 			let isMaximized = mainWindow.isMaximized();
 			configsData = {};
 			configsData.bounds = mainWindow.getBounds();
@@ -253,13 +253,13 @@ const initializeWindow = (config) => {
 			configsData.openUrlInside = openUrlInside;
 			configsData.useXdgOpen = useXdgOpen;
 			configsData.thirdPartyAuthLoginMode = thirdPartyAuthLoginMode;
-		    
+
 			ConfigManager.updateConfigs(configsData);
-		}else{
+		} else {
 			e.preventDefault();
-			if (keepMinimized){
+			if (keepMinimized) {
 				mainWindow.minimize()
-			}else{
+			} else {
 				mainWindow.hide();
 			}
 		}
@@ -269,7 +269,7 @@ const initializeWindow = (config) => {
 	mainWindow.webContents.setWindowOpenHandler(({ url }) => {
 		handleRedirect(undefined, url);
 		return { action: 'deny' };
-	  });
+	});
 
 	buildMenu();
 
@@ -289,15 +289,15 @@ const getStartHiddenTick = () => {
 	return startHidden ? '☑' : '☐';
 }
 
-const getOpenUrlInsideTick= () => {
+const getOpenUrlInsideTick = () => {
 	return getOpenUrlInside() ? '☐' : '☑';
 }
 
-const getUseXdgOpenTick= () => {
+const getUseXdgOpenTick = () => {
 	return getUseXdgOpen() ? '☑' : '☐';
 }
 
-const menuSubMenu= () => {
+const menuSubMenu = () => {
 
 	return [
 		{
@@ -305,14 +305,14 @@ const menuSubMenu= () => {
 			click: () => {
 				onForceReloadClicked();
 			}
-		},{
+		}, {
 			label: getEnableKeyboardShortcuts() ? "Disable alt left/right shortcuts (restart)" : "Enable alt left/right shortcuts (restart)",
 			click: () => {
 				onToggleKeyboardShortcuts();
 			}
 		}, {
 			type: 'separator'
-		},{
+		}, {
 			label: getThirdPartyAuthLoginMode() ? "Back to regular mode after auth (restart)" : "Use third party auth mode (restart)",
 			click: () => {
 				onToggleThirdPartyAuthLoginMode();
@@ -329,8 +329,8 @@ const menuSubMenu= () => {
 	];
 }
 
-const viewSubMenu= () => {
-	if (platform === 'win32'){
+const viewSubMenu = () => {
+	if (platform === 'win32') {
 		return [
 			{
 				label: getStartHiddenTick() + ' Start hidden (restart)',
@@ -361,7 +361,7 @@ const viewSubMenu= () => {
 	}
 }
 
-const advancedSubMenu= () => {
+const advancedSubMenu = () => {
 	let mn = []
 	mn.push({
 		label: 'You should probably not tweak things here :-)',
@@ -370,14 +370,14 @@ const advancedSubMenu= () => {
 		type: 'separator'
 	});
 	mn.push({
-		label: getOpenUrlInsideTick() +	" Open URLs in external default browser",
+		label: getOpenUrlInsideTick() + " Open URLs in external default browser",
 		click: () => {
 			onToggleOpenUrlInside();
 		}
 	});
-	if (process.platform === 'linux'){
+	if (process.platform === 'linux') {
 		mn.push({
-			label: getUseXdgOpenTick() +	" Open URLs using xdg-open rather than default method",
+			label: getUseXdgOpenTick() + " Open URLs using xdg-open rather than default method",
 			click: () => {
 				onToggleUseXdgOpen();
 			}
@@ -397,23 +397,23 @@ const buildMenu = () => {
 		{
 			label: 'Menu',
 			submenu: menuSubMenu()
-		},{
+		}, {
 			label: 'View',
 			submenu: viewSubMenu()
-		},{
+		}, {
 			label: 'Advanced',
 			submenu: advancedSubMenu()
-		},{
+		}, {
 			label: 'About',
 			submenu: [
 				{
-					label: app.name + ' '+ app.getVersion() 
-				},{
-					label: 'electron '+process.versions.electron
+					label: app.name + ' ' + app.getVersion()
+				}, {
+					label: 'electron ' + process.versions.electron
 				}
 
 			]
-		},{
+		}, {
 			label: 'DevTools',
 			accelerator: 'CommandOrControl+Shift+I',
 			click: () => {

@@ -1,4 +1,4 @@
-const {app} = require("electron");
+const { app } = require("electron");
 const fs = require("fs");
 const pathsManifest = require("./paths");
 const { config } = require("process");
@@ -13,11 +13,11 @@ const setConfigDefaults = (configuration) => {
 	configuration.thirdPartyAuthLoginMode = configuration.thirdPartyAuthLoginMode === undefined ? false : configuration.thirdPartyAuthLoginMode;
 	configuration.useOldUrl = configuration.useOldUrl === undefined ? false : configuration.useOldUrl;
 	configuration.languages = configuration.languages === undefined ? undefined : configuration.languages;
-	if(process.platform === 'win32'){
+	if (process.platform === 'win32') {
 		configuration.keepMinimized = true;
 	}
 	console.log(configuration)
-	console.log("?disable-gpu:"+app.commandLine.hasSwitch('disable-gpu'));
+	console.log("?disable-gpu:" + app.commandLine.hasSwitch('disable-gpu'));
 }
 
 const loadConfigs = () => {
@@ -28,7 +28,7 @@ const loadConfigs = () => {
 	} catch (e) {
 		console.error(e);
 		const defconfig = '{"bounds":{"x":456,"y":229,"width":1105,"height":757},"wasMaximized":false}'
-		fs.writeFileSync(pathsManifest.configsPath,defconfig, 'utf8');
+		fs.writeFileSync(pathsManifest.configsPath, defconfig, 'utf8');
 		c = JSON.parse(defconfig, "utf-8");
 		setConfigDefaults(c);
 		return c;

@@ -1,4 +1,4 @@
-const {globalShortcut} = require("electron");
+const { globalShortcut } = require("electron");
 let mainWindow;
 
 const goBack = () => {
@@ -15,7 +15,7 @@ const goForward = () => {
 
 const registerKeyboardShortcuts = (windowObj) => {
 	mainWindow = windowObj;
-	
+
 	globalShortcut.register("Alt+Right", () => {
 		goForward();
 	});

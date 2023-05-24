@@ -1,10 +1,10 @@
 const contextMenu = require('electron-context-menu');
 
 const initializeContextMenu = () => {
-	contextMenu({		
+	contextMenu({
 		showInspectElement: false,
 		showCopyImageAddress: true,
-		showSaveImageAs: true,		
+		showSaveImageAs: true,
 	});
 }
 
