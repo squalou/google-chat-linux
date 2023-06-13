@@ -23,6 +23,9 @@ const noRedirectUrlArrayHardcoded = ["accounts/SetOSID?authuser=0&continue=https
 	, "https://chat.google.com/"
 ];
 
+const dirty_start_redirect_url = 'https://www.google.com/url?q=';
+const dirty_end_end_redirect_url = '&source=chat&';
+
 let urlNotRedirectedTmp;
 if (process.env.NO_REDIRECT_URL) {
 	urlNotRedirectedTmp = noRedirectUrlArrayHardcoded.concat(process.env.NO_REDIRECT_URL.toString().split(","));
@@ -33,7 +36,26 @@ const urlNotRedirected = urlNotRedirectedTmp;
 console.log("not redirected urls:");
 console.log(urlNotRedirected);
 
+const clean_url = (url) => {
+	init_url=url;
+	try{
+		if (url.startsWith(dirty_start_redirect_url)){
+			url = url.substr(dirty_start_redirect_url.length);
+		}
+		e = url.indexOf(dirty_end_end_redirect_url);
+		if(e>0){
+			url = url.substr(0, e);
+		}
+		return url;
+	}
+	catch (e){
+		console.log("erreur au nettoyage d'url " +e);
+		return init_url;
+	}
+}
+
 ipcMain.on('open-link', (evt, href) => {
+	href=clean_url(href);
 	shell.openExternal(href);
 });
 
@@ -202,11 +224,12 @@ const doNotRedirect = (url) => {
 
 const handleRedirect = (e, url) => {
 	// leave redirect for double auth mechanism, trap crappy blocked url link
-	console.log(url)
-	console.log(e)
+	// console.log(url)
+	// console.log(e)
 	if (e !== undefined && url.includes("about:blank")) {
 		e.preventDefault();
 	} else if (!openUrlInside && !doNotRedirect(url)) {
+		url = clean_url(url);
 		if (process.platform === 'linux' && getUseXdgOpen()) {
 			require('child_process').exec('xdg-open ' + url);
 		} else {
