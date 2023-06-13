@@ -59,6 +59,10 @@ So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+### 5.24.19-4
+
+Clean MORE links (https://github.com/squalou/google-chat-linux/issues/66)
+
 ### 5.24.19-3
 
 Clean links from google decoration before opening them (https://github.com/squalou/google-chat-linux/issues/66)

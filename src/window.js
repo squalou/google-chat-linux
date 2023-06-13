@@ -23,8 +23,8 @@ const noRedirectUrlArrayHardcoded = ["accounts/SetOSID?authuser=0&continue=https
 	, "https://chat.google.com/"
 ];
 
-const dirty_start_redirect_url = 'https://www.google.com/url?q=';
-const dirty_end_end_redirect_url = '&source=chat&';
+const dirty_start_redirect_url = 'https://www.google.com/url?';
+const dirty_end_redirect_url_array = ['&source=chat&', '&uct=', '&usg='];
 
 let urlNotRedirectedTmp;
 if (process.env.NO_REDIRECT_URL) {
@@ -37,19 +37,29 @@ console.log("not redirected urls:");
 console.log(urlNotRedirected);
 
 const clean_url = (url) => {
+	//console.log("cleaning url "+url);
 	init_url=url;
 	try{
 		if (url.startsWith(dirty_start_redirect_url)){
 			url = url.substr(dirty_start_redirect_url.length);
+			// now that initial dirt is away, there are still chars to remove. Find first http string and remove what's before
+			ht = url.indexOf('http');
+			url = url.substr(ht);
 		}
-		e = url.indexOf(dirty_end_end_redirect_url);
-		if(e>0){
-			url = url.substr(0, e);
-		}
+		//console.log("cleaning url step 1 "+url);
+		dirty_end_redirect_url_array.forEach(d=>{
+			e = url.indexOf(d);
+			if(e>0){
+				url = url.substr(0, e);
+			}
+		})
+		url = decodeURIComponent(url);
+		//console.log("cleaning url step 2 "+url);
+		console.log("cleaning url from "+init_url+" to "+url);
 		return url;
 	}
 	catch (e){
-		console.log("erreur au nettoyage d'url " +e);
+		console.log("error while cleaning url " +url +"\n" +e);
 		return init_url;
 	}
 }

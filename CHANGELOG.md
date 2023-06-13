@@ -4,6 +4,9 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.24.19-4
+
+Clean MORE links (https://github.com/squalou/google-chat-linux/issues/66)
 ### 5.24.19-3
 
 Clean links from google decoration before opening them (https://github.com/squalou/google-chat-linux/issues/66)
