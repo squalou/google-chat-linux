@@ -17,53 +17,53 @@ console.log('Node.js runtime version:', process.version);
 console.log('runtime platform : ', process.platform);
 
 const initialize = () => {
-	app.allowRendererProcessReuse = true;
-	config = ConfigManager.loadConfigs();
+    app.allowRendererProcessReuse = true;
+    config = ConfigManager.loadConfigs();
 
-	if (!mainWindow) {
-		mainWindow = WindowManager.initializeWindow(config);
-	}
+    if (!mainWindow) {
+        mainWindow = WindowManager.initializeWindow(config);
+    }
 
-	if (!contextMenu) {
-		contextMenu = ContextMenu.initializeContextMenu(mainWindow);
-	}
+    if (!contextMenu) {
+        contextMenu = ContextMenu.initializeContextMenu(mainWindow);
+    }
 
-	if (!systemTrayIcon) {
-		systemTrayIcon = TrayManager.initializeTray(mainWindow);
-	}
+    if (!systemTrayIcon) {
+        systemTrayIcon = TrayManager.initializeTray(mainWindow);
+    }
 
-	if (WindowManager.getEnableKeyboardShortcuts()) {
-		KeyboardManager.registerKeyboardShortcuts(mainWindow);
-	}
+    if (WindowManager.getEnableKeyboardShortcuts()) {
+        KeyboardManager.registerKeyboardShortcuts(mainWindow);
+    }
 
 };
 
 if (process.platform === 'win32') {
-	// Force single window, add Quit on taskbar for windows
-	const gotTheLock = app.requestSingleInstanceLock();
-	if (!gotTheLock) {
-		app.quit();
-	} else {
-		app.on('second-instance', (event, argv) => {
-			if (process.platform === 'win32' && argv.includes('--quit')) {
-				// Needs to be delayed to not interfere with mainWindow.restore();
-				setTimeout(() => {
-					console.log('Quitting via Task');
-					WindowManager.onQuitEntryClicked()
-					app.quit();
-				}, 10);
-			}
-		});
-	}
+    // Force single window, add Quit on taskbar for windows
+    const gotTheLock = app.requestSingleInstanceLock();
+    if (!gotTheLock) {
+        app.quit();
+    } else {
+        app.on('second-instance', (event, argv) => {
+            if (process.platform === 'win32' && argv.includes('--quit')) {
+                // Needs to be delayed to not interfere with mainWindow.restore();
+                setTimeout(() => {
+                    console.log('Quitting via Task');
+                    WindowManager.onQuitEntryClicked()
+                    app.quit();
+                }, 10);
+            }
+        });
+    }
 
-	app.setUserTasks([
-		{
-			program: process.execPath,
-			arguments: '--quit',
-			iconIndex: 0,
-			title: "Quit"
-		}
-	]);
+    app.setUserTasks([
+        {
+            program: process.execPath,
+            arguments: '--quit',
+            iconIndex: 0,
+            title: "Quit"
+        }
+    ]);
 }
 
 app.on("ready", initialize);

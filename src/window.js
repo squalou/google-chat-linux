@@ -250,23 +250,19 @@ const handleRedirect = (e, url) => {
 };
 
 const initializeWindow = (config) => {
-
-    const additionalData = { myKey: 'myValue' }
     const gotTheLock = app.requestSingleInstanceLock(additionalData)
     if (!gotTheLock) {
         console.log("Another instance is already running ! aborting");
         app.quit()
     } else {
         app.on('second-instance', (event, commandLine, workingDirectory, additionalData) => {
-            console.log(additionalData)
-            if (mainWindow) {
+             if (mainWindow) {
                 if (mainWindow.isMinimized()) { mainWindow.restore() }
                 mainWindow.show()
                 mainWindow.focus()
             }
         })
     }
-
     const bwOptions = (config && config.bounds) ? Object.assign(getBrowserWindowOptions(config), config.bounds) : getBrowserWindowOptions()
     const extraOptions = getExtraOptions();
     keepMinimized = (config && config.keepMinimized);
