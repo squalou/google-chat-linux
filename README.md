@@ -59,6 +59,10 @@ So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+### 5.24.30-1
+
+Prevent several instances of google chat linux to be launched. (https://github.com/squalou/google-chat-linux/issues/67)
+
 ### 5.24.19-4
 
 Clean MORE links (https://github.com/squalou/google-chat-linux/issues/66)

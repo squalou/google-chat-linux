@@ -4,6 +4,14 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.24.30-1
+
+Prevent several instances of google chat linux to be launched simultaneously. (https://github.com/squalou/google-chat-linux/issues/67)
+
+* Under X.Org : Starting a new one will restore and focus the existing one.
+* Under Wayland : it depends, with Gnome a notification is displayed but no focus given.
+
+
 ### 5.24.19-4
 
 Clean MORE links (https://github.com/squalou/google-chat-linux/issues/66)
