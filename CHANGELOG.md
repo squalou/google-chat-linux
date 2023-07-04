@@ -4,7 +4,11 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
-### 5.24.30-1
+### 5.24.20-2
+
+repackage, fix vulnerabilities
+
+### 5.24.20-1
 
 Prevent several instances of google chat linux to be launched simultaneously. (https://github.com/squalou/google-chat-linux/issues/67)
 

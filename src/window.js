@@ -250,7 +250,7 @@ const handleRedirect = (e, url) => {
 };
 
 const initializeWindow = (config) => {
-    const gotTheLock = app.requestSingleInstanceLock(additionalData)
+    const gotTheLock = app.requestSingleInstanceLock(undefined)
     if (!gotTheLock) {
         console.log("Another instance is already running ! aborting");
         app.quit()
