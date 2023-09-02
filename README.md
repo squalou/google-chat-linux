@@ -59,6 +59,10 @@ So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+### 5.24.21-1
+
+Fix https://github.com/squalou/google-chat-linux/issues/69 : download of attachments. (was broken by a side effect of https://github.com/squalou/google-chat-linux/issues/67 )
+
 ### 5.24.20-2
 
 repackage, fix vulnerabilities

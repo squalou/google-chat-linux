@@ -232,13 +232,24 @@ const doNotRedirect = (url) => {
     return urlNotRedirected.some((e) => url.includes(e));
 }
 
+const downloadUrl = (url) => {
+    var isDownloadAttachment =  url.startsWith("https://chat.google.com/") && url.indexOf("get_attachment_url?url_type=DOWNLOAD_URL")>-1;
+    // console.log("is it a download url : " + isDownloadAttachment);
+    return isDownloadAttachment;
+}
+
 const handleRedirect = (e, url) => {
+    // return true if redirect was trapped here, else false, in order to continue with 'default' behaviour (useful for download attachements)
+    //
     // leave redirect for double auth mechanism, trap crappy blocked url link
     // console.log(url)
     // console.log(e)
+    var handled = false;
     if (e !== undefined && url.includes("about:blank")) {
+        handled = true;
         e.preventDefault();
-    } else if (!openUrlInside && !doNotRedirect(url)) {
+    } else if (!downloadUrl(url) && !openUrlInside && !doNotRedirect(url)) {
+        handled = true;
         url = clean_url(url);
         if (process.platform === 'linux' && getUseXdgOpen()) {
             require('child_process').exec('xdg-open ' + url);
@@ -247,6 +258,7 @@ const handleRedirect = (e, url) => {
         }
         if (e !== undefined) e.preventDefault();
     }
+    return handled;
 };
 
 const initializeWindow = (config) => {
@@ -313,8 +325,11 @@ const initializeWindow = (config) => {
 
     mainWindow.webContents.on('will-navigate', handleRedirect);
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-        handleRedirect(undefined, url);
-        return { action: 'deny' };
+        if (handleRedirect(undefined, url)){
+            return { action: 'deny' };
+        } else {
+            return { action: 'allow' };
+        }
     });
 
     buildMenu();
