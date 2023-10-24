@@ -32,7 +32,15 @@ Dependency is taken care of in AUR Arch package and Debian package.
 
 ## Custom CSS
 
-To inject custom CSS, create a file called `custom.css` to `~/.config/google-chat-linux` for Linux or `%APPDATA%\google-chat-linux\` for Windows.
+To inject custom CSS, create a file called `custom.css` in `~/.config/google-chat-linux` for Linux or `%APPDATA%\google-chat-linux\` for Windows.
+
+To find out how Google Chat makes their themes, go to Developer Tools (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>I</kbd>) > Sources > `gtn-roster-iframe-id (world)` > `(no domain)` > the large purple CSS file (begins with `/_/scs/mss-static/_/ss/k=boq-dynamite.DynamiteWebUi...`). The file is pretty scattered, but searching for terms such as
+
+- `color-scheme: light;`
+- `:root {`
+- `[data-theme=dark] {`
+
+can prove to be helpful.
 
 ## Wayland support
 
@@ -338,7 +346,7 @@ These files are added in distributed packages... in hope there are no side effec
 
 https://github.com/electron/electron/issues/14941
 
-### More precisely :
+### More precisely:
 
 * On Linux the app indicator will be used if it is supported, otherwise GtkStatusIcon will be used instead.
 * When app indicator is used on Linux, the click event is ignored.
