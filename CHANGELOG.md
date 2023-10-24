@@ -4,6 +4,13 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.24.22-1
+
+Fix https://github.com/squalou/google-chat-linux/issues/62 : thank you https://github.com/ThatOneCalculator !
+
+Minor electron update (24.8.5)
+
+
 ### 5.24.21-1
 
 Fix https://github.com/squalou/google-chat-linux/issues/69 : download of attachments. (was broken by a side effect of https://github.com/squalou/google-chat-linux/issues/67 )
