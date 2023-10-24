@@ -32,7 +32,7 @@ Dependency is taken care of in AUR Arch package and Debian package.
 
 ## Custom CSS
 
-Add a file called `custom.css` to `~/.config/google-chat-linux` on Linux and `%APPDATA%\google-chat-linux\` on Windows.
+To inject custom CSS, create a file called `custom.css` to `~/.config/google-chat-linux` for Linux or `%APPDATA%\google-chat-linux\` for Windows.
 
 ## Wayland support
 
