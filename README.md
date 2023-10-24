@@ -30,6 +30,10 @@ Starting with 5.14.x, xdg-desktop-portal must be installed. It's probably alread
 
 Dependency is taken care of in AUR Arch package and Debian package.
 
+## Custom CSS
+
+Add a file called `custom.css` to `~/.config/google-chat-linux` on Linux and `%APPDATA%\google-chat-linux\` on Windows.
+
 ## Wayland support
 
 ### TL/DR; 

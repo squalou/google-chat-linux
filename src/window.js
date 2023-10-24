@@ -296,6 +296,18 @@ const initializeWindow = (config) => {
         if (!startHidden) {
             mainWindow.show();
         }
+
+        // Inject custom CSS
+        const userDataPath = app.getPath('userData');
+        const customCssFile = fs.readFileSync(`${userDataPath}/custom.css`, 'utf8');
+        mainWindow.webContents.insertCSS(customCssFile, {
+            cssOrigin: 'author'
+        }).then(result => {
+            console.log('Custom CSS injected', result)
+        }).catch(error => {
+            console.log(error);
+            console.log(`No custom.css file found in ${userDataPath}`);
+        });
     });
 
     mainWindow.on('close', (e) => {
