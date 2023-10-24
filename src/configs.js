@@ -1,7 +1,7 @@
 const { app } = require("electron");
 const fs = require("fs");
 const pathsManifest = require("./paths");
-const { config } = require("process");
+const process = require("process");
 
 const setConfigDefaults = (configuration) => {
     configuration.keepMinimized = configuration.keepMinimized === undefined ? true : configuration.keepMinimized;
@@ -35,6 +35,25 @@ const loadConfigs = () => {
     }
 }
 
+const loadCustomCss = () => {
+    const userDataPath = app.getPath('userData');
+    const customCssFilePath = path.join(userDataPath, 'custom.css');
+
+    if (fs.existsSync(customCssFilePath)) {
+        try {
+            const customCss = fs.readFileSync(customCssFilePath, 'utf8');
+            return customCss;
+        } catch (error) {
+            console.error('Error reading custom.css file:', error);
+            return '';
+        }
+    } else {
+        console.log(`No custom.css file found in ${userDataPath}`);
+        fs.writeFileSync(customCssFilePath, '/* Custom CSS for Google Chat */', 'utf8');
+        return '';
+    }
+}
+
 const updateConfigs = (updateData) => {
     let configs = loadConfigs();
     configs = Object.assign({}, configs, updateData);
@@ -53,5 +72,6 @@ const saveConfigs = (configData) => {
 module.exports = {
     "loadConfigs": loadConfigs,
     "updateConfigs": updateConfigs,
-    "saveConfigs": saveConfigs
+    "saveConfigs": saveConfigs,
+    "loadCustomCss": loadCustomCss
 }

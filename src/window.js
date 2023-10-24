@@ -1,10 +1,9 @@
 const { app, BrowserWindow, ipcMain, shell, Menu } = require("electron");
 const path = require("path");
-const { session } = require('electron')
-const pathsManifest = require('./paths');
-const ConfigManager = require('./configs');
-const fs = require('fs');
+const pathsManifest = require("./paths");
 const { platform } = require("process");
+const ConfigManager = require("./configs");
+
 let mainWindow;
 let isQuitting = false;
 let keepMinimized = true;
@@ -297,17 +296,17 @@ const initializeWindow = (config) => {
             mainWindow.show();
         }
 
-        // Inject custom CSS
-        const userDataPath = app.getPath('userData');
-        const customCssFile = fs.readFileSync(`${userDataPath}/custom.css`, 'utf8');
-        mainWindow.webContents.insertCSS(customCssFile, {
-            cssOrigin: 'author'
-        }).then(result => {
-            console.log('Custom CSS injected', result)
-        }).catch(error => {
-            console.log(error);
-            console.log(`No custom.css file found in ${userDataPath}`);
-        });
+        const customCss = ConfigManager.loadCustomCss();
+        if (customCss === '') {
+            console.log('No custom CSS found');
+        }
+        else {
+            mainWindow.webContents.insertCSS(customCss, {
+                cssOrigin: 'author'
+            }).then(result => {
+                console.log('Custom CSS injected', result);
+            });
+        }
     });
 
     mainWindow.on('close', (e) => {
