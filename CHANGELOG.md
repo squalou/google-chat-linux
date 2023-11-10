@@ -4,6 +4,12 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.27.22-1
+
+Update electron to 27.0.3.
+
+Wayland is best supported now with titlbars and all. Run with `--ozone-platform=wayland` and your're done !
+
 ### 5.24.22-1
 
 Fix https://github.com/squalou/google-chat-linux/issues/62 : thank you https://github.com/ThatOneCalculator !

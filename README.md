@@ -46,14 +46,16 @@ can prove to be helpful.
 
 ### TL/DR; 
 
-Run with **both** command line options : `--enable-features=WaylandWindowDecorations --ozone-platform-hint=auto`
+Improved with electron 27 : WaylandWindowDecorations is now enabled by default.
+
+Run with `--ozone-platform=wayland`.
 
 
 ### Detailed story
 
 Electron 20 introduced a command line to mimic chromium way to switch to Wayland if available. Simply run electron ap with `--ozone-platform-hint=auto` to make it use Wayland if available, Xorg else. The default value is `default` and does not try Wayland at all.
 
-This has side effects on window decoration (absent on Gnome for instance).
+This has side effects on window decoration (absent on Gnome for instance, fixed with electron 27).
 
 Another side effect is the lack of notification in systray. (Which only works already with a workaround on Gnome, see further). 
 
@@ -70,6 +72,10 @@ So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google
 ## CHANGELOG and news
 
 See full [CHANGELOG](./CHANGELOG.md).
+
+### 5.27.22-1
+
+Update electron to 27.0.3 with Wayaln improvements.
 
 ### 5.24.22-1
 
