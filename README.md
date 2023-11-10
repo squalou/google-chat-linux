@@ -75,7 +75,7 @@ See full [CHANGELOG](./CHANGELOG.md).
 
 ### 5.27.22-1
 
-Update electron to 27.0.3 with Wayaln improvements.
+Update electron to 27.0.3 with Wayland improvements.
 
 ### 5.24.22-1
 
