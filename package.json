@@ -9,7 +9,7 @@
     "dist": "electron-builder"
   },
   "repository": "github.com:squalou/google-chat-linux.git",
-  "homepage": "github.com:squalou/google-chat-linux.git",
+  "homepage": "https://github.com/squalou/google-chat-linux",
   "author": "Roberto Fasciolo <rob@robyf.net> (https://www.robyf.net/)",
   "license": "WTFPL",
   "build": {
