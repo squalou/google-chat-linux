@@ -312,13 +312,25 @@ a package 'google-chat-linux-bin' is availabe on AUR for Arch Linux and derivati
 
 ### manually build a deb package
 
-Run :
+You have two options - either install all build dependencies and then run :
 
 ```sh
 npm run dist
 ```
 
-will build a .deb file in `dist/`. Run for instance `sudo dkpg -i dist/google-chat-linux*.deb`.
+Or install docker (or podman) container engine and then create a local container with all build dependencies :
+
+```sh
+npm run container:setup
+```
+
+and then create the package by running:
+
+```sh
+npm run container:build:deb
+```
+
+In the end you'll end up with .deb file in `dist/`. Run for instance `sudo dkpg -i dist/google-chat-linux*.deb`.
 
 Installation of the .deb file is tested under Ubuntu, and works fine. Under Mint it installs well but react with emotes crashes the app. Go wonder.
 
