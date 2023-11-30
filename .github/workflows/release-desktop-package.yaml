@@ -48,12 +48,15 @@ jobs:
       - name: Install npm modules
         run: npm install
 
-      - name: Build desktop app
+      - name: Build deb desktop app
         run: npm run dist
 
-      - name: Create Debian check sum file
+      - name: Build rpm desktop app
+        run: npm run dist:rpm
+
+      - name: Create check sum file for deb and rpm
         if: matrix.config.os == 'ubuntu-latest'
-        run: sha512sum *.deb > google-chat-linux-SHA512.txt
+        run: sha512sum *.deb *.rpm > google-chat-linux-SHA512.txt
         working-directory: dist
 
       - name: Upload Debian package to release
@@ -67,7 +70,18 @@ jobs:
           asset_name: google-chat-linux_${{ steps.extract_package_version.outputs.version }}_amd64.deb
           asset_content_type: application/octet-stream
 
-      - name: Upload Debian check sum file to release
+      - name: Upload rpm package to release
+        if: matrix.config.os == 'ubuntu-latest'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.release.outputs.upload_url }}
+          asset_path: dist/google-chat-linux_${{ steps.extract_package_version.outputs.version }}_x86_64.rpm
+          asset_name: google-chat-linux_${{ steps.extract_package_version.outputs.version }}_x86_64.rpm
+          asset_content_type: application/octet-stream
+
+      - name: Upload deb and rpm check sum file to release
         if: matrix.config.os == 'ubuntu-latest'
         uses: actions/upload-release-asset@v1
         env:

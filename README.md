@@ -310,6 +310,10 @@ a package 'google-chat-linux-bin' is availabe on AUR for Arch Linux and derivati
 
 **Note** some environment variables are set in index.js : GTK_USE_PORTAL, ELECTRON_DISABLE_SANDBOX and NODE_OPTIONS="--no-force-async-hooks-checks". This *should* work. Else, set them manually.
 
+### rpm based (Fedora)
+
+[Have a look in tags](https://github.com/squalou/google-chat-linux/tags) section, download the relevant .rpm file and install with `sudo dnf install <package-name.rpm>` command.
+
 ### manually build a deb package
 
 You have two options - either install all build dependencies and then run :
