@@ -6,6 +6,12 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ### 5.27.22-1
 
+* Desktop shortcut name changed to `Google Chat Alt`
+* `rpm` build availablme
+* build using containers available
+
+### 5.27.22-1
+
 Update electron to 27.0.3.
 
 Wayland is best supported now with titlbars and all. Run with `--ozone-platform=wayland` and your're done !

@@ -75,6 +75,14 @@ See full [CHANGELOG](./CHANGELOG.md).
 
 ### 5.27.22-1
 
+* Desktop shortcut name changed to `Google Chat Alt`
+* `rpm` build availablme
+* build using containers available
+
+And thank you https://github.com/pbabinca for all this !
+
+### 5.27.22-1
+
 Update electron to 27.0.3 with Wayland improvements.
 
 ### 5.24.22-1
