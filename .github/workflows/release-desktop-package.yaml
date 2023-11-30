@@ -109,9 +109,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.release.outputs.upload_url }}
-          asset_path: dist/google-chat-linux_${{ steps.extract_package_version.outputs.version }}.x86_64.rpm
+          asset_path: dist/google-chat-linux-${{ steps.extract_package_version.outputs.version }}.x86_64.rpm
           asset_name: google-chat-linux-${{ steps.extract_package_version.outputs.version }}.x86_64.rpm
           asset_content_type: application/octet-stream
+
       - name: Create Exe check sum file
         if: matrix.config.os == 'windows-latest'
         run: sha512sum *.exe > google-chat-win-SHA512.txt
