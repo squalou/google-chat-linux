@@ -59,10 +59,37 @@ jobs:
         if: runner.os == 'Linux'
         run: npm run dist:rpm
 
-      - name: Create check sum file for deb and rpm
+      - name: Create check sum file for deb
         if: matrix.config.os == 'ubuntu-latest'
-        run: sha512sum *.deb *.rpm > google-chat-linux-SHA512.txt
+        run: sha512sum *.deb > google-chat-linux-SHA512.txt
         working-directory: dist
+
+      - name: Create check sum file for rpm
+        if: matrix.config.os == 'ubuntu-latest'
+        run: sha512sum *.rpm > google-chat-linux-rpm-SHA512.txt
+        working-directory: dist
+
+      - name: Upload deb check sum file to release
+        if: matrix.config.os == 'ubuntu-latest'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.release.outputs.upload_url }}
+          asset_path: dist/google-chat-linux-SHA512.txt
+          asset_name: google-chat-linux-SHA512.txt
+          asset_content_type: text/plain
+
+      - name: Upload rpm check sum file to release
+        if: matrix.config.os == 'ubuntu-latest'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.release.outputs.upload_url }}
+          asset_path: dist/google-chat-linux-rpm-SHA512.txt
+          asset_name: google-chat-linux-rpm-SHA512.txt
+          asset_content_type: text/plain
 
       - name: Upload Debian package to release
         if: matrix.config.os == 'ubuntu-latest'
@@ -85,18 +112,6 @@ jobs:
           asset_path: dist/google-chat-linux_${{ steps.extract_package_version.outputs.version }}_x86_64.rpm
           asset_name: google-chat-linux_${{ steps.extract_package_version.outputs.version }}_x86_64.rpm
           asset_content_type: application/octet-stream
-
-      - name: Upload deb and rpm check sum file to release
-        if: matrix.config.os == 'ubuntu-latest'
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.release.outputs.upload_url }}
-          asset_path: dist/google-chat-linux-SHA512.txt
-          asset_name: google-chat-linux-SHA512.txt
-          asset_content_type: text/plain
-
       - name: Create Exe check sum file
         if: matrix.config.os == 'windows-latest'
         run: sha512sum *.exe > google-chat-win-SHA512.txt
