@@ -351,6 +351,22 @@ npm run dist
 A _Setup_.exe will be built under `\dist\` directory. 
 
 
+### rpm based distributions (Fedora)
+
+Install podman (or docker) container engine and then create a local container with all build dependencies :
+
+```sh
+npm run container:setup
+```
+
+and then create the package by running:
+
+```sh
+npm run container:build:rpm
+```
+
+In the end you'll end up with .rpm file in `dist/`. Run for instance `sudo dnf install dist/google-chat-linux*.rpm`.
+
 ## Systray Support
 
 **Note** : from 0.5 on, electron 9 bring back Tray integration BUT "click" events are ignored.
