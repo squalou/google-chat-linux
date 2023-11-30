@@ -56,6 +56,7 @@ jobs:
         run: npm run dist
 
       - name: Build rpm desktop app
+        if: runner.os == 'Linux'
         run: npm run dist:rpm
 
       - name: Create check sum file for deb and rpm
