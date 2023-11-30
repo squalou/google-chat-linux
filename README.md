@@ -76,7 +76,7 @@ See full [CHANGELOG](./CHANGELOG.md).
 ### 5.27.22-1
 
 * Desktop shortcut name changed to `Google Chat Alt`
-* `rpm` build availablme
+* `rpm` build available
 * build using containers available
 
 And thank you https://github.com/pbabinca for all this !
