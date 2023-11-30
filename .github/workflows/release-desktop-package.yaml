@@ -18,14 +18,14 @@ jobs:
     steps:
       - name: Get tag name
         id: tag
-        run: echo ::set-output name=NAME::${GITHUB_REF/refs\/tags\//}
+        run: echo 0.0.1
       - name: Create release
         id: create_release
         uses: actions/create-release@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
+          tag_name: 0.0.1
           release_name: ${{ steps.tag.outputs.NAME }}
           
   release_assets:
@@ -44,6 +44,10 @@ jobs:
       - name: Extract package version
         id: extract_package_version
         uses: Saionaro/extract-package-version@v1.1.1
+
+      - name: Install dependencies
+        if: runner.os != 'Windows'
+        run: sudo apt-get install -y ruby-dev build-essential && sudo gem install fpm
 
       - name: Install npm modules
         run: npm install
