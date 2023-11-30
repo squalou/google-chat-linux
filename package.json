@@ -8,9 +8,11 @@
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "dist:deb": "electron-builder --linux=deb",
+    "dist:rpm": "electron-builder --linux=rpm",
     "container:setup": "container_engine=${CONTAINER_ENGINE:-$(type -P podman || type -P docker)} && ${container_engine} build -t google-chat-linux-containerbuild containerbuild || >&2 echo 'Install podman or docker container engine to run this command.' && exit 1",
     "container:build": "scripts/in-container.sh npm install && scripts/in-container.sh npm run dist",
-    "container:build:deb": "scripts/in-container.sh npm install && scripts/in-container.sh npm run dist:deb"
+    "container:build:deb": "scripts/in-container.sh npm install && scripts/in-container.sh npm run dist:deb",
+    "container:build:rpm": "scripts/in-container.sh npm install && scripts/in-container.sh npm run dist:rpm"
   },
   "repository": "github.com:squalou/google-chat-linux.git",
   "homepage": "github.com:squalou/google-chat-linux.git",
@@ -29,6 +31,9 @@
       "depends": [
         "xdg-desktop-portal"
       ]
+    },
+    "rpm": {
+        "fpm": ["--rpm-rpmbuild-define=_build_id_links none"]
     },
     "win": {
       "target": [

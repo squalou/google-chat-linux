@@ -8,7 +8,8 @@ RUN \
   echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_18.x nodistro main" >> /etc/apt/sources.list.d/nodesource.list && \
   apt-get -qq update && \
   # binutils provides ar - required to build deb \
-  apt-get -qq install --no-install-recommends -y nodejs binutils && \
+  # rpm provides rpmbuild - required to build rpm \
+  apt-get -qq install --no-install-recommends -y nodejs binutils rpm && \
   apt-get purge -y --auto-remove && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /project
