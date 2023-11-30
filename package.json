@@ -1,7 +1,7 @@
 {
   "name": "google-chat-linux",
   "version": "5.27.22-1",
-  "description": "Google Hangouts Chat unofficial linux app",
+  "description": "Unofficial alternative Google Chat desktop app",
   "main": "src/index.js",
   "scripts": {
     "start": "electron .",
@@ -16,7 +16,7 @@
     "appId": "Google Chat Linux",
     "linux": {
       "desktop": {
-        "Name": "Google Chat Linux"
+        "Name": "Google Chat Alt"
       },
       "category": "Network;InstantMessaging",
       "target": "deb"
