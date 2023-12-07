@@ -260,6 +260,11 @@ const handleRedirect = (e, url) => {
     return handled;
 };
 
+const getURL = (commandLine) => {
+    const foundItem = commandLine.find(item => item.startsWith('gchat://'));
+    return foundItem ? foundItem.replace('gchat://', 'https://') : null;
+};
+
 const initializeWindow = (config) => {
     const gotTheLock = app.requestSingleInstanceLock(undefined)
     if (!gotTheLock) {
@@ -271,6 +276,10 @@ const initializeWindow = (config) => {
                 if (mainWindow.isMinimized()) { mainWindow.restore() }
                 mainWindow.show()
                 mainWindow.focus()
+                const url = getURL(commandLine)
+                if (url) {
+                    mainWindow.loadURL(url)
+                }
             }
         })
     }
@@ -285,7 +294,12 @@ const initializeWindow = (config) => {
     thirdPartyAuthLoginMode = (config && config.thirdPartyAuthLoginMode);
 
     mainWindow = new BrowserWindow(bwOptions);
-    mainWindow.loadURL(extraOptions.url);
+
+    let url = getURL(process.argv)
+    if (!url) {
+        url = extraOptions.url
+    }
+    mainWindow.loadURL(url);
 
     if (config.languages !== undefined) {
         const ses = mainWindow.webContents.session
