@@ -42,6 +42,34 @@ To find out how Google Chat makes their themes, go to Developer Tools (<kbd>Ctrl
 
 can prove to be helpful.
 
+## Open Google Chat URLs from web browser in the app
+
+You can configure your web browser to detect Google Chat URLs and open them in the Google Chat Alt application:
+
+Step 0: Install Google Chat Alt.
+
+Step 1: Install a user script manager. See [Step 1 on Greasy Fork](https://greasyfork.org/) for various options.
+
+Note: the script manager must be able to cope with content security policy (CSP) headers. Tampermonkey on Firefox is known to work.
+
+Step 2: Install the user script [Google Chat Alt landing page](https://greasyfork.org/en/scripts/481609-google-chat-alt-landing-page) by clicking the green install button on the user script's page, and your user script manager will ask you to confirm the install.
+
+Step 3: Try it out by navigating e.g. to https://mail.google.com/chat/ in your web browser. If the user script is working correctly instead of Google Chat web UI your browser should ask you:
+
+> Allow this site to open the gchat link with Google Chat Alt?
+
+You can check the checkmark:
+
+> Always allow [...] to open gchat links
+
+Once you press the button Open Link, Google Chat Alt will be either started or (if you have it already running) restore its window. You can then close the tab in your browser.
+
+Note: If navigating to Google Chat opens Google Chat web UI the user script manager might not be compatible with the user script, Google might have changed something on the web site or you might have failed to install the script properly.
+
+Note: If navigating to Google Chat opens landing page that says "Launching Google Chat Alt" but web browser doesn't ask to open the link in the application, verify if you have installed Google Chat Alt. Running `gio mime x-scheme-handler/gchat` should display `google-chat-linux.desktop` as a default application.
+
+On technical level this functionality works in following way: Google Chat Alt uses [XDG Desktop file to claim to support URI scheme](https://developer.gnome.org/documentation/guidelines/maintainer/integrating.html#uri-schemes-handling) gchat://. No browser is able to handle this (made up) URI scheme but we use this to pass URI to the app. App looks for URI with this scheme and if found, it replaces gchat:// with https:// and navigates to that address. This should work for channel and direct message links out of box.
+
 ## Wayland support
 
 ### TL/DR; 

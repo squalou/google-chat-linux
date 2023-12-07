@@ -22,7 +22,8 @@
     "appId": "Google Chat Linux",
     "linux": {
       "desktop": {
-        "Name": "Google Chat Alt"
+        "Name": "Google Chat Alt",
+        "MimeType": "x-scheme-handler/gchat;"
       },
       "category": "Network;InstantMessaging",
       "target": "deb"
