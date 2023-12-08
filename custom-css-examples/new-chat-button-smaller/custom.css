@@ -1,0 +1,16 @@
+/* Custom CSS for Google Chat */
+/* 'New Chat' huge icon -> not displayed*/
+.bGH {
+    display: none !important;
+}
+/* 'New Chat' area : make it small and move it out of the way */
+.bGG {
+  /* display: none !important; */
+  position: absolute;
+  height: 20px !important;
+  left: 155px;
+  top: -40px;
+  z-index: 1000;
+}
+.L3 {
+}

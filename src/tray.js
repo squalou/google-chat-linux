@@ -64,6 +64,7 @@ const initializeTray = (windowObj) => {
     } catch (e) {
         console.log(e)
         console.log("set Tray icon failed !")
+        systemTrayIcon = new Tray(null);
     }
     mainWindow = windowObj;
     return buildContextMenu();
