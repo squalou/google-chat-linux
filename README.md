@@ -101,7 +101,12 @@ So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google
 
 See full [CHANGELOG](./CHANGELOG.md).
 
-### 5.27.22-1
+### 5.27.22-3
+
+Add a nice pseudo-protocol support : open gchat:// urls in client instead of browser. See "Open Google Chat URLs from web browser in the app" above. 
+Thanks again https://github.com/pbabinca !
+
+### 5.27.22-2
 
 * Desktop shortcut name changed to `Google Chat Alt`
 * `rpm` build available
@@ -184,84 +189,6 @@ it can be referenced in a local .desktop file, and it will work. That's hjow I p
 
 - https://github.com/squalou/google-chat-linux/issues/51 : manually set `NO_REDIRECT_URL` to solve login with custom OAuth SSO providers issues. Comma separated list of urls is accepted ! (see issue in github for more details)
 
-### 5.21.18-3
-
-- remove `--ozone-platform-hint=auto` from default launcher
-- add a word in README about wayland
- 
-### 5.21.18-2
-
-- update to electron 21
-- set `--ozone-platform-hint=auto` to for better wayland support when available.
-
-### 5.20.18-1
-
-- update to electron 20
-- Fix #54 (systray in wayland)
-
-### 5.15.17-1
-
-Fix #40 : client breaks out to browser when login needed.
-
-### 5.15.16-2
-
-Fix language support https://github.com/squalou/google-chat-linux/issues/42
-
-Add "languages": ["fr","en-US"] in the json to override default OS locale.
-
-### 5.15.16-1
-
-electron 15
-
-### 5.14.16-1
-
-* Good Bye Themes ! (they didn't work anymore anyway)
-* Good bye Old UI support : Google removed it
-
-This **may be the last version**, since ... it doesn't bring anything more than using Ferdi, or the native "installed" app from Chrome. Except systray integration 
-for people where it works anyway.
-
-
-5.14.15-1
-
-* electron 14
-* support native filechooser instead of GTK only. [see here](README.md/#support-native-filechooser)
-* WARNING : native filechooser may not work as nicely as expected on all distributions, see [#38](https://github.com/squalou/google-chat-linux/issues/38)
-
-5.12.14-1
-
-Details about systray click behaviour and google account login page.
-
-5.12.13-2
-
-Fix support for new chat UI notifications. Thak you @ankurk91 : you should check his fork https://github.com/ankurk91/google-chat-electron.
-
-Keep mechanism to revert to old one while it still works, UI is so much better.
-  
-5.12.12-1
-
-Google did it again : a new UI that breaks everything. There is still hope (for a time). Default URL is redirected to https://mail.google.com/chat ...
-but previous one is still accessible.
-
-To activate it, go to `Menu`, and tick `use old version of chat` OR `right click` in systray icon and choose `Use previous chat UI`.
-
-I don't know how long it will work but for now, it does and make systray notifiction and theme work again.
-
-5.12.11-2: tweak for linux url open
-
-fix #34 : Additional 'Advanced' option to open urls using `xdg-open` rather than `shell.openExternal`. Works better for some users.
-
-5.12.11-1: better windows support
-
-Respect windows UI integration a bit more.
-
-5.12.10-1: electron 12
-
-- Windows support : `npm install && npm run dist` can now be run on Windows platform to build an installer.
-
-5.11.10-1: add experimental dark theme (activate on "View" menu)
-
-5.11.9-1: electron 11 (*Apple M1* native support)
 
 ## versioning scheme
 

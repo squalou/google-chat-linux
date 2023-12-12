@@ -1,6 +1,6 @@
 {
   "name": "google-chat-linux",
-  "version": "5.27.22-2",
+  "version": "5.27.22-3",
   "description": "Unofficial alternative Google Chat desktop app",
   "main": "src/index.js",
   "scripts": {

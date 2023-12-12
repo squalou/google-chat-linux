@@ -4,7 +4,14 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
-### 5.27.22-1
+### 5.27.22-3
+
+Add a nice pseudo-protocol support : open gchat:// urls in client instead of browser. (requires configutaion in browsers)
+
+See README.md "Open Google Chat URLs from web browser in the app". 
+
+
+### 5.27.22-2
 
 * Desktop shortcut name changed to `Google Chat Alt`
 * `rpm` build available
