@@ -73,10 +73,10 @@ const initializeTray = (windowObj) => {
 
 ipcMain.on('favicon-changed', (evt, href) => {
     var itype = "";
-    if (href.match(/favicon_chat_new_non_notif_r2/) ||
-        href.match(/favicon_chat_r2/)) {
+    if (href.match(/favicon_chat_new_non_notif_r/) ||
+        href.match(/favicon_chat_r/)) {
         itype = "NORMAL";
-    } else if (href.match(/favicon_chat_new_notif_r2/)) {
+    } else if (href.match(/favicon_chat_new_notif_r/)) {
         itype = "ATTENTION";
     } else {
         itype = "OFFLINE";

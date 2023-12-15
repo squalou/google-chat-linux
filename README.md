@@ -101,6 +101,10 @@ So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+### 5.27.22-4
+
+Fix systray notification (favicon name changed on google side) see https://github.com/squalou/google-chat-linux/issues/87
+
 ### 5.27.22-3
 
 Add a nice pseudo-protocol support : open gchat:// urls in client instead of browser. See "Open Google Chat URLs from web browser in the app" above. 

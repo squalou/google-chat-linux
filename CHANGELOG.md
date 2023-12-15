@@ -4,6 +4,10 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.27.22-4
+
+Fix systray notification (favicon name changed on google side) see https://github.com/squalou/google-chat-linux/issues/87
+
 ### 5.27.22-3
 
 Add a nice pseudo-protocol support : open gchat:// urls in client instead of browser. (requires configutaion in browsers)
