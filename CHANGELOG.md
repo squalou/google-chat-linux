@@ -3,6 +3,17 @@
 An electron-base client for Google Hangouts Chat, since Google didn't see fit to provide one.
 
 ## CHANGELOG
+### 5.27.23-1
+
+Add support for several iconThemes, to match some 'monochrome' desktop themes. 3 values are supported : 
+
+* `default` : the good old green ones
+* `colored` : the new colored google ones
+* `mono` : an attempt at monochrome icon theme
+
+Edit `~/.config/google-hangouts-chat-linux.json` and set `"iconTheme":"colored"` for instance, then **restart**.
+
+No GUI setting for now.
 
 ### 5.27.22-4
 

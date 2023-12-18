@@ -60,7 +60,7 @@ const initializeTray = (windowObj) => {
     // -> moved things to ipcRenderer preload mechanism in faviconChange.js - thank you ankurk91 :-)
     // see https://github.com/ankurk91/google-chat-electron.git
     try {
-        systemTrayIcon = new Tray(pathsManifest.OFFLINE);
+        systemTrayIcon = new Tray(pathsManifest.offline());
     } catch (e) {
         console.log(e)
         console.log("set Tray icon failed !")
@@ -86,11 +86,11 @@ ipcMain.on('favicon-changed', (evt, href) => {
 
 function iconForType(iconType) {
     if (iconType == "NORMAL") {
-        return pathsManifest.NORMAL;
+        return pathsManifest.normal();
     } else if (iconType == "ATTENTION") {
-        return pathsManifest.BADGE;
+        return pathsManifest.badge();
     } else {
-        return pathsManifest.OFFLINE;
+        return pathsManifest.offline();
     }
 }
 

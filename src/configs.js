@@ -14,6 +14,8 @@ const setConfigDefaults = (configuration) => {
     configuration.thirdPartyAuthLoginMode = configuration.thirdPartyAuthLoginMode === undefined ? false : configuration.thirdPartyAuthLoginMode;
     configuration.useOldUrl = configuration.useOldUrl === undefined ? false : configuration.useOldUrl;
     configuration.languages = configuration.languages === undefined ? undefined : configuration.languages;
+    configuration.iconTheme = configuration.iconTheme === undefined ? 'default' : configuration.iconTheme;
+    pathsManifest.setIconTheme(configuration.iconTheme)
     if (process.platform === 'win32') {
         configuration.keepMinimized = true;
     }

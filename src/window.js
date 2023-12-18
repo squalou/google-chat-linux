@@ -215,7 +215,7 @@ const getBrowserWindowOptions = (config) => {
         },
         "show": false,
         "backgroundColor": "#262727",
-        "icon": pathsManifest.NORMAL,
+        "icon": pathsManifest.normal(),
     }
 }
 
