@@ -4,6 +4,10 @@ const pathsManifest = require("./paths");
 const { platform } = require("process");
 const ConfigManager = require("./configs");
 
+const DEFAULT_ICONS = 'default'
+const COLORED_ICONS = 'colored'
+const MONO_ICONS = 'mono'
+
 let mainWindow;
 let isQuitting = false;
 let keepMinimized = true;
@@ -129,6 +133,12 @@ const onStartHiddenClicked = () => {
 const onQuitEntryClicked = () => {
     setIsQuitting(true);
     app.quit();
+}
+
+const onSetIconThemeClicked = (theme) => {
+    iconTheme = theme;
+    app.relaunch();
+    onQuitEntryClicked();
 }
 
 const onToggleThirdPartyAuthLoginMode = () => {
@@ -292,7 +302,7 @@ const initializeWindow = (config) => {
     openUrlInside = (config && config.openUrlInside);
     useXdgOpen = (config && config.useXdgOpen);
     thirdPartyAuthLoginMode = (config && config.thirdPartyAuthLoginMode);
-
+    iconTheme = (config && config.iconTheme)
     mainWindow = new BrowserWindow(bwOptions);
 
     let url = getURL(process.argv)
@@ -336,7 +346,7 @@ const initializeWindow = (config) => {
             configsData.openUrlInside = openUrlInside;
             configsData.useXdgOpen = useXdgOpen;
             configsData.thirdPartyAuthLoginMode = thirdPartyAuthLoginMode;
-
+            configsData.iconTheme = iconTheme;
             ConfigManager.updateConfigs(configsData);
         } else {
             e.preventDefault();
@@ -381,6 +391,10 @@ const getOpenUrlInsideTick = () => {
 
 const getUseXdgOpenTick = () => {
     return getUseXdgOpen() ? '☑' : '☐';
+}
+
+const getIconThemeTick = (theme) => {
+    return iconTheme === theme ? '☑' : '☐';
 }
 
 const menuSubMenu = () => {
@@ -441,6 +455,25 @@ const viewSubMenu = () => {
                 label: getStartHiddenTick() + ' Start hidden (restart)',
                 click: () => {
                     onStartHiddenClicked();
+                }
+            }, {
+                type: 'separator'
+            }, {
+                label: 'Tray icon theme (restart)',
+            }, {
+                label: getIconThemeTick(DEFAULT_ICONS) + ' ' + DEFAULT_ICONS,
+                click: () => {
+                    onSetIconThemeClicked(DEFAULT_ICONS);
+                }
+            }, {
+                label: getIconThemeTick(COLORED_ICONS) + ' ' + COLORED_ICONS,
+                click: () => {
+                    onSetIconThemeClicked(COLORED_ICONS);
+                }
+            }, {
+                label: getIconThemeTick(MONO_ICONS) + ' ' + MONO_ICONS,
+                click: () => {
+                    onSetIconThemeClicked(MONO_ICONS);
                 }
             }
         ]

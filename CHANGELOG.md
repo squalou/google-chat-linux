@@ -3,6 +3,11 @@
 An electron-base client for Google Hangouts Chat, since Google didn't see fit to provide one.
 
 ## CHANGELOG
+
+### 5.27.23-2
+
+Add a menu in 'View' to change tray icon theme.
+
 ### 5.27.23-1
 
 Add support for several iconThemes, to match some 'monochrome' desktop themes. 3 values are supported : 

@@ -101,6 +101,10 @@ So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+### 5.27.23-2
+
+Add a menu in 'View' to change tray icon theme.
+
 ### 5.27.23-1
 
 Add support for several iconThemes, to match some 'monochrome' desktop themes. 3 values are supported : 
