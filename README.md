@@ -101,7 +101,7 @@ So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google
 
 See full [CHANGELOG](./CHANGELOG.md).
 
-### 5.27.23-5 5.27.23-4 and 5.27.23-3
+### 5.27.23-6 5.27.23-5 5.27.23-4 and 5.27.23-3
 
 empty release - AUR only pkg release version
 

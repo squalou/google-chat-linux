@@ -4,7 +4,7 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
-### 5.27.23-5, -4, -3
+### 5.27.23-6, -5, -4, -3
 
 empty releases for AUR packaging fix only
 
