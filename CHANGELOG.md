@@ -4,6 +4,10 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.27.23-5, -4, -3
+
+empty releases for AUR packaging fix only
+
 ### 5.27.23-2
 
 Add a menu in 'View' to change tray icon theme.
