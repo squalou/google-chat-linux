@@ -101,6 +101,10 @@ So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+### 5.27.23-4 and 5.27.23-3
+
+empty release - AUR only pkg release version
+
 ### 5.27.23-2
 
 Add a menu in 'View' to change tray icon theme.
