@@ -4,6 +4,12 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.29.23-1
+
+bump electron to 29 with better wayland support. Define `ELECTRON_OZONE_PLATFORM_HINT=auto` to take advantage of it. Values can be `auto`, `wayland`, `x11`, with `auto` being a reasonable default.
+
+Set it in `.zshenv` for instance, and logout / login again. Must be in a placed sourced when .desktop applications launchers are used, will certainly be DE dependant.
+
 ### 5.27.23-6, -5, -4, -3
 
 empty releases for AUR packaging fix only
