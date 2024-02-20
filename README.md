@@ -74,6 +74,8 @@ On technical level this functionality works in following way: Google Chat Alt us
 
 ### TL/DR; 
 
+Improved with electron 29 : declare environment variable `export ELECTRON_OZONE_PLATFORM_HINT=auto` (values can be `auto`, `x11`, `wayland`), for instance in `.zshenv`, no need to use --ozone-platform flag, so no need to use custom .desktop file !
+
 Improved with electron 27 : WaylandWindowDecorations is now enabled by default.
 
 Run with `--ozone-platform=wayland`.
@@ -100,6 +102,12 @@ So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google
 ## CHANGELOG and news
 
 See full [CHANGELOG](./CHANGELOG.md).
+
+### 5.29.23-1
+
+bump electron to 29 with better wayland support. Define `ELECTRON_OZONE_PLATFORM_HINT=auto` to take advantage of it. Values can be `auto`, `wayland`, `x11`, with `auto` being a reasonable default.
+
+Set it in `.zshenv` for instance, and logout / login again. Must be in a placed sourced when .desktop applications launchers are used, will certainly be DE dependant.
 
 ### 5.27.23-6 5.27.23-5 5.27.23-4 and 5.27.23-3
 
