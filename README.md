@@ -16,6 +16,10 @@ clever other for : https://github.com/ankurk91/google-chat-electron
 
 See [Systray support](#systray-support) notes.
 
+## AppImage support
+
+See further below if you ever need to build an AppImage for your distribution.
+
 ## Windows support
 
 Electron is cross platform. I added the minimum required tweaks to have a decently working app on Windows. You can install the _Setup_.exe from [releases](https://github.com/squalou/google-chat-linux/releases).
@@ -308,6 +312,31 @@ a package 'google-chat-linux-bin' is availabe on AUR for Arch Linux and derivati
 ### rpm based (Fedora)
 
 [Have a look in tags](https://github.com/squalou/google-chat-linux/tags) section, download the relevant .rpm file and install with `sudo dnf install <package-name.rpm>` command.
+
+### AppImage (useful for arm64 and other distributions)
+
+edit `package.json`, replace target `deb` by `AppImage`.
+
+before
+
+```json
+  "build": {
+    "appId": "Google Chat Linux",
+    "linux": {
+      "desktop": {
+        "Name": "Google Chat Alt",
+        "MimeType": "x-scheme-handler/gchat;"
+      },
+      "category": "Network;InstantMessaging",
+      "target": "deb"  // <--here remove deb and put AppImage
+    },
+  }
+```
+
+then `npm run dist`
+
+The package will be built in `dist` subfolder. AppImage is fine for instance on Asahi Linux on Apple silicium.
+
 
 ### manually build a deb package
 
