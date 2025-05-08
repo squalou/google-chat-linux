@@ -7,7 +7,7 @@ const process = require("process");
 const setConfigDefaults = (configuration) => {
     configuration.keepMinimized = configuration.keepMinimized === undefined ? true : configuration.keepMinimized;
     configuration.startHidden = configuration.startHidden === undefined ? false : configuration.startHidden;
-    configuration.enableKeyboardShortcuts = configuration.enableKeyboardShortcuts === undefined ? false : configuration.enableKeyboardShortcuts;
+    configuration.enableKeyboardShortcuts = configuration.enableKeyboardShortcuts === undefined ? true : configuration.enableKeyboardShortcuts;
     configuration.enableNodeIntegration = configuration.enableNodeIntegration === undefined ? true : configuration.enableNodeIntegration;
     configuration.openUrlInside = configuration.openUrlInside === undefined ? false : configuration.openUrlInside;
     configuration.useXdgOpen = configuration.useXdgOpen === undefined ? false : configuration.useXdgOpen;

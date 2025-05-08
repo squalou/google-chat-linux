@@ -12,7 +12,7 @@ let mainWindow;
 let isQuitting = false;
 let keepMinimized = true;
 let startHidden = true;
-let enableKeyboardShortcuts = false;
+let enableKeyboardShortcuts = true;
 let enableNodeIntegration = true;
 let openUrlInside = false;
 let useXdgOpen = false;
