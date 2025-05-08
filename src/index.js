@@ -32,6 +32,8 @@ const initialize = () => {
         systemTrayIcon = TrayManager.initializeTray(mainWindow);
     }
 
+    mainWindow.on('page-title-updated', function(e) { e.preventDefault() });
+
     if (WindowManager.getEnableKeyboardShortcuts()) {
         KeyboardManager.registerKeyboardShortcuts(mainWindow);
     }
