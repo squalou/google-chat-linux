@@ -129,7 +129,7 @@ Add support for several iconThemes, to match some 'monochrome' desktop themes. 3
 * `colored` : the new colored google ones
 * `mono` : an attempt at monochrome icon theme
 
-Edit `~/.config/google-hangouts-chat-linux.json` and set `"iconTheme":"colored"` for instance, then **restart**.
+Edit `~/.config/google-chat-linux.json` and set `"iconTheme":"colored"` for instance, then **restart**.
 
 No GUI setting for now.
 
@@ -252,7 +252,7 @@ Troubleshooting
 
 ## configure spellcheck language
 
-After first run, quit, then edit $HOME/.config/google-hangouts-chat-linux.json, add "languages": ["fr","en-US"] in the json to override default OS locale.
+After first run, quit, then edit $HOME/.config/google-chat-linux.json, add "languages": ["fr","en-US"] in the json to override default OS locale.
 
 ## auth with third party provider
 
