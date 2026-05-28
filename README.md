@@ -107,6 +107,11 @@ So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+### 5.39.25-1
+
+Fix try icon after Google canged their names *again*.
+
+Several dependencies vulnerability fixes.
 ### 5.39.24-1
 
 Bump to electron 39.0 as maintainance chore.
@@ -156,39 +161,8 @@ Thanks again https://github.com/pbabinca !
 
 And thank you https://github.com/pbabinca for all this !
 
-### 5.27.22-1
 
-Update electron to 27.0.3 with Wayland improvements.
-
-### 5.24.22-1
-
-Fix https://github.com/squalou/google-chat-linux/issues/62 : thank you https://github.com/ThatOneCalculator !
-
-Minor electron update (24.8.5)
-
-### 5.24.21-1
-
-Fix https://github.com/squalou/google-chat-linux/issues/69 : download of attachments. (was broken by a side effect of https://github.com/squalou/google-chat-linux/issues/67 )
-
-### 5.24.20-2
-
-repackage, fix vulnerabilities
-
-### 5.24.20-1
-
-Prevent several instances of google chat linux to be launched. (https://github.com/squalou/google-chat-linux/issues/67)
-
-### 5.24.19-4
-
-Clean MORE links (https://github.com/squalou/google-chat-linux/issues/66)
-
-### 5.24.19-3
-
-Clean links from google decoration before opening them (https://github.com/squalou/google-chat-linux/issues/66)
-
-### 5.24.19-2
-
-Fix open links in external browser (https://github.com/squalou/google-chat-linux/issues/65)
+`--- %< --- snip` 
 
 ### 5.24.19-1
 

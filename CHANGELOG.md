@@ -3,6 +3,13 @@
 An electron-base client for Google Hangouts Chat, since Google didn't see fit to provide one.
 
 ## CHANGELOG
+
+### 5.39.25-1
+
+Fix try icon after Google canged their names *again*.
+
+Several dependencies vulnerability fixes.
+
 ### 5.39.24-1
 
 Bump to electron 39.0 as maintainance chore.
