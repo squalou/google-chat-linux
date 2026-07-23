@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const pathsManifest = require("./paths");
 const process = require("process");
+const { normalizeNotificationLanguage } = require("./notificationMessages");
 
 const setConfigDefaults = (configuration) => {
     configuration.keepMinimized = configuration.keepMinimized === undefined ? true : configuration.keepMinimized;
@@ -16,6 +17,7 @@ const setConfigDefaults = (configuration) => {
     configuration.languages = configuration.languages === undefined ? undefined : configuration.languages;
     configuration.iconTheme = configuration.iconTheme === undefined ? 'default' : configuration.iconTheme;
     configuration.useTray = configuration.useTray === undefined ? true : configuration.useTray;
+    configuration.notificationLanguage = normalizeNotificationLanguage(configuration.notificationLanguage);
     pathsManifest.setIconTheme(configuration.iconTheme)
     if (process.platform === 'win32') {
         configuration.keepMinimized = true;

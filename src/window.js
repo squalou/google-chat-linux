@@ -3,6 +3,11 @@ const path = require("path");
 const pathsManifest = require("./paths");
 const { platform } = require("process");
 const ConfigManager = require("./configs");
+const NotificationManager = require("./notifications");
+const {
+    NOTIFICATION_LANGUAGES,
+    normalizeNotificationLanguage
+} = require("./notificationMessages");
 
 const DEFAULT_ICONS = 'default'
 const COLORED_ICONS = 'colored'
@@ -17,6 +22,7 @@ let enableNodeIntegration = true;
 let openUrlInside = false;
 let useXdgOpen = false;
 let thirdPartyAuthLoginMode = false;
+let notificationLanguage = NOTIFICATION_LANGUAGES.ENGLISH;
 
 const noRedirectUrlArrayHardcoded = ["accounts/SetOSID?authuser=0&continue=https%3A%2F%2Fchat.google.com"
     , "accounts.google.com"
@@ -192,6 +198,12 @@ const onForceReloadClicked = () => {
     mainWindow.webContents.reload();
 }
 
+const onSetNotificationLanguageClicked = (language) => {
+    notificationLanguage = normalizeNotificationLanguage(language);
+    NotificationManager.setNotificationLanguage(notificationLanguage);
+    buildMenu();
+};
+
 const updateIcon = (icon) => {
     try {
         mainWindow.setIcon(icon);
@@ -323,7 +335,10 @@ const initializeWindow = (config) => {
     thirdPartyAuthLoginMode = (config && config.thirdPartyAuthLoginMode);
     iconTheme = (config && config.iconTheme)
     useTray = (config && config.useTray)
+    notificationLanguage = normalizeNotificationLanguage(config && config.notificationLanguage);
     mainWindow = new BrowserWindow(bwOptions);
+    NotificationManager.setMainWindow(mainWindow);
+    NotificationManager.setNotificationLanguage(notificationLanguage);
 
     //mainWindow.webContents.openDevTools();
     // if(process.platform === "linux" && ! config.keepMinimized){
@@ -374,6 +389,7 @@ const initializeWindow = (config) => {
             configsData.thirdPartyAuthLoginMode = thirdPartyAuthLoginMode;
             configsData.iconTheme = iconTheme;
             configsData.useTray = useTray;
+            configsData.notificationLanguage = notificationLanguage;
             ConfigManager.updateConfigs(configsData);
         } else {
             e.preventDefault();
@@ -436,6 +452,30 @@ const menuSubMenu = () => {
             click: () => {
                 onForceReloadClicked();
             }
+        }, {
+            label: 'Test native notification',
+            click: () => {
+                NotificationManager.showTestNotification();
+            }
+        }, {
+            label: 'Notification language',
+            submenu: [
+                {
+                    label: 'English',
+                    type: 'radio',
+                    checked: notificationLanguage === NOTIFICATION_LANGUAGES.ENGLISH,
+                    click: () => {
+                        onSetNotificationLanguageClicked(NOTIFICATION_LANGUAGES.ENGLISH);
+                    }
+                }, {
+                    label: 'Polski',
+                    type: 'radio',
+                    checked: notificationLanguage === NOTIFICATION_LANGUAGES.POLISH,
+                    click: () => {
+                        onSetNotificationLanguageClicked(NOTIFICATION_LANGUAGES.POLISH);
+                    }
+                }
+            ]
         }, {
             label: getEnableKeyboardShortcuts() ? "Disable alt left/right shortcuts (restart)" : "Enable alt left/right shortcuts (restart)",
             click: () => {

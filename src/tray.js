@@ -2,6 +2,8 @@ const { Tray, Menu, ipcMain } = require("electron");
 //const path = require("path");
 const pathsManifest = require("./paths");
 const WindowManager = require('./window');
+const NotificationManager = require("./notifications");
+const { ICON_TYPES, classifyFavicon } = require("./faviconState");
 let mainWindow;
 let systemTrayIcon;
 const onShowEntryClicked = () => {
@@ -72,24 +74,15 @@ const initializeTray = (windowObj) => {
 };
 
 ipcMain.on('favicon-changed', (evt, href) => {
-    var itype = "";
-    if (href.match(/logo_favicon_no_dot/) ||
-        href.match(/favicon_chat_new_non_notif_r/) ||
-        href.match(/favicon_chat_r/)) {
-        itype = "NORMAL";
-    } else if (href.match(/logo_favicon_dot/) ||
-        href.match(/favicon_chat_new_notif_r/)) {
-        itype = "ATTENTION";
-    } else {
-        itype = "OFFLINE";
-    }
-    setIcon(itype);
+    const iconType = classifyFavicon(href);
+    setIcon(iconType);
+    NotificationManager.updateUnreadState(iconType);
 });
 
 function iconForType(iconType) {
-    if (iconType == "NORMAL") {
+    if (iconType == ICON_TYPES.NORMAL) {
         return pathsManifest.normal();
-    } else if (iconType == "ATTENTION") {
+    } else if (iconType == ICON_TYPES.ATTENTION) {
         return pathsManifest.badge();
     } else {
         return pathsManifest.offline();
@@ -107,7 +100,7 @@ const setIcon = (iconType) => {
     }
     WindowManager.updateIcon(i);
 
-    if (iconType == "ATTENTION") {
+    if (iconType == ICON_TYPES.ATTENTION) {
         WindowManager.setOverlayIcon();
     } else {
         WindowManager.cleanOverlayIcon();
