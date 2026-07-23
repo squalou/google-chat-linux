@@ -2,8 +2,10 @@
   "name": "google-chat-linux",
   "version": "5.39.25-1",
   "description": "Unofficial alternative Google Chat desktop app",
+  "desktopName": "google-chat-linux.desktop",
   "main": "src/index.js",
   "scripts": {
+    "test": "node --test",
     "start": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
