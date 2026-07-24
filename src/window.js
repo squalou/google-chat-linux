@@ -6,6 +6,7 @@ const ConfigManager = require("./configs");
 const NotificationManager = require("./notifications");
 const {
     NOTIFICATION_LANGUAGES,
+    NOTIFICATION_LANGUAGE_OPTIONS,
     normalizeNotificationLanguage
 } = require("./notificationMessages");
 
@@ -459,23 +460,14 @@ const menuSubMenu = () => {
             }
         }, {
             label: 'Notification language',
-            submenu: [
-                {
-                    label: 'English',
-                    type: 'radio',
-                    checked: notificationLanguage === NOTIFICATION_LANGUAGES.ENGLISH,
-                    click: () => {
-                        onSetNotificationLanguageClicked(NOTIFICATION_LANGUAGES.ENGLISH);
-                    }
-                }, {
-                    label: 'Polski',
-                    type: 'radio',
-                    checked: notificationLanguage === NOTIFICATION_LANGUAGES.POLISH,
-                    click: () => {
-                        onSetNotificationLanguageClicked(NOTIFICATION_LANGUAGES.POLISH);
-                    }
+            submenu: NOTIFICATION_LANGUAGE_OPTIONS.map(({ code, label }) => ({
+                label,
+                type: 'radio',
+                checked: notificationLanguage === code,
+                click: () => {
+                    onSetNotificationLanguageClicked(code);
                 }
-            ]
+            }))
         }, {
             label: getEnableKeyboardShortcuts() ? "Disable alt left/right shortcuts (restart)" : "Enable alt left/right shortcuts (restart)",
             click: () => {
