@@ -24,6 +24,7 @@ let openUrlInside = false;
 let useXdgOpen = false;
 let thirdPartyAuthLoginMode = false;
 let notificationLanguage = NOTIFICATION_LANGUAGES.ENGLISH;
+let enableNativeNotifications = true;
 
 const noRedirectUrlArrayHardcoded = ["accounts/SetOSID?authuser=0&continue=https%3A%2F%2Fchat.google.com"
     , "accounts.google.com"
@@ -205,6 +206,13 @@ const onSetNotificationLanguageClicked = (language) => {
     buildMenu();
 };
 
+const onSetNativeNotificationsEnabled = (enabled) => {
+    enableNativeNotifications = Boolean(enabled);
+    NotificationManager.setNativeNotificationsEnabled(enableNativeNotifications);
+    ConfigManager.updateConfigs({ enableNativeNotifications });
+    buildMenu();
+};
+
 const updateIcon = (icon) => {
     try {
         mainWindow.setIcon(icon);
@@ -337,9 +345,11 @@ const initializeWindow = (config) => {
     iconTheme = (config && config.iconTheme)
     useTray = (config && config.useTray)
     notificationLanguage = normalizeNotificationLanguage(config && config.notificationLanguage);
+    enableNativeNotifications = (config && config.enableNativeNotifications) !== false;
     mainWindow = new BrowserWindow(bwOptions);
     NotificationManager.setMainWindow(mainWindow);
     NotificationManager.setNotificationLanguage(notificationLanguage);
+    NotificationManager.setNativeNotificationsEnabled(enableNativeNotifications);
 
     //mainWindow.webContents.openDevTools();
     // if(process.platform === "linux" && ! config.keepMinimized){
@@ -391,6 +401,7 @@ const initializeWindow = (config) => {
             configsData.iconTheme = iconTheme;
             configsData.useTray = useTray;
             configsData.notificationLanguage = notificationLanguage;
+            configsData.enableNativeNotifications = enableNativeNotifications;
             ConfigManager.updateConfigs(configsData);
         } else {
             e.preventDefault();
@@ -454,7 +465,15 @@ const menuSubMenu = () => {
                 onForceReloadClicked();
             }
         }, {
+            label: 'Enable native notifications',
+            type: 'checkbox',
+            checked: enableNativeNotifications,
+            click: (menuItem) => {
+                onSetNativeNotificationsEnabled(menuItem.checked);
+            }
+        }, {
             label: 'Test native notification',
+            enabled: enableNativeNotifications,
             click: () => {
                 NotificationManager.showTestNotification();
             }

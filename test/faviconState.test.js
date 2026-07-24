@@ -57,6 +57,16 @@ test("shows only once while the favicon remains in attention state", () => {
     );
 });
 
+test("suppresses unread notifications when native notifications are disabled", () => {
+    assert.deepEqual(
+        transitionUnreadState(false, ICON_TYPES.ATTENTION, false),
+        {
+            hasUnread: false,
+            action: UNREAD_ACTIONS.NONE
+        }
+    );
+});
+
 test("offline preserves unread state and normal clears it", () => {
     const offline = transitionUnreadState(true, ICON_TYPES.OFFLINE);
     assert.deepEqual(offline, {
