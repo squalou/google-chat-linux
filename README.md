@@ -107,6 +107,10 @@ So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+### 5.39.26-1
+
+Add native notification support (with toggle to disable it if needed). Thanks to @Adiker.
+
 ### 5.39.25-1
 
 Fix try icon after Google canged their names *again*.

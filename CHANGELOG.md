@@ -4,6 +4,10 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.39.26-1
+
+Add native notification support (with toggle to disable it if needed). Thanks to @Adiker.
+
 ### 5.39.25-1
 
 Fix try icon after Google canged their names *again*.
