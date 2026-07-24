@@ -11,6 +11,7 @@ let mainWindow;
 let hasUnread = false;
 let unreadNotification;
 let notificationLanguage = NOTIFICATION_LANGUAGES.ENGLISH;
+let nativeNotificationsEnabled = true;
 const activeNotifications = new Set();
 
 const showMainWindow = () => {
@@ -73,8 +74,25 @@ const setNotificationLanguage = (language) => {
     notificationLanguage = normalizeNotificationLanguage(language);
 };
 
+const closeAllNotifications = () => {
+    for (const notification of [...activeNotifications]) {
+        notification.close();
+    }
+    activeNotifications.clear();
+    unreadNotification = undefined;
+};
+
+const setNativeNotificationsEnabled = (enabled) => {
+    nativeNotificationsEnabled = Boolean(enabled);
+    hasUnread = false;
+
+    if (!nativeNotificationsEnabled) {
+        closeAllNotifications();
+    }
+};
+
 const updateUnreadState = (iconType) => {
-    const nextState = transitionUnreadState(hasUnread, iconType);
+    const nextState = transitionUnreadState(hasUnread, iconType, nativeNotificationsEnabled);
     hasUnread = nextState.hasUnread;
 
     if (nextState.action === UNREAD_ACTIONS.SHOW) {
@@ -91,6 +109,10 @@ const updateUnreadState = (iconType) => {
 };
 
 const showTestNotification = () => {
+    if (!nativeNotificationsEnabled) {
+        return;
+    }
+
     const messages = getNotificationMessages(notificationLanguage);
     createNotification({
         title: "Google Chat",
@@ -101,6 +123,7 @@ const showTestNotification = () => {
 module.exports = {
     setMainWindow,
     setNotificationLanguage,
+    setNativeNotificationsEnabled,
     updateUnreadState,
     showTestNotification
 };

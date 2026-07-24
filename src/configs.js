@@ -18,6 +18,7 @@ const setConfigDefaults = (configuration) => {
     configuration.iconTheme = configuration.iconTheme === undefined ? 'default' : configuration.iconTheme;
     configuration.useTray = configuration.useTray === undefined ? true : configuration.useTray;
     configuration.notificationLanguage = normalizeNotificationLanguage(configuration.notificationLanguage);
+    configuration.enableNativeNotifications = configuration.enableNativeNotifications === undefined ? true : configuration.enableNativeNotifications;
     pathsManifest.setIconTheme(configuration.iconTheme)
     if (process.platform === 'win32') {
         configuration.keepMinimized = true;

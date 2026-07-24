@@ -25,7 +25,14 @@ const classifyFavicon = (href = "") => {
     return ICON_TYPES.OFFLINE;
 };
 
-const transitionUnreadState = (hasUnread, iconType) => {
+const transitionUnreadState = (hasUnread, iconType, notificationsEnabled = true) => {
+    if (!notificationsEnabled) {
+        return {
+            hasUnread: false,
+            action: UNREAD_ACTIONS.NONE
+        };
+    }
+
     if (iconType === ICON_TYPES.ATTENTION && !hasUnread) {
         return {
             hasUnread: true,
