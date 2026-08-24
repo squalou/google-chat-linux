@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, shell, Menu } = require("electron");
+const { app, BrowserWindow, ipcMain, shell, Menu, powerMonitor } = require("electron");
 const path = require("path");
 const pathsManifest = require("./paths");
 const { platform } = require("process");
@@ -350,6 +350,9 @@ const initializeWindow = (config) => {
     NotificationManager.setMainWindow(mainWindow);
     NotificationManager.setNotificationLanguage(notificationLanguage);
     NotificationManager.setNativeNotificationsEnabled(enableNativeNotifications);
+
+    // Normal window closes stay in the tray; let system shutdown quit cleanly.
+    powerMonitor.once('shutdown', onQuitEntryClicked);
 
     //mainWindow.webContents.openDevTools();
     // if(process.platform === "linux" && ! config.keepMinimized){
