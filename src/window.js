@@ -9,6 +9,10 @@ const {
     NOTIFICATION_LANGUAGE_OPTIONS,
     normalizeNotificationLanguage
 } = require("./notificationMessages");
+const {
+    isAttachmentDownloadUrl,
+    startAttachmentDownload
+} = require("./downloads");
 
 const DEFAULT_ICONS = 'default'
 const COLORED_ICONS = 'colored'
@@ -271,12 +275,6 @@ const doNotRedirect = (url) => {
     return urlNotRedirected.some((e) => url.includes(e));
 }
 
-const downloadUrl = (url) => {
-    var isDownloadAttachment =  url.startsWith("https://chat.google.com/") && url.indexOf("get_attachment_url?url_type=DOWNLOAD_URL")>-1;
-    // console.log("is it a download url : " + isDownloadAttachment);
-    return isDownloadAttachment;
-}
-
 const meetOrHuddleUrl = (url) => {
     var isMeetOrHuddle =  (url.startsWith("https://meet.google.com/") && url.indexOf("MeetingsUi")>-1) || (url.startsWith("https://play.google.com/"));
     console.log("is it a meet url : " + isMeetOrHuddle);
@@ -297,7 +295,7 @@ const handleRedirect = (e, url) => {
     if (e !== undefined && url.includes("about:blank")) {
         handled = true;
         e.preventDefault();
-    } else if ( url.includes("about:blank") || (!downloadUrl(url) && !openUrlInside && !doNotRedirect(url))) {
+    } else if ( url.includes("about:blank") || (!isAttachmentDownloadUrl(url) && !openUrlInside && !doNotRedirect(url))) {
         handled = true;
         url = clean_url(url);
         if (process.platform === 'linux' && getUseXdgOpen()) {
@@ -415,6 +413,10 @@ const initializeWindow = (config) => {
 
     mainWindow.webContents.on('will-navigate', handleRedirect);
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+        if (startAttachmentDownload(mainWindow.webContents, url)) {
+            return { action: 'deny' };
+        }
+
         if (handleRedirect(undefined, url)){
             return { action: 'deny' };
         } else {
