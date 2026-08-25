@@ -107,6 +107,12 @@ So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+### 5.39.27-1
+
+Improve Shutdown : now app properly closes when system powers off, thanks to @Adiker !
+
+Fix downloads experience : no more empty window appearing. @Adiker again :)
+
 ### 5.39.26-1
 
 Add native notification support (with toggle to disable it if needed). Thanks to @Adiker.
