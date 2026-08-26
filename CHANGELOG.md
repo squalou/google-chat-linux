@@ -4,6 +4,10 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.39.27-2
+
+Minor additional KDE quit fix.
+
 ### 5.39.27-1
 
 Improve Shutdown : now app properly closes when system powers off, thanks to @Adiker !

@@ -107,6 +107,10 @@ So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+### 5.39.27-2
+
+Minor additional KDE quit fix.
+
 ### 5.39.27-1
 
 Improve Shutdown : now app properly closes when system powers off, thanks to @Adiker !
