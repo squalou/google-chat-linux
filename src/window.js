@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, shell, Menu, powerMonitor } = require("elec
 const path = require("path");
 const pathsManifest = require("./paths");
 const { platform } = require("process");
+const { execFileSync } = require("child_process");
 const ConfigManager = require("./configs");
 const NotificationManager = require("./notifications");
 const {
@@ -154,6 +155,30 @@ const onUseTrayIconClicked = () => {
 const onQuitEntryClicked = () => {
     setIsQuitting(true);
     app.quit();
+}
+
+const isKdeSessionShuttingDown = () => {
+    if (platform !== 'linux') {
+        return false;
+    }
+
+    try {
+        const result = execFileSync('busctl', [
+            '--user',
+            'call',
+            'org.kde.ksmserver',
+            '/KSMServer',
+            'org.kde.KSMServerInterface',
+            'isShuttingDown'
+        ], {
+            encoding: 'utf8',
+            stdio: ['ignore', 'pipe', 'ignore'],
+            timeout: 250
+        });
+        return result.trim() === 'b true';
+    } catch (e) {
+        return false;
+    }
 }
 
 const onSetIconThemeClicked = (theme) => {
@@ -387,6 +412,10 @@ const initializeWindow = (config) => {
     });
 
     mainWindow.on('close', (e) => {
+        if (!isQuitting && isKdeSessionShuttingDown()) {
+            setIsQuitting(true);
+        }
+
         if (isQuitting) {
             let isMaximized = mainWindow.isMaximized();
             configsData = {};
