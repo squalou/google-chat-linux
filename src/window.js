@@ -14,6 +14,7 @@ const {
     isAttachmentDownloadUrl,
     startAttachmentDownload
 } = require("./downloads");
+const { shouldQuitOnWindowClose } = require("./windowClosePolicy");
 
 const DEFAULT_ICONS = 'default'
 const COLORED_ICONS = 'colored'
@@ -412,7 +413,12 @@ const initializeWindow = (config) => {
     });
 
     mainWindow.on('close', (e) => {
-        if (!isQuitting && isKdeSessionShuttingDown()) {
+        const isSessionShuttingDown = !isQuitting && useTray && isKdeSessionShuttingDown();
+        if (shouldQuitOnWindowClose({
+            isQuitting,
+            useTray,
+            isSessionShuttingDown
+        })) {
             setIsQuitting(true);
         }
 
