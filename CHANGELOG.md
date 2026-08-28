@@ -4,6 +4,18 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.39.28-1
+
+'Quit' behaviour changes.
+
+When using systray : things go on as previously, (including latest improvements especially for KDE quitting)
+
+When **not** using systray, closing window also quits entirely the app. (So, 'Super+Q' on COSMIC or 'Alt F4' elsewhere maybe will indeed Quit)
+
+This is coherent with other great chat apps behaviour, and consistent accrosse DE.
+
+Thanks again to @Adiker ... I guess I found a future maintainer for the day I quit google for good ;)
+
 ### 5.39.27-2
 
 Minor additional KDE quit fix.
