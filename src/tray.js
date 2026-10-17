@@ -2,8 +2,8 @@ const { Tray, Menu, ipcMain } = require("electron");
 //const path = require("path");
 const pathsManifest = require("./paths");
 const WindowManager = require('./window');
-const NotificationManager = require("./notifications");
 const { ICON_TYPES, classifyFavicon } = require("./faviconState");
+const { isChatOrigin } = require("./notificationPolicy");
 let mainWindow;
 let systemTrayIcon;
 const onShowEntryClicked = () => {
@@ -74,9 +74,9 @@ const initializeTray = (windowObj) => {
 };
 
 ipcMain.on('favicon-changed', (evt, href) => {
+    if (!isChatOrigin(evt.senderFrame?.url) || evt.senderFrame !== evt.sender.mainFrame || typeof href !== 'string') return;
     const iconType = classifyFavicon(href);
     setIcon(iconType);
-    NotificationManager.updateUnreadState(iconType);
 });
 
 function iconForType(iconType) {
@@ -92,7 +92,7 @@ function iconForType(iconType) {
 const setIcon = (iconType) => {
     const i = iconForType(iconType)
     try {
-        systemTrayIcon.setImage(i);
+        systemTrayIcon?.setImage(i);
     } catch (e) {
         //do nothing ... fails on some distribs / OS / window managers
         console.log("Failed to update window icon :-(")

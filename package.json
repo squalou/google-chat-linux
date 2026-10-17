@@ -5,7 +5,8 @@
   "desktopName": "google-chat-linux.desktop",
   "main": "src/index.js",
   "scripts": {
-    "test": "node --test",
+    "test": "node --test test/*.test.js",
+    "test:notifications:electron": "node scripts/notification-smoke.cjs",
     "start": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",

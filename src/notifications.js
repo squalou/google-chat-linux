@@ -1,129 +1,117 @@
 const { Notification } = require("electron");
+const { EventEmitter } = require("node:events");
 const pathsManifest = require("./paths");
-const { UNREAD_ACTIONS, transitionUnreadState } = require("./faviconState");
-const {
-    NOTIFICATION_LANGUAGES,
-    normalizeNotificationLanguage,
-    getNotificationMessages
-} = require("./notificationMessages");
+const { NOTIFICATION_LANGUAGES, normalizeNotificationLanguage, getNotificationMessages } = require("./notificationMessages");
+const { normalizeNotificationDuration, getNotificationDuration } = require("./notificationDuration");
 
 let mainWindow;
-let hasUnread = false;
-let unreadNotification;
 let notificationLanguage = NOTIFICATION_LANGUAGES.ENGLISH;
 let nativeNotificationsEnabled = true;
+let showNotificationPreview = true;
+let notificationPreviewDurationSeconds = 0;
+let notificationGenericDurationSeconds = 0;
 const activeNotifications = new Set();
+const changes = new EventEmitter();
 
 const showMainWindow = () => {
-    if (!mainWindow || mainWindow.isDestroyed()) {
-        return;
-    }
-
-    if (mainWindow.isMinimized()) {
-        mainWindow.restore();
-    }
+    if (!mainWindow || mainWindow.isDestroyed()) return;
+    if (mainWindow.isMinimized()) mainWindow.restore();
     mainWindow.show();
     mainWindow.focus();
 };
 
-const retainNotification = (notification, isUnreadNotification = false) => {
-    activeNotifications.add(notification);
-
-    const release = () => {
-        activeNotifications.delete(notification);
-        if (isUnreadNotification && unreadNotification === notification) {
-            unreadNotification = undefined;
-        }
+const createNotification = (options, handlers = {}) => {
+    if (!nativeNotificationsEnabled || !Notification.isSupported()) return undefined;
+    const duration = getNotificationDuration(getSettings());
+    const notification = new Notification({ icon: pathsManifest.normal(), ...options,
+        ...(duration !== 0 ? { timeoutType: "never" } : {}) });
+    let timer;
+    let closed = false;
+    const release = () => { clearTimeout(timer); activeNotifications.delete(notification); };
+    const finishClose = () => {
+        if (closed) return;
+        closed = true;
+        release();
+        handlers.close?.();
     };
-
+    const originalClose = notification.close.bind(notification);
+    notification.close = () => { originalClose(); finishClose(); };
+    activeNotifications.add(notification);
+    notification.on("show", () => {
+        clearTimeout(timer);
+        if (!closed && duration > 0) timer = setTimeout(() => notification.close(), duration * 1000);
+    });
     notification.on("click", () => {
+        release();
         showMainWindow();
-        release();
+        handlers.click?.();
     });
-    notification.on("close", release);
-    notification.on("failed", (event, error) => {
-        console.error("Failed to show native notification:", error);
+    notification.on("close", finishClose);
+    notification.on("failed", () => {
+        // OS errors may contain presentation data. Do not log them.
+        console.error("Failed to show native notification");
+        closed = true;
         release();
+        handlers.failed?.();
     });
-
-    return notification;
-};
-
-const createNotification = (options, isUnreadNotification = false) => {
-    if (!Notification.isSupported()) {
-        console.warn("Native notifications are not supported on this system");
-        return undefined;
-    }
-
-    const notification = retainNotification(
-        new Notification({
-            icon: pathsManifest.normal(),
-            ...options
-        }),
-        isUnreadNotification
-    );
     notification.show();
     return notification;
 };
 
-const setMainWindow = (windowObj) => {
-    mainWindow = windowObj;
+const closeAllNotifications = () => {
+    for (const notification of [...activeNotifications]) notification.close();
+    activeNotifications.clear();
 };
 
+const getSettings = () => ({
+    enableNativeNotifications: nativeNotificationsEnabled,
+    showNotificationPreview,
+    notificationPreviewDurationSeconds,
+    notificationGenericDurationSeconds,
+    notificationDurationSeconds: getNotificationDuration({ showNotificationPreview,
+        notificationPreviewDurationSeconds, notificationGenericDurationSeconds }),
+    unread: getNotificationMessages(notificationLanguage).unread
+});
+
+const publishSettings = () => changes.emit("settings", getSettings());
 const setNotificationLanguage = (language) => {
     notificationLanguage = normalizeNotificationLanguage(language);
+    publishSettings();
 };
-
-const closeAllNotifications = () => {
-    for (const notification of [...activeNotifications]) {
-        notification.close();
-    }
-    activeNotifications.clear();
-    unreadNotification = undefined;
-};
-
 const setNativeNotificationsEnabled = (enabled) => {
     nativeNotificationsEnabled = Boolean(enabled);
-    hasUnread = false;
-
-    if (!nativeNotificationsEnabled) {
-        closeAllNotifications();
-    }
+    publishSettings();
+    if (!nativeNotificationsEnabled) closeAllNotifications();
 };
-
-const updateUnreadState = (iconType) => {
-    const nextState = transitionUnreadState(hasUnread, iconType, nativeNotificationsEnabled);
-    hasUnread = nextState.hasUnread;
-
-    if (nextState.action === UNREAD_ACTIONS.SHOW) {
-        const messages = getNotificationMessages(notificationLanguage);
-        unreadNotification = createNotification({
-            title: "Google Chat",
-            body: messages.unread,
-            timeoutType: "never"
-        }, true);
-    } else if (nextState.action === UNREAD_ACTIONS.CLOSE) {
-        unreadNotification?.close();
-        unreadNotification = undefined;
-    }
+const setShowNotificationPreview = (enabled) => {
+    showNotificationPreview = Boolean(enabled);
+    publishSettings();
+    if (!showNotificationPreview) closeAllNotifications();
+};
+const setNotificationDurations = (previewSeconds, genericSeconds) => {
+    notificationPreviewDurationSeconds = normalizeNotificationDuration(previewSeconds);
+    notificationGenericDurationSeconds = normalizeNotificationDuration(genericSeconds);
+    publishSettings();
 };
 
 const showTestNotification = () => {
-    if (!nativeNotificationsEnabled) {
-        return;
-    }
-
     const messages = getNotificationMessages(notificationLanguage);
-    createNotification({
-        title: "Google Chat",
-        body: messages.test
-    });
+    createNotification({ title: "Google Chat", body: showNotificationPreview ? messages.test : messages.unread });
 };
 
 module.exports = {
-    setMainWindow,
+    setMainWindow: (window) => { mainWindow = window; },
     setNotificationLanguage,
     setNativeNotificationsEnabled,
-    updateUnreadState,
+    setShowNotificationPreview,
+    setNotificationDurations,
+    getSettings,
+    onSettingsChanged: (listener) => {
+        changes.on("settings", listener);
+        return () => changes.off("settings", listener);
+    },
+    showMainWindow,
+    createNotification,
+    closeAllNotifications,
     showTestNotification
 };

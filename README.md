@@ -34,6 +34,88 @@ Starting with 5.14.x, xdg-desktop-portal must be installed. It's probably alread
 
 Dependency is taken care of in AUR Arch package and Debian package.
 
+## Message notifications
+
+Desktop notifications show the sender, message text and room information supplied
+by Google Chat. In Google Chat settings, enable **Desktop notifications → Allow
+chat notifications**. Chat's muted conversations, Do Not Disturb and active-chat
+rules still apply; the app does not generate notifications by reading the chat
+list or detecting an unread favicon. Your desktop's notification permissions and
+Do Not Disturb settings must also allow Google Chat Linux notifications.
+
+The application menu provides:
+
+- **Enable native notifications**: enable or disable all app notifications.
+- **Show sender and message preview**: enabled by default. Turn it off to show
+  only “Google Chat” and a generic unread-message notice, without sender names,
+  message text or notification images.
+- **Notification language**: choose the language of the generic notice and test
+  notification. Google-provided sender names and messages are not translated.
+- **Notification duration**: set separate durations for **With sender and message
+  preview** and **Without preview**. Choose 3, 5, 10, 15, 30 or 60 seconds,
+  **System default** (the initial setting) or **Until dismissed**.
+- **Test native notification**: test the desktop notification service. This does
+  not test incoming Google Chat messages or their conversation links.
+
+These settings apply immediately and persist across restarts. Disabling previews
+or notifications dismisses existing app notifications. Clicking a notification
+restores the main window and preserves Google's conversation click handler; Chat
+links opened by that handler reuse the main window. If no handler supplies a
+destination, the window is shown without switching conversations.
+
+Duration changes apply to subsequent notifications, including the test
+notification. Timed notifications request persistent display, then the app closes
+them after the selected number of seconds from their display event. Timers for
+page notifications run in the main process so hidden/minimized windows do not
+delay dismissal. Your desktop can still dismiss or suppress a banner earlier.
+**Until dismissed** requests persistent display without an app timer; **System
+default** preserves Google's/your desktop's usual behavior. Closing a notification
+also removes it from the notification service, rather than merely hiding its
+banner.
+
+For a custom duration, edit `notificationPreviewDurationSeconds` and
+`notificationGenericDurationSeconds` in `~/.config/google-hangouts-chat-linux.json`
+while the app is closed: integer seconds from 1 to 3600, `0` for the system default,
+or `-1` for manual dismissal. Custom values appear checked in the duration menu.
+
+Notifications work while the app is running, including when it is hidden or
+minimized and when its tray icon is disabled. They do not work after quitting the
+app. Missing message text uses a localized unread-message notice; information
+that Google does not supply is not reconstructed.
+
+### Implementation and compatibility
+
+Page notifications retain Chromium's native `Notification` objects and event
+handlers. Electron 39 does not implement persistent service-worker notifications,
+so `ServiceWorkerRegistration.showNotification()` uses Electron's main-process
+notification service. Its click/close events are relayed to the worker's existing
+handlers, preserving `notification.data` and `waitUntil()` work. This compatibility
+path supplies notification-like objects rather than native persistent
+`Notification`/`NotificationEvent` instances; it supports basic notifications,
+not notification action buttons or replies. Worker notifications live only for
+the running app session.
+
+The renderer now runs sandboxed with Node.js disabled; sandboxed preloads also run
+in Chat iframes. The former Advanced-menu Node integration toggle and the legacy
+`enableNodeIntegration` setting are no longer used. Launching with `--no-sandbox`
+or `ELECTRON_DISABLE_SANDBOX` prevents service-worker preloads from working.
+
+### Notification verification
+
+Run `npm test` for unit tests and `npm run test:notifications:electron` for isolated
+Electron checks. The latter uses synthetic pages under intercepted Google origins
+in a temporary profile, requires a graphical session (or Xvfb), and does not
+contact Google or use your login. It verifies real Chromium notification objects,
+iframe/worker adapters, conversation click routing, and live privacy settings;
+the persistent-notification OS presenter is stubbed.
+
+Real Google Chat acceptance checks still require receiving a direct message and
+a group/space message with desktop notifications enabled. Verify the sender and
+text, another message while the favicon stays unread, clicking each conversation,
+hidden/minimized windows, muted conversations and Do Not Disturb. Synthetic tests
+do not establish which notification API the current Google Chat deployment uses
+or prove desktop delivery of real messages.
+
 ## Custom CSS
 
 To inject custom CSS, create a file called `custom.css` in `~/.config/google-chat-linux` for Linux or `%APPDATA%\google-chat-linux\` for Windows.
@@ -291,15 +373,11 @@ export PATH=$HOME/node_modules/.bin:$PATH
 fix the rights on sandbox executable as the error message will suggest:
 
 ```sh
-sudo chown root:root $HOME/node_modules/electron/dist/chrome-sandbox && sudo chown 4755 $HOME/node_modules/electron/dist/chrome-sandbox
+sudo chown root:root $HOME/node_modules/electron/dist/chrome-sandbox && sudo chmod 4755 $HOME/node_modules/electron/dist/chrome-sandbox
 electron .
 ```
     
-OR if you're in a hurry :
-
-```sh
-export ELECTRON_DISABLE_SANDBOX=true; export NODE_OPTIONS="--no-force-async-hooks-checks"; electron .
-```
+Keep the sandbox enabled: the notification service-worker preload requires it.
 
 ## Linux packages
 
@@ -313,7 +391,7 @@ a package 'google-chat-linux-bin' is availabe on AUR for Arch Linux and derivati
 
 **Tested on** Ubuntu 18.04, 20.04, 21.04, Mint 20.1
 
-**Note** some environment variables are set in index.js : GTK_USE_PORTAL, ELECTRON_DISABLE_SANDBOX and NODE_OPTIONS="--no-force-async-hooks-checks". This *should* work. Else, set them manually.
+**Note** `GTK_USE_PORTAL` and `NODE_OPTIONS="--no-force-async-hooks-checks"` are set in index.js. The app no longer sets `ELECTRON_DISABLE_SANDBOX`.
 
 ### rpm based (Fedora)
 
@@ -370,8 +448,8 @@ Installation of the .deb file is tested under Ubuntu, and works fine. Under Mint
 
 NOTE : to run from a terminal you'll have to :
 
-- either `sudo chown root:root /opt/google-chat-linux/chrome-sandbox && sudo chown 4755 /opt/google-chat-linux/chrome-sandbox` after the .deb is inYYstalled
-- or run `export ELECTRON_DISABLE_SANDBOX=true; export NODE_OPTIONS="--no-force-async-hooks-checks"` before the launch of `/opt/google-chat-linux/google-chat-linux`
+- either `sudo chown root:root /opt/google-chat-linux/chrome-sandbox && sudo chmod 4755 /opt/google-chat-linux/chrome-sandbox` after the .deb is inYYstalled
+- keep the sandbox enabled when launching `/opt/google-chat-linux/google-chat-linux`, so service-worker notifications can work
 
 The provided .desktop file takes care of it, so running from your desktop launcher will work.
 

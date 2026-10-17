@@ -5,6 +5,9 @@ const { platform } = require("process");
 const { execFileSync } = require("child_process");
 const ConfigManager = require("./configs");
 const NotificationManager = require("./notifications");
+const { initializeNotificationSession } = require("./notificationSession");
+const { isChatNavigation } = require("./notificationPolicy");
+const { NOTIFICATION_DURATION_OPTIONS, normalizeNotificationDuration } = require("./notificationDuration");
 const {
     NOTIFICATION_LANGUAGES,
     NOTIFICATION_LANGUAGE_OPTIONS,
@@ -25,12 +28,14 @@ let isQuitting = false;
 let keepMinimized = true;
 let startHidden = true;
 let enableKeyboardShortcuts = true;
-let enableNodeIntegration = true;
 let openUrlInside = false;
 let useXdgOpen = false;
 let thirdPartyAuthLoginMode = false;
 let notificationLanguage = NOTIFICATION_LANGUAGES.ENGLISH;
 let enableNativeNotifications = true;
+let showNotificationPreview = true;
+let notificationPreviewDurationSeconds = 0;
+let notificationGenericDurationSeconds = 0;
 
 const noRedirectUrlArrayHardcoded = ["accounts/SetOSID?authuser=0&continue=https%3A%2F%2Fchat.google.com"
     , "accounts.google.com"
@@ -117,14 +122,6 @@ const setEnableKeyboardShortcuts = (b) => {
     enableKeyboardShortcuts = b;
 };
 
-const getEnableNodeIntegration = () => {
-    return enableNodeIntegration;
-};
-
-const setEnableNodeIntegration = (b) => {
-    enableNodeIntegration = b;
-};
-
 const getThirdPartyAuthLoginMode = () => {
     return thirdPartyAuthLoginMode;
 };
@@ -192,10 +189,8 @@ const onToggleThirdPartyAuthLoginMode = () => {
     setThirdPartyAuthLoginMode(!getThirdPartyAuthLoginMode());
     if (getThirdPartyAuthLoginMode()) {
         setOpenUrlInside(true);
-        setEnableNodeIntegration(false);
     } else {
         setOpenUrlInside(false);
-        setEnableNodeIntegration(true);
     }
     app.relaunch();
     onQuitEntryClicked();
@@ -220,12 +215,6 @@ const onToggleKeyboardShortcuts = () => {
     onQuitEntryClicked();
 }
 
-const onToggleNodeIntegration = () => {
-    setEnableNodeIntegration(!getEnableNodeIntegration());
-    app.relaunch();
-    onQuitEntryClicked();
-}
-
 const onForceReloadClicked = () => {
     mainWindow.webContents.reload();
 }
@@ -233,6 +222,7 @@ const onForceReloadClicked = () => {
 const onSetNotificationLanguageClicked = (language) => {
     notificationLanguage = normalizeNotificationLanguage(language);
     NotificationManager.setNotificationLanguage(notificationLanguage);
+    ConfigManager.updateConfigs({ notificationLanguage });
     buildMenu();
 };
 
@@ -241,6 +231,33 @@ const onSetNativeNotificationsEnabled = (enabled) => {
     NotificationManager.setNativeNotificationsEnabled(enableNativeNotifications);
     ConfigManager.updateConfigs({ enableNativeNotifications });
     buildMenu();
+};
+
+const onSetShowNotificationPreview = (enabled) => {
+    showNotificationPreview = Boolean(enabled);
+    NotificationManager.setShowNotificationPreview(showNotificationPreview);
+    ConfigManager.updateConfigs({ showNotificationPreview });
+    buildMenu();
+};
+
+const onSetNotificationDuration = (withPreview, seconds) => {
+    if (withPreview) notificationPreviewDurationSeconds = normalizeNotificationDuration(seconds);
+    else notificationGenericDurationSeconds = normalizeNotificationDuration(seconds);
+    NotificationManager.setNotificationDurations(notificationPreviewDurationSeconds, notificationGenericDurationSeconds);
+    ConfigManager.updateConfigs({ notificationPreviewDurationSeconds, notificationGenericDurationSeconds });
+    buildMenu();
+};
+
+const notificationDurationSubMenu = (withPreview) => {
+    const current = withPreview ? notificationPreviewDurationSeconds : notificationGenericDurationSeconds;
+    const options = [...NOTIFICATION_DURATION_OPTIONS];
+    if (!options.some(({ seconds }) => seconds === current)) {
+        options.push({ seconds: current, label: `${current} seconds (custom)` });
+    }
+    return options.map(({ seconds, label }) => ({
+        label, type: 'radio', checked: current === seconds,
+        click: () => onSetNotificationDuration(withPreview, seconds)
+    }));
 };
 
 const updateIcon = (icon) => {
@@ -271,15 +288,17 @@ const cleanOverlayIcon = () => {
     }
 }
 
-const getBrowserWindowOptions = (config) => {
-    // sandbox still required for url opens
+const getBrowserWindowOptions = () => {
+    // Worker preloads require the sandbox. Subframes get only sandboxed preload
+    // APIs; Node.js remains disabled in every page and iframe.
     return {
         "title": process.title,
         "autoHideMenuBar": true,
         "webPreferences": {
-            "nodeIntegration": config.enableNodeIntegration,
+            "nodeIntegration": false,
+            "nodeIntegrationInSubFrames": true,
             "contextIsolation": true,
-            "sandbox": false,
+            "sandbox": true,
             "spellcheck": true,
             "preload": path.join(__dirname, 'faviconChanged.js'),
         },
@@ -362,7 +381,6 @@ const initializeWindow = (config) => {
     keepMinimized = (config && config.keepMinimized);
     startHidden = (config && config.startHidden);
     enableKeyboardShortcuts = (config && config.enableKeyboardShortcuts);
-    enableNodeIntegration = (config && config.enableNodeIntegration);
     openUrlInside = (config && config.openUrlInside);
     useXdgOpen = (config && config.useXdgOpen);
     thirdPartyAuthLoginMode = (config && config.thirdPartyAuthLoginMode);
@@ -370,10 +388,16 @@ const initializeWindow = (config) => {
     useTray = (config && config.useTray)
     notificationLanguage = normalizeNotificationLanguage(config && config.notificationLanguage);
     enableNativeNotifications = (config && config.enableNativeNotifications) !== false;
+    showNotificationPreview = (config && config.showNotificationPreview) !== false;
+    notificationPreviewDurationSeconds = normalizeNotificationDuration(config && config.notificationPreviewDurationSeconds);
+    notificationGenericDurationSeconds = normalizeNotificationDuration(config && config.notificationGenericDurationSeconds);
     mainWindow = new BrowserWindow(bwOptions);
     NotificationManager.setMainWindow(mainWindow);
     NotificationManager.setNotificationLanguage(notificationLanguage);
     NotificationManager.setNativeNotificationsEnabled(enableNativeNotifications);
+    NotificationManager.setShowNotificationPreview(showNotificationPreview);
+    NotificationManager.setNotificationDurations(notificationPreviewDurationSeconds, notificationGenericDurationSeconds);
+    initializeNotificationSession(mainWindow, NotificationManager);
 
     // Normal window closes stay in the tray; let system shutdown quit cleanly.
     powerMonitor.once('shutdown', onQuitEntryClicked);
@@ -430,7 +454,6 @@ const initializeWindow = (config) => {
             configsData.keepMinimized = keepMinimized;
             configsData.startHidden = startHidden;
             configsData.enableKeyboardShortcuts = enableKeyboardShortcuts;
-            configsData.enableNodeIntegration = enableNodeIntegration;
             configsData.openUrlInside = openUrlInside;
             configsData.useXdgOpen = useXdgOpen;
             configsData.thirdPartyAuthLoginMode = thirdPartyAuthLoginMode;
@@ -438,6 +461,9 @@ const initializeWindow = (config) => {
             configsData.useTray = useTray;
             configsData.notificationLanguage = notificationLanguage;
             configsData.enableNativeNotifications = enableNativeNotifications;
+            configsData.showNotificationPreview = showNotificationPreview;
+            configsData.notificationPreviewDurationSeconds = notificationPreviewDurationSeconds;
+            configsData.notificationGenericDurationSeconds = notificationGenericDurationSeconds;
             ConfigManager.updateConfigs(configsData);
         } else {
             e.preventDefault();
@@ -452,6 +478,12 @@ const initializeWindow = (config) => {
     mainWindow.webContents.on('will-navigate', handleRedirect);
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
         if (startAttachmentDownload(mainWindow.webContents, url)) {
+            return { action: 'deny' };
+        }
+
+        if (isChatNavigation(url)) {
+            NotificationManager.showMainWindow();
+            void mainWindow.loadURL(url).catch(() => {});
             return { action: 'deny' };
         }
 
@@ -511,6 +543,19 @@ const menuSubMenu = () => {
             click: (menuItem) => {
                 onSetNativeNotificationsEnabled(menuItem.checked);
             }
+        }, {
+            label: 'Show sender and message preview',
+            type: 'checkbox',
+            checked: showNotificationPreview,
+            enabled: enableNativeNotifications,
+            click: (menuItem) => onSetShowNotificationPreview(menuItem.checked)
+        }, {
+            label: 'Notification duration',
+            enabled: enableNativeNotifications,
+            submenu: [
+                { label: 'With sender and message preview', submenu: notificationDurationSubMenu(true) },
+                { label: 'Without preview', submenu: notificationDurationSubMenu(false) }
+            ]
         }, {
             label: 'Test native notification',
             enabled: enableNativeNotifications,
@@ -629,12 +674,6 @@ const advancedSubMenu = () => {
             }
         });
     }
-    mn.push({
-        label: getEnableNodeIntegration() ? "Disable Node integration (breaks icon color change) (restart)" : "Enable Node integration (enables icon color change) (restart)",
-        click: () => {
-            onToggleNodeIntegration();
-        }
-    });
     return mn;
 }
 
