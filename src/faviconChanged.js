@@ -36,6 +36,7 @@ const initObserver = () => {
 
 let interval;
 window.addEventListener('DOMContentLoaded', () => {
+    if (!process.isMainFrame) return;
     clearInterval(interval);
     interval = setInterval(initObserver, 1500)
 });

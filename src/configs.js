@@ -4,12 +4,12 @@ const path = require("path");
 const pathsManifest = require("./paths");
 const process = require("process");
 const { normalizeNotificationLanguage } = require("./notificationMessages");
+const { normalizeNotificationDuration } = require("./notificationDuration");
 
 const setConfigDefaults = (configuration) => {
     configuration.keepMinimized = configuration.keepMinimized === undefined ? true : configuration.keepMinimized;
     configuration.startHidden = configuration.startHidden === undefined ? false : configuration.startHidden;
     configuration.enableKeyboardShortcuts = configuration.enableKeyboardShortcuts === undefined ? true : configuration.enableKeyboardShortcuts;
-    configuration.enableNodeIntegration = configuration.enableNodeIntegration === undefined ? true : configuration.enableNodeIntegration;
     configuration.openUrlInside = configuration.openUrlInside === undefined ? false : configuration.openUrlInside;
     configuration.useXdgOpen = configuration.useXdgOpen === undefined ? false : configuration.useXdgOpen;
     configuration.thirdPartyAuthLoginMode = configuration.thirdPartyAuthLoginMode === undefined ? false : configuration.thirdPartyAuthLoginMode;
@@ -19,6 +19,9 @@ const setConfigDefaults = (configuration) => {
     configuration.useTray = configuration.useTray === undefined ? true : configuration.useTray;
     configuration.notificationLanguage = normalizeNotificationLanguage(configuration.notificationLanguage);
     configuration.enableNativeNotifications = configuration.enableNativeNotifications === undefined ? true : configuration.enableNativeNotifications;
+    configuration.showNotificationPreview = configuration.showNotificationPreview !== false;
+    configuration.notificationPreviewDurationSeconds = normalizeNotificationDuration(configuration.notificationPreviewDurationSeconds);
+    configuration.notificationGenericDurationSeconds = normalizeNotificationDuration(configuration.notificationGenericDurationSeconds);
     pathsManifest.setIconTheme(configuration.iconTheme)
     if (process.platform === 'win32') {
         configuration.keepMinimized = true;
