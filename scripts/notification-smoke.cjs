@@ -164,6 +164,32 @@ app.whenReady().then(async () => {
     // The worker fixture deliberately uses the supplied data, not a guessed URL.
     await waitFor(() => win.webContents.getURL().includes("from=document"));
 
+    // Exercise actual stop/start cycles: Electron retains the worker's IPC
+    // emitter, so registrations must be removed before the next start.
+    win.webContents.debugger.attach("1.3");
+    await win.webContents.debugger.sendCommand("ServiceWorker.enable");
+    for (let cycle = 0; cycle < 3; cycle++) {
+        const [version] = Object.keys(ses.serviceWorkers.getAllRunning());
+        const stopped = new Promise((resolve) => {
+            const listener = ({ versionId, runningStatus }) => {
+                if (String(versionId) !== version || runningStatus !== "stopped") return;
+                ses.serviceWorkers.off("running-status-changed", listener);
+                resolve();
+            };
+            ses.serviceWorkers.on("running-status-changed", listener);
+        });
+        await win.webContents.debugger.sendCommand("ServiceWorker.stopWorker", { versionId: version });
+        await stopped;
+        await ses.serviceWorkers.startWorkerForScope("https://chat.google.com/");
+        const count = displayed.length;
+        assert.equal(await notifyWorker(`Restart ${cycle}`, "After restart"), "shown");
+        assert.equal(displayed.length, count + 1);
+        assert.equal(displayed.at(-1).options.title, `Restart ${cycle}`);
+        displayed.at(-1).close();
+        await new Promise((resolve) => setTimeout(resolve, 50));
+    }
+    win.webContents.debugger.detach();
+
     config.showNotificationPreview = false;
     changes.emit("settings", { ...config });
     assert.deepEqual(await execute(`(() => {
@@ -212,6 +238,6 @@ app.whenReady().then(async () => {
     assert.equal(saved.notificationGenericDurationSeconds, 15);
     menuWindow.destroy();
     clearTimeout(timeout);
-    console.log(`PASS: Electron ${process.versions.electron}: native objects, iframe, worker/document delivery, clicks, separate duration timers, menu persistence, live privacy and disable/re-enable (synthetic fixtures; no tray).`);
+    console.log(`PASS: Electron ${process.versions.electron}: native objects, iframe, worker/document delivery, clicks, worker restarts, separate duration timers, menu persistence, live privacy and disable/re-enable (synthetic fixtures; no tray).`);
     app.quit();
 }).catch((error) => { console.error(error); app.exit(1); });

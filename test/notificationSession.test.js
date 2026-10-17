@@ -5,7 +5,11 @@ const { initializeNotificationSession } = require("../src/notificationSession");
 
 class IPC extends EventEmitter {
     handlers = new Map();
-    handle(channel, fn) { this.handlers.set(channel, fn); }
+    handle(channel, fn) {
+        if (this.handlers.has(channel)) throw new Error(`Attempted to register a second handler for '${channel}'`);
+        this.handlers.set(channel, fn);
+    }
+    removeHandler(channel) { this.handlers.delete(channel); }
     invoke(channel, event, value) { return this.handlers.get(channel)(event, value); }
 }
 
@@ -162,4 +166,36 @@ test("frame timers cancel on close, privacy changes and destruction", (t) => {
     contents.emit("destroyed");
     t.mock.timers.tick(10000);
     assert.equal(messages.filter(([channel]) => channel === "gchat:notification-expire").length, 0);
+});
+
+
+test("worker stop/restart reuses IPC safely without duplicate handlers or listeners", () => {
+    const { session, contents, options, displayed } = setup();
+    let endedTasks = 0;
+    const worker = { ipc: new IPC(), versionId: 7, scope: options.scope,
+        scriptURL: "https://chat.google.com/sw.js", isDestroyed: () => false,
+        send() {}, startTask: () => ({ end: () => { endedTasks++; } }) };
+    session.serviceWorkers.getWorkerFromVersionID = () => worker;
+    const unrelated = () => {};
+    worker.ipc.on("unrelated", unrelated);
+    const event = { type: "service-worker", session, serviceWorker: worker };
+    for (let cycle = 0; cycle < 3; cycle++) {
+        const status = (runningStatus) => session.serviceWorkers.emit("running-status-changed", { versionId: 7, runningStatus });
+        status("starting");
+        status("starting");
+        assert.equal(worker.ipc.handlers.size, 1);
+        assert.equal(worker.ipc.listenerCount("gchat:notification-settings"), 1);
+        worker.ipc.invoke("gchat:notification-show", event, { ...options, id: `cycle-${cycle}` });
+        status("stopped");
+        assert.equal(displayed[cycle].closed, true);
+        assert.equal(worker.ipc.handlers.size, 0);
+        assert.equal(worker.ipc.listenerCount("gchat:notification-settings"), 0);
+        assert.equal(worker.ipc.listenerCount("unrelated"), 1);
+    }
+    session.serviceWorkers.emit("running-status-changed", { versionId: 7, runningStatus: "starting" });
+    contents.emit("destroyed");
+    assert.equal(worker.ipc.handlers.size, 0);
+    assert.equal(worker.ipc.listenerCount("gchat:notification-close"), 0);
+    assert.equal(contents.ipc.handlers.size, 0);
+    assert.equal(endedTasks, 0, "stopped workers have already lost their external tasks");
 });

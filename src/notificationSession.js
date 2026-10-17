@@ -8,6 +8,7 @@ const initializeNotificationSession = (window, manager) => {
     const session = contents.session;
     const workers = session.serviceWorkers;
     const workerBindings = new Set();
+    const ipcBindings = new Map();
     const persistent = new Map();
     const pendingEvents = new Map();
     const frameTimers = new Map();
@@ -65,10 +66,16 @@ const initializeNotificationSession = (window, manager) => {
     };
 
     const bind = (ipc) => {
-        ipc.on("gchat:notification-settings", (event) => {
+        if (ipcBindings.has(ipc)) return;
+        const listeners = [];
+        const on = (channel, listener) => {
+            ipc.on(channel, listener);
+            listeners.push([channel, listener]);
+        };
+        on("gchat:notification-settings", (event) => {
             event.returnValue = trusted(event) ? manager.getSettings() : null;
         });
-        ipc.on("gchat:notification-activate", (event, url) => {
+        on("gchat:notification-activate", (event, url) => {
             event.returnValue = false;
             if (!trusted(event)) return;
             manager.showMainWindow();
@@ -124,13 +131,18 @@ const initializeNotificationSession = (window, manager) => {
             }
             persistent.set(id, { target, notification, task, scope, tag: options.tag });
         });
-        ipc.on("gchat:notification-close", (event, id) => {
+        on("gchat:notification-close", (event, id) => {
             const entry = persistent.get(id);
             if (!trusted(event) || !entry || entry.target !== owner(event)) return;
             dismiss(id);
         });
-        ipc.on("gchat:notification-event-done", (event, id) => {
+        on("gchat:notification-event-done", (event, id) => {
             if (trusted(event) && pendingEvents.get(id)?.target === owner(event)) finishEvent(id);
+        });
+        ipcBindings.set(ipc, () => {
+            for (const [channel, listener] of listeners) ipc.removeListener(channel, listener);
+            ipc.removeHandler("gchat:notification-show");
+            ipcBindings.delete(ipc);
         });
     };
     bind(contents.ipc);
@@ -152,8 +164,11 @@ const initializeNotificationSession = (window, manager) => {
     });
     const bindWorker = (worker) => {
         if (!worker || workerBindings.has(worker) || !isChatOrigin(worker.scope) || !isChatOrigin(worker.scriptURL)) return;
-        workerBindings.add(worker);
+        // Electron can reuse the same IPC emitter after a worker stops.
+        // Bind by emitter identity, and remove our handlers at the stop boundary.
+        if (ipcBindings.has(worker.ipc)) return;
         bind(worker.ipc);
+        workerBindings.add(worker);
     };
     const onWorkerStatus = ({ versionId, runningStatus }) => {
         if (runningStatus === "starting") bindWorker(workers.getWorkerFromVersionID(versionId));
@@ -166,6 +181,10 @@ const initializeNotificationSession = (window, manager) => {
                         entry.notification.close();
                     }
                 }
+                for (const [id, entry] of pendingEvents) {
+                    if (entry.target === worker) finishEvent(id);
+                }
+                ipcBindings.get(worker.ipc)?.();
                 workerBindings.delete(worker);
             }
         }
@@ -199,6 +218,8 @@ const initializeNotificationSession = (window, manager) => {
     contents.once("destroyed", () => {
         stopWatching();
         workers.off("running-status-changed", onWorkerStatus);
+        for (const unbind of [...ipcBindings.values()]) unbind();
+        workerBindings.clear();
         for (const id of persistent.keys()) dismiss(id);
         for (const id of pendingEvents.keys()) finishEvent(id);
         for (const id of frameTimers.keys()) cancelFrameTimer(id);
