@@ -57,6 +57,11 @@ The application menu provides:
 - **Test native notification**: test the desktop notification service. This does
   not test incoming Google Chat messages or their conversation links.
 
+Message previews are limited to 1024 Unicode code points, including a trailing
+ellipsis when truncated. Emoji sequences and combining characters stay intact.
+The limit applies to both page and service-worker notifications; the full message
+remains available in the conversation.
+
 These settings apply immediately and persist across restarts. Disabling previews
 or notifications dismisses existing app notifications. Clicking a notification
 restores the main window and preserves Google's conversation click handler; Chat

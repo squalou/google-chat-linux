@@ -16,6 +16,26 @@ function installNotificationAdapter(bridge) {
     const settings = () => bridge.settings();
     let previousSettings = settings();
     if (!previousSettings) return null;
+    const MAX_BODY_PREVIEW = 1024;
+    const previewSegmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+    const truncatePreview = (body) => {
+        if (body.length <= MAX_BODY_PREVIEW) return body;
+        let preview = "";
+        let length = 0;
+        for (const { segment, index } of previewSegmenter.segment(body)) {
+            const nextLength = length + Array.from(segment).length;
+            // Count Unicode code points, but only cut at whole graphemes so
+            // combining marks, flags and joined emoji stay intact. Reserve one
+            // code point for the ellipsis unless the complete body fits.
+            if (nextLength >= MAX_BODY_PREVIEW) {
+                if (nextLength === MAX_BODY_PREVIEW && index + segment.length === body.length) return body;
+                return preview + "…";
+            }
+            preview += segment;
+            length = nextLength;
+        }
+        return body;
+    };
     const present = (title, options, config) => {
         const copy = { ...options };
         if (!config.showNotificationPreview) {
@@ -28,7 +48,7 @@ function installNotificationAdapter(bridge) {
         }
         return [String(title || "Google Chat"), {
             ...copy,
-            body: copy.body == null || String(copy.body).trim() === "" ? config.unread : String(copy.body)
+            body: truncatePreview(copy.body == null || String(copy.body).trim() === "" ? config.unread : String(copy.body))
         }];
     };
 
