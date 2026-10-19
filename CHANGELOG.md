@@ -4,6 +4,10 @@ An electron-base client for Google Hangouts Chat, since Google didn't see fit to
 
 ## CHANGELOG
 
+### 5.39.29-1
+
+Huge improvements with native notifications support, including message preview. See doc in README.
+
 ### 5.39.28-1
 
 'Quit' behaviour changes.

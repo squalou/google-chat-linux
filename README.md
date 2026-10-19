@@ -189,6 +189,10 @@ So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+### 5.39.29-1
+
+Huge improvements with native notifications support, including message preview. See doc above.
+
 ### 5.39.28-1
 
 'Quit' behaviour changes.
