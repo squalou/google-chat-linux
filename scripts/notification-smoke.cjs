@@ -164,6 +164,30 @@ app.whenReady().then(async () => {
     // The worker fixture deliberately uses the supplied data, not a guessed URL.
     await waitFor(() => win.webContents.getURL().includes("from=document"));
 
+    // Oversized previews must be shortened before reaching either Chromium's
+    // desktop presenter or the persistent-notification IPC size validation.
+    const longBody = "a".repeat(1022) + "👋🏽" + "x".repeat(100000);
+    const expectedPreview = "a".repeat(1022) + "…";
+    assert.equal(await execute(`(() => {
+        const body = 'a'.repeat(1022) + '👋🏽' + 'x'.repeat(100000);
+        const n = new Notification('Long page message', {body});
+        const preview = n.body; n.close(); return preview;
+    })()`), expectedPreview);
+    await execute(`(async () => {
+        const registration = await navigator.serviceWorker.ready;
+        const body = 'a'.repeat(1022) + '👋🏽' + 'x'.repeat(100000);
+        await registration.showNotification('Long document message', {body, data:{url:'/room/42?from=long-document'}});
+        const [notification] = await registration.getNotifications();
+        if (notification.body !== body) throw new Error('Original message body was changed');
+    })()`);
+    assert.equal(displayed.at(-1).options.body, expectedPreview);
+    displayed.at(-1).handlers.click();
+    await waitFor(() => win.webContents.getURL().includes("from=long-document"));
+    assert.equal(await notifyWorker("Long worker message", longBody), "shown");
+    assert.equal(displayed.at(-1).options.body, expectedPreview);
+    displayed.at(-1).handlers.click();
+    await waitFor(() => win.webContents.getURL() === "https://chat.google.com/room/42");
+
     // Exercise actual stop/start cycles: Electron retains the worker's IPC
     // emitter, so registrations must be removed before the next start.
     win.webContents.debugger.attach("1.3");
@@ -238,6 +262,6 @@ app.whenReady().then(async () => {
     assert.equal(saved.notificationGenericDurationSeconds, 15);
     menuWindow.destroy();
     clearTimeout(timeout);
-    console.log(`PASS: Electron ${process.versions.electron}: native objects, iframe, worker/document delivery, clicks, worker restarts, separate duration timers, menu persistence, live privacy and disable/re-enable (synthetic fixtures; no tray).`);
+    console.log(`PASS: Electron ${process.versions.electron}: native objects, iframe, worker/document delivery, bounded Unicode previews, clicks, worker restarts, separate duration timers, menu persistence, live privacy and disable/re-enable (synthetic fixtures; no tray).`);
     app.quit();
 }).catch((error) => { console.error(error); app.exit(1); });

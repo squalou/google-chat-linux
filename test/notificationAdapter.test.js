@@ -77,6 +77,61 @@ test("uses localized fallback without inventing a sender", () => {
     assert.equal(created[1].title, "Google Chat");
 });
 
+for (const source of ["constructor", "frame", "worker"]) {
+    test(`${source} previews are bounded without splitting Unicode graphemes`, async () => {
+        const { realm, created, calls } = createRealm({ worker: source === "worker" });
+        const cases = [
+            ["short body", "Hello 👋", "Hello 👋"],
+            ["exact ASCII limit", "a".repeat(1024), "a".repeat(1024)],
+            ["one past the limit", "a".repeat(1025), "a".repeat(1023) + "…"],
+            ["body larger than the IPC input limit", "a".repeat(100000), "a".repeat(1023) + "…"],
+            ["exact astral limit", "👋".repeat(1024), "👋".repeat(1024)],
+            ["exact emoji sequence limit", "👋🏽".repeat(512), "👋🏽".repeat(512)],
+            ["astral overflow", "👋".repeat(1025), "👋".repeat(1023) + "…"],
+            ["skin tone", "a".repeat(1022) + "👋🏽x", "a".repeat(1022) + "…"],
+            ["flag", "a".repeat(1022) + "🇵🇱x", "a".repeat(1022) + "…"],
+            ["joined family", "a".repeat(1020) + "👨‍👩‍👧‍👦x", "a".repeat(1020) + "…"],
+            ["combining accent", "a".repeat(1022) + "e\u0301x", "a".repeat(1022) + "…"],
+            ["single oversized grapheme", "e" + "\u0301".repeat(1024), "…"]
+        ];
+        for (const [label, body, expected] of cases) {
+            realm.body = body;
+            if (source === "constructor") {
+                vm.runInContext('new Notification("Anna · Team", {body, data:{url:"/room/42"}})', realm);
+                const notification = created.at(-1);
+                assert.equal(notification.options.body, expected, label);
+                assert.equal(notification.title, "Anna · Team");
+                assert.equal(notification.options.data.url, "/room/42");
+            } else {
+                await vm.runInContext('globalThis.registration = new ServiceWorkerRegistration(); registration.showNotification("Anna · Team", {body, data:{url:"/room/42"}})', realm);
+                assert.equal(calls.at(-1)[1].body, expected, label);
+                assert.equal(calls.at(-1)[1].title, "Anna · Team");
+                const notifications = await vm.runInContext('registration.getNotifications()', realm);
+                assert.equal(notifications.at(-1).body, body, "only the displayed preview is shortened");
+                assert.equal(notifications.at(-1).data.url, "/room/42");
+            }
+            assert.ok(Array.from(expected).length <= 1024, label);
+        }
+    });
+}
+
+test("truncated worker previews retain the original body and routing in Google's click handler", async () => {
+    const { realm, adapter, target, calls } = createRealm({ worker: true });
+    const body = "👋🏽".repeat(1000);
+    realm.body = body;
+    let clicked;
+    target.addEventListener("notificationclick", (event) => {
+        clicked = event.notification;
+        event.waitUntil(vm.runInContext('clients.openWindow("/room/42")', realm));
+    });
+    await vm.runInContext('new ServiceWorkerRegistration().showNotification("Anna", {body, data:{url:"/room/42"}})', realm);
+    assert.equal(calls[0][1].body, "👋🏽".repeat(511) + "…");
+    await adapter.event(calls[0][1].id, "click");
+    assert.equal(clicked.body, body);
+    assert.equal(clicked.data.url, "/room/42");
+    assert.deepEqual(calls[1], ["activate", "https://chat.google.com/room/42"]);
+});
+
 test("settings updates close existing notifications and future notifications use fresh settings", () => {
     const { realm, settings, created, adapter } = createRealm();
     vm.runInContext('new Notification("Anna", {body:"Hi"})', realm);
