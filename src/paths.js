@@ -23,7 +23,7 @@ const offline = () => {
 }
 
 module.exports = {
-    "configsPath": path.resolve(app.getPath("appData"), "google-hangouts-chat-linux.json"),
+    "configsPath": path.resolve(app.getPath("appData"), "google-chat-linux.json"),
     "OVERLAY_NEW_NOTIF": path.resolve(process.resourcesPath, "icon/overlay-new-xs.png"),
     normal: normal,
     badge: badge,
