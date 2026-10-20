@@ -194,6 +194,10 @@ So, **to use electron's Wayland rendering** edit `/usr/share/applciations/google
 
 See full [CHANGELOG](./CHANGELOG.md).
 
+### 5.39.29-2
+
+Minor fix : ellipsis too long notification messages.
+
 ### 5.39.29-1
 
 Huge improvements with native notifications support, including message preview. See doc above.
